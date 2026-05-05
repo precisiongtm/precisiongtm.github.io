@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Precision GTM - Enterprise Go-to-Market Strategy</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-blue: #0080FF;
+            --dark-blue: #0047B3;
+            --text-primary: #1a1a1a;
+            --text-secondary: #4a4a4a;
+            --bg-light: #f8f9fa;
+            --border-color: #e0e0e0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: white;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header */
+        header {
+            padding: 40px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo {
+            height: 48px;
+            width: auto;
+        }
+
+        .company-name {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            line-height: 1.2;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: var(--text-primary);
+            max-width: 900px;
+        }
+
+        .hero .subheadline {
+            font-size: 24px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            max-width: 800px;
+        }
+
+        .hero .supporting-line {
+            font-size: 20px;
+            color: var(--text-secondary);
+            font-style: italic;
+            margin-bottom: 40px;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 14px 28px;
+            font-size: 16px;
+            font-weight: 500;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--dark-blue);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary-blue);
+            border: 2px solid var(--primary-blue);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        /* Section Styles */
+        section {
+            padding: 80px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        section:last-of-type {
+            border-bottom: none;
+        }
+
+        h2 {
+            font-size: 36px;
+            font-weight: 600;
+            margin-bottom: 32px;
+            color: var(--text-primary);
+        }
+
+        .section-intro {
+            font-size: 20px;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+            max-width: 800px;
+        }
+
+        /* Who I Work With */
+        .client-types {
+            list-style: none;
+            margin-top: 24px;
+        }
+
+        .client-types li {
+            padding: 16px 0;
+            padding-left: 32px;
+            position: relative;
+            font-size: 18px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        .client-types li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 24px;
+            width: 8px;
+            height: 8px;
+            background: var(--primary-blue);
+            border-radius: 50%;
+        }
+
+        /* Focus Areas */
+        .focus-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 32px;
+            margin-top: 40px;
+        }
+
+        .focus-card {
+            background: var(--bg-light);
+            padding: 32px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-blue);
+        }
+
+        .focus-card h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+
+        .focus-card p {
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            line-height: 1.7;
+        }
+
+        .focus-card ul {
+            list-style: none;
+        }
+
+        .focus-card ul li {
+            padding: 6px 0;
+            padding-left: 20px;
+            position: relative;
+            color: var(--text-secondary);
+        }
+
+        .focus-card ul li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--primary-blue);
+        }
+
+        /* Case Studies */
+        .case-studies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 32px;
+            margin-top: 40px;
+        }
+
+        .case-study {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 32px;
+            transition: box-shadow 0.2s;
+        }
+
+        .case-study:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .case-study h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--primary-blue);
+        }
+
+        .case-study .problem,
+        .case-study .what-changed,
+        .case-study .outcome {
+            margin-bottom: 20px;
+        }
+
+        .case-study .label {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .case-study .content {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .case-study ul {
+            list-style: none;
+            margin-top: 8px;
+        }
+
+        .case-study ul li {
+            padding: 4px 0;
+            padding-left: 20px;
+            position: relative;
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+
+        .case-study ul li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--primary-blue);
+        }
+
+        /* Writing Section */
+        .writing-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 24px;
+            font-size: 18px;
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .writing-link:hover {
+            text-decoration: underline;
+        }
+
+        /* About */
+        .about-content {
+            max-width: 800px;
+        }
+
+        .about-content h3 {
+            font-size: 24px;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+
+        .about-content p {
+            font-size: 18px;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        /* Contact */
+        .contact-email {
+            font-size: 24px;
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .contact-email:hover {
+            text-decoration: underline;
+        }
+
+        /* Footer */
+        footer {
+            padding: 40px 0;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .hero .subheadline {
+                font-size: 20px;
+            }
+
+            h2 {
+                font-size: 28px;
+            }
+
+            .focus-grid,
+            .case-studies-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <img src="PrecisionGTM_Logo.png" alt="Precision GTM" class="logo">
+                <span class="company-name">Precision GTM</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Precision GTM helps vertical AI and enterprise software companies design GTM for complex products, partners, and enterprise deals.</h1>
+            <p class="subheadline">Focused on companies with strong products that aren't scaling the way they should.</p>
+            <p class="supporting-line">The product is rarely the problem. GTM usually is.</p>
+            <div class="cta-buttons">
+                <a href="mailto:mac@precisiongotomarket.com" class="btn btn-primary">Start a conversation</a>
+                <a href="https://substack.com/@thegtmoperator" class="btn btn-secondary">Learn more</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Who I Work With -->
+    <section id="who-i-work-with">
+        <div class="container">
+            <h2>Who I work with</h2>
+            <p class="section-intro">Companies with strong products that aren't scaling the way they should.</p>
+            <p class="section-intro">Typically:</p>
+            <ul class="client-types">
+                <li>vertical AI companies entering enterprise markets</li>
+                <li>platforms repositioning from legacy to modern narratives</li>
+                <li>teams with traction, but inconsistent GTM execution</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Where I Focus -->
+    <section id="where-i-focus">
+        <div class="container">
+            <h2>Where I focus</h2>
+            <div class="focus-grid">
+                <div class="focus-card">
+                    <h3>1. Defining a wedge that actually lands</h3>
+                    <p>Strong products often struggle to enter new markets because the entry point is unclear.</p>
+                    <ul>
+                        <li>define a narrow, credible use case</li>
+                        <li>align it to how buyers evaluate solutions</li>
+                        <li>create a path to initial adoption</li>
+                    </ul>
+                </div>
+                <div class="focus-card">
+                    <h3>2. Sharpening the category and narrative</h3>
+                    <p>When positioning is unclear, sales cycles stretch and teams improvise.</p>
+                    <ul>
+                        <li>clarify the category you are competing in</li>
+                        <li>tighten the core narrative</li>
+                        <li>make value defensible in enterprise conversations</li>
+                    </ul>
+                </div>
+                <div class="focus-card">
+                    <h3>3. Aligning GTM to how enterprise deals actually work</h3>
+                    <p>Deals stall when GTM is not aligned to buying dynamics.</p>
+                    <ul>
+                        <li>align messaging to the economic buyer</li>
+                        <li>connect ABM to deal qualification</li>
+                        <li>improve how opportunities progress</li>
+                    </ul>
+                </div>
+                <div class="focus-card">
+                    <h3>4. Designing a scalable route to market</h3>
+                    <p>Growth slows when targeting and execution are not aligned.</p>
+                    <ul>
+                        <li>refine ICP and segmentation</li>
+                        <li>prioritize outbound</li>
+                        <li>connect inbound and outbound</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Case Studies -->
+    <section id="case-studies">
+        <div class="container">
+            <h2>How this shows up in practice</h2>
+            <div class="case-studies-grid">
+                <div class="case-study">
+                    <h3>AI workflow GTM</h3>
+                    <div class="problem">
+                        <div class="label">Problem</div>
+                        <div class="content">Product assumed enterprise workflows were ready. Deals stalled due to implementation uncertainty.</div>
+                    </div>
+                    <div class="what-changed">
+                        <div class="label">What changed</div>
+                        <ul>
+                            <li>narrowed to a specific workflow</li>
+                            <li>packaged a pilot with defined outcome</li>
+                            <li>aligned partner delivery</li>
+                        </ul>
+                    </div>
+                    <div class="outcome">
+                        <div class="label">Outcome</div>
+                        <div class="content">Clear entry point and faster deal progression</div>
+                    </div>
+                </div>
+
+                <div class="case-study">
+                    <h3>Partner GTM</h3>
+                    <div class="problem">
+                        <div class="label">Problem</div>
+                        <div class="content">Strong product, fragmented partner motion. Messaging inconsistent across ecosystem.</div>
+                    </div>
+                    <div class="what-changed">
+                        <div class="label">What changed</div>
+                        <ul>
+                            <li>defined joint value proposition</li>
+                            <li>created structured partner plays</li>
+                            <li>enforced consistency</li>
+                        </ul>
+                    </div>
+                    <div class="outcome">
+                        <div class="label">Outcome</div>
+                        <div class="content">Improved alignment and pipeline quality</div>
+                    </div>
+                </div>
+
+                <div class="case-study">
+                    <h3>Legacy → modern positioning</h3>
+                    <div class="problem">
+                        <div class="label">Problem</div>
+                        <div class="content">Value existed but narrative didn't land. Seen as "legacy".</div>
+                    </div>
+                    <div class="what-changed">
+                        <div class="label">What changed</div>
+                        <ul>
+                            <li>reframed around buyer outcomes</li>
+                            <li>simplified story</li>
+                            <li>aligned field messaging</li>
+                        </ul>
+                    </div>
+                    <div class="outcome">
+                        <div class="label">Outcome</div>
+                        <div class="content">Stronger positioning in enterprise deals</div>
+                    </div>
+                </div>
+
+                <div class="case-study">
+                    <h3>Pipeline diagnostics</h3>
+                    <div class="problem">
+                        <div class="label">Problem</div>
+                        <div class="content">Pipeline existed but conversion lagged</div>
+                    </div>
+                    <div class="what-changed">
+                        <div class="label">What changed</div>
+                        <ul>
+                            <li>structured deal reviews</li>
+                            <li>identified misalignment points</li>
+                            <li>adjusted GTM motion</li>
+                        </ul>
+                    </div>
+                    <div class="outcome">
+                        <div class="label">Outcome</div>
+                        <div class="content">Clearer path to closing and expansion</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Writing -->
+    <section id="writing">
+        <div class="container">
+            <h2>Writing</h2>
+            <p class="section-intro">I write about how enterprise GTM actually works, especially for AI and complex systems.</p>
+            <a href="https://substack.com/@thegtmoperator" class="writing-link">The GTM Operator →</a>
+        </div>
+    </section>
+
+    <!-- Experiments -->
+    <section id="experiments">
+        <div class="container">
+            <h2>Experiments</h2>
+            <p class="section-intro">Exploring how AI can support GTM systems — from signal integration to deal diagnostics and partner enablement.</p>
+            <p class="section-intro">Early work, evolving.</p>
+        </div>
+    </section>
+
+    <!-- About -->
+    <section id="about">
+        <div class="container">
+            <h2>About</h2>
+            <div class="about-content">
+                <h3>Mac Gupta</h3>
+                <p>Principal, Precision GTM LLC</p>
+                <p>Background in product marketing and partner GTM across enterprise software.</p>
+                <p>Focused on how complex products actually get adopted, sold, and scaled in enterprise environments.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact">
+        <div class="container">
+            <h2>Contact</h2>
+            <a href="mailto:mac@precisiongotomarket.com" class="contact-email">mac@precisiongotomarket.com</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Precision GTM LLC. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

@@ -221,11 +221,91 @@
         }
 
         /* Case Studies */
-        .case-studies-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 32px;
-            margin-top: 40px;
+        .carousel-container {
+            position: relative;
+            max-width: 900px;
+            margin: 40px auto 0;
+            padding: 0 60px;
+        }
+
+        .carousel-track {
+            overflow: hidden;
+            position: relative;
+        }
+
+        .carousel-slide {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .carousel-slide.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .carousel-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: white;
+            border: 2px solid var(--primary-blue);
+            color: var(--primary-blue);
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.2s;
+            z-index: 10;
+        }
+
+        .carousel-nav:hover {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .carousel-nav.prev {
+            left: 0;
+        }
+
+        .carousel-nav.next {
+            right: 0;
+        }
+
+        .carousel-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 32px;
+        }
+
+        .indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--border-color);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .indicator.active {
+            background: var(--primary-blue);
+            width: 32px;
+            border-radius: 6px;
+        }
+
+        .indicator:hover {
+            background: var(--primary-blue);
         }
 
         .case-study {
@@ -367,6 +447,16 @@
             .btn {
                 text-align: center;
             }
+
+            .carousel-container {
+                padding: 0 50px;
+            }
+
+            .carousel-nav {
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
         }
     </style>
 </head>
@@ -455,86 +545,92 @@
     <section id="case-studies">
         <div class="container">
             <h2>How this shows up in practice</h2>
-            <div class="case-studies-grid">
-                <div class="case-study">
-                    <h3>AI workflow GTM</h3>
-                    <div class="problem">
-                        <div class="label">Problem</div>
-                        <div class="content">Product assumed enterprise workflows were ready. Deals stalled due to implementation uncertainty.</div>
+            
+            <!-- Carousel Container -->
+            <div class="carousel-container">
+                <button class="carousel-nav prev" onclick="changeSlide(-1)" aria-label="Previous case study">‹</button>
+                
+                <div class="carousel-track">
+                    <!-- Case Study 1 -->
+                    <div class="carousel-slide active">
+                        <div class="case-study">
+                            <h3>US Market Entry</h3>
+                            <div class="problem">
+                                <div class="label">Problem</div>
+                                <div class="content">Insurance AI platform with success in Asia and Europe with multiple entry motions. Unclear which approach will scale in the US.</div>
+                            </div>
+                            <div class="what-changed">
+                                <div class="label">What changed</div>
+                                <ul>
+                                    <li>Analyzed pipeline for patterns across various use cases (claims, underwriting, etc.)</li>
+                                    <li>Compared US and comparable EU deals for buyer patterns</li>
+                                    <li>Identified best entry point for US growth</li>
+                                </ul>
+                            </div>
+                            <div class="outcome">
+                                <div class="label">Outcome</div>
+                                <div class="content">Clear recommendation on which approach to prioritize and where to efficiently focus sales and marketing resources.</div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="what-changed">
-                        <div class="label">What changed</div>
-                        <ul>
-                            <li>narrowed to a specific workflow</li>
-                            <li>packaged a pilot with defined outcome</li>
-                            <li>aligned partner delivery</li>
-                        </ul>
+
+                    <!-- Case Study 2 -->
+                    <div class="carousel-slide">
+                        <div class="case-study">
+                            <h3>Scaling Growth Without Increasing Costs</h3>
+                            <div class="problem">
+                                <div class="label">Problem</div>
+                                <div class="content">Construction tech AI company needed to triple ARR in one year without increasing sales and marketing spend. Lacked systematic approach to deploy resources efficiently.</div>
+                            </div>
+                            <div class="what-changed">
+                                <div class="label">What changed</div>
+                                <ul>
+                                    <li>Analyzed 50 recent deals to refine ICP in contractor segment</li>
+                                    <li>Built account scoring system to prioritize 300 top targets from 3,000 accounts</li>
+                                    <li>Created repeatable outbound motion with target personas, entry messages, and weekly cadence</li>
+                                    <li>Established tracking for early signs of improving pipeline quality</li>
+                                </ul>
+                            </div>
+                            <div class="outcome">
+                                <div class="label">Outcome</div>
+                                <div class="content">Account scoring model and refined ICP that aligned paid media spend with sales targeting. Clear system for efficient resource deployment.</div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="outcome">
-                        <div class="label">Outcome</div>
-                        <div class="content">Clear entry point and faster deal progression</div>
+
+                    <!-- Case Study 3 -->
+                    <div class="carousel-slide">
+                        <div class="case-study">
+                            <h3>Clarifying Category Narrative to Reduce Sales Cycle</h3>
+                            <div class="problem">
+                                <div class="label">Problem</div>
+                                <div class="content">Employee productivity AI company with unclear category and monitoring perception issues. Sales cycles were long, reps struggled with tribal knowledge, and "employee monitoring" narrative triggered cultural objections.</div>
+                            </div>
+                            <div class="what-changed">
+                                <div class="label">What changed</div>
+                                <ul>
+                                    <li>Analyzed website, case studies, and sales conversations to identify narrative friction</li>
+                                    <li>Reframed category from "monitoring" to "operational intelligence for service delivery"</li>
+                                    <li>Built sales playbook with objection handling for privacy and culture concerns</li>
+                                    <li>Created SDR messaging framework and discovery questions for US buyers</li>
+                                </ul>
+                            </div>
+                            <div class="outcome">
+                                <div class="label">Outcome</div>
+                                <div class="content">Clear US category narrative, repeatable sales story, and tools to address monitoring objections early. Reduced explanation burden and improved conversion rates.</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="case-study">
-                    <h3>Partner GTM</h3>
-                    <div class="problem">
-                        <div class="label">Problem</div>
-                        <div class="content">Strong product, fragmented partner motion. Messaging inconsistent across ecosystem.</div>
-                    </div>
-                    <div class="what-changed">
-                        <div class="label">What changed</div>
-                        <ul>
-                            <li>defined joint value proposition</li>
-                            <li>created structured partner plays</li>
-                            <li>enforced consistency</li>
-                        </ul>
-                    </div>
-                    <div class="outcome">
-                        <div class="label">Outcome</div>
-                        <div class="content">Improved alignment and pipeline quality</div>
-                    </div>
-                </div>
+                <button class="carousel-nav next" onclick="changeSlide(1)" aria-label="Next case study">›</button>
+            </div>
 
-                <div class="case-study">
-                    <h3>Legacy → modern positioning</h3>
-                    <div class="problem">
-                        <div class="label">Problem</div>
-                        <div class="content">Value existed but narrative didn't land. Seen as "legacy".</div>
-                    </div>
-                    <div class="what-changed">
-                        <div class="label">What changed</div>
-                        <ul>
-                            <li>reframed around buyer outcomes</li>
-                            <li>simplified story</li>
-                            <li>aligned field messaging</li>
-                        </ul>
-                    </div>
-                    <div class="outcome">
-                        <div class="label">Outcome</div>
-                        <div class="content">Stronger positioning in enterprise deals</div>
-                    </div>
-                </div>
-
-                <div class="case-study">
-                    <h3>Pipeline diagnostics</h3>
-                    <div class="problem">
-                        <div class="label">Problem</div>
-                        <div class="content">Pipeline existed but conversion lagged</div>
-                    </div>
-                    <div class="what-changed">
-                        <div class="label">What changed</div>
-                        <ul>
-                            <li>structured deal reviews</li>
-                            <li>identified misalignment points</li>
-                            <li>adjusted GTM motion</li>
-                        </ul>
-                    </div>
-                    <div class="outcome">
-                        <div class="label">Outcome</div>
-                        <div class="content">Clearer path to closing and expansion</div>
-                    </div>
-                </div>
+            <!-- Carousel Indicators -->
+            <div class="carousel-indicators">
+                <span class="indicator active" onclick="goToSlide(0)"></span>
+                <span class="indicator" onclick="goToSlide(1)"></span>
+                <span class="indicator" onclick="goToSlide(2)"></span>
             </div>
         </div>
     </section>
@@ -545,6 +641,7 @@
             <h2>Insights</h2>
             <p class="section-intro">We write about how enterprise GTM actually works, especially for AI and complex systems.</p>
             <div style="margin-top: 32px; display: flex; flex-direction: column; gap: 16px;">
+                <a href="https://precisiongtm.substack.com/p/fdes-should-not-just-deploy-ai-they" class="writing-link">FDEs Should Not Just Deploy AI—They Should Define and Defend the Category →</a>
                 <a href="https://precisiongtm.substack.com/p/where-ai-actually-helped-my-enterprise?r=8c6e98" class="writing-link">Where AI Actually Helped My Enterprise GTM Work →</a>
                 <a href="https://precisiongtm.substack.com/p/vertical-ai-gtm-the-implementation?r=8c6e98" class="writing-link">Vertical AI GTM: The Implementation Gap That Stalls Deals →</a>
             </div>
@@ -557,6 +654,15 @@
             <h2>AI Toolkits</h2>
             <p class="section-intro">Exploring how AI can support GTM systems: from signal integration to deal diagnostics and partner enablement.</p>
             <p class="section-intro">Early work, evolving.</p>
+            
+            <div style="margin-top: 40px;">
+                <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 16px; color: var(--text-primary);">Win/Loss Diagnostic Agent</h3>
+                <p style="color: var(--text-secondary); margin-bottom: 24px;">AI-powered analysis to identify patterns in won and lost deals, surface key insights, and improve deal qualification.</p>
+                <video controls style="width: 100%; max-width: 800px; border-radius: 8px; border: 1px solid var(--border-color);">
+                    <source src="winloss-demo.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
         </div>
     </section>
 
@@ -599,6 +705,13 @@
                     </svg>
                     @precisiongtm
                 </a>
+                <a href="mailto:mac@precisiongotomarket.com" style="display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--primary-blue); font-size: 18px; font-weight: 500;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                        <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                    mac@precisiongotomarket.com
+                </a>
             </div>
         </div>
     </section>
@@ -609,5 +722,39 @@
             <p>&copy; 2026 Precision GTM LLC. All rights reserved.</p>
         </div>
     </footer>
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.carousel-slide');
+        const indicators = document.querySelectorAll('.indicator');
+
+        function showSlide(n) {
+            if (n >= slides.length) {
+                currentSlide = 0;
+            } else if (n < 0) {
+                currentSlide = slides.length - 1;
+            } else {
+                currentSlide = n;
+            }
+
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active');
+                indicators[index].classList.remove('active');
+            });
+
+            slides[currentSlide].classList.add('active');
+            indicators[currentSlide].classList.add('active');
+        }
+
+        function changeSlide(direction) {
+            showSlide(currentSlide + direction);
+        }
+
+        function goToSlide(n) {
+            showSlide(n);
+        }
+
+        // Optional: Auto-advance carousel every 8 seconds
+        // setInterval(() => changeSlide(1), 8000);
+    </script>
 </body>
 </html>

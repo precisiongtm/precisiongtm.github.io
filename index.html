@@ -1,760 +1,1153 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Precision GTM</title>
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --primary-blue: #0080FF;
-            --dark-blue: #0047B3;
-            --text-primary: #1a1a1a;
-            --text-secondary: #4a4a4a;
-            --bg-light: #f8f9fa;
-            --border-color: #e0e0e0;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-            line-height: 1.6;
-            color: var(--text-primary);
-            background: white;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 24px;
-        }
-
-        /* Header */
-        header {
-            padding: 40px 0;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .header-content {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .logo {
-            height: 48px;
-            width: auto;
-        }
-
-        .company-name {
-            font-size: 24px;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        /* Hero Section */
-        .hero {
-            padding: 80px 0;
-            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
-        }
-
-        .hero h1 {
-            font-size: 48px;
-            line-height: 1.2;
-            font-weight: 600;
-            margin-bottom: 24px;
-            color: var(--text-primary);
-            max-width: 900px;
-        }
-
-        .hero .subheadline {
-            font-size: 24px;
-            color: var(--text-secondary);
-            margin-bottom: 16px;
-            max-width: 800px;
-        }
-
-        .hero .supporting-line {
-            font-size: 20px;
-            color: var(--text-secondary);
-            font-style: italic;
-            margin-bottom: 40px;
-        }
-
-        .cta-buttons {
-            display: flex;
-            gap: 16px;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 14px 28px;
-            font-size: 16px;
-            font-weight: 500;
-            text-decoration: none;
-            border-radius: 6px;
-            transition: all 0.2s;
-        }
-
-        .btn-primary {
-            background: var(--primary-blue);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: var(--dark-blue);
-            transform: translateY(-1px);
-        }
-
-        .btn-secondary {
-            background: white;
-            color: var(--primary-blue);
-            border: 2px solid var(--primary-blue);
-        }
-
-        .btn-secondary:hover {
-            background: var(--primary-blue);
-            color: white;
-        }
-
-        /* Section Styles */
-        section {
-            padding: 80px 0;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        section:last-of-type {
-            border-bottom: none;
-        }
-
-        h2 {
-            font-size: 36px;
-            font-weight: 600;
-            margin-bottom: 32px;
-            color: var(--text-primary);
-        }
-
-        .section-intro {
-            font-size: 20px;
-            line-height: 1.7;
-            color: var(--text-secondary);
-            margin-bottom: 32px;
-            max-width: 800px;
-        }
-
-        /* Who I Work With */
-        .client-types {
-            list-style: none;
-            margin-top: 24px;
-        }
-
-        .client-types li {
-            padding: 16px 0;
-            padding-left: 32px;
-            position: relative;
-            font-size: 18px;
-            line-height: 1.6;
-            color: var(--text-secondary);
-        }
-
-        .client-types li::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 24px;
-            width: 8px;
-            height: 8px;
-            background: var(--primary-blue);
-            border-radius: 50%;
-        }
-
-        /* Focus Areas */
-        .focus-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 32px;
-            margin-top: 40px;
-        }
-
-        .focus-card {
-            background: var(--bg-light);
-            padding: 32px;
-            border-radius: 8px;
-            border-left: 4px solid var(--primary-blue);
-        }
-
-        .focus-card h3 {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 16px;
-            color: var(--text-primary);
-        }
-
-        .focus-card p {
-            color: var(--text-secondary);
-            margin-bottom: 16px;
-            line-height: 1.7;
-        }
-
-        .focus-card ul {
-            list-style: none;
-        }
-
-        .focus-card ul li {
-            padding: 6px 0;
-            padding-left: 20px;
-            position: relative;
-            color: var(--text-secondary);
-        }
-
-        .focus-card ul li::before {
-            content: '→';
-            position: absolute;
-            left: 0;
-            color: var(--primary-blue);
-        }
-
-        /* Case Studies */
-        .carousel-container {
-            position: relative;
-            max-width: 900px;
-            margin: 40px auto 0;
-            padding: 0 60px;
-        }
-
-        .carousel-track {
-            overflow: hidden;
-            position: relative;
-        }
-
-        .carousel-slide {
-            display: none;
-            animation: fadeIn 0.5s;
-        }
-
-        .carousel-slide.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateX(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        .carousel-nav {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: white;
-            border: 2px solid var(--primary-blue);
-            color: var(--primary-blue);
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            font-size: 24px;
-            cursor: pointer;
-            transition: all 0.2s;
-            z-index: 10;
-        }
-
-        .carousel-nav:hover {
-            background: var(--primary-blue);
-            color: white;
-        }
-
-        .carousel-nav.prev {
-            left: 0;
-        }
-
-        .carousel-nav.next {
-            right: 0;
-        }
-
-        .carousel-indicators {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            margin-top: 32px;
-        }
-
-        .indicator {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: var(--border-color);
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .indicator.active {
-            background: var(--primary-blue);
-            width: 32px;
-            border-radius: 6px;
-        }
-
-        .indicator:hover {
-            background: var(--primary-blue);
-        }
-
-        .case-study {
-            background: white;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 32px;
-            transition: box-shadow 0.2s;
-        }
-
-        .case-study:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        }
-
-        .case-study h3 {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 20px;
-            color: var(--primary-blue);
-        }
-
-        .case-study .problem,
-        .case-study .what-changed,
-        .case-study .outcome {
-            margin-bottom: 20px;
-        }
-
-        .case-study .label {
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--text-secondary);
-            margin-bottom: 8px;
-        }
-
-        .case-study .content {
-            color: var(--text-secondary);
-            line-height: 1.6;
-        }
-
-        .case-study ul {
-            list-style: none;
-            margin-top: 8px;
-        }
-
-        .case-study ul li {
-            padding: 4px 0;
-            padding-left: 20px;
-            position: relative;
-            color: var(--text-secondary);
-            font-size: 15px;
-        }
-
-        .case-study ul li::before {
-            content: '•';
-            position: absolute;
-            left: 0;
-            color: var(--primary-blue);
-        }
-
-        /* Writing Section */
-        .writing-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 24px;
-            font-size: 18px;
-            color: var(--primary-blue);
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .writing-link:hover {
-            text-decoration: underline;
-        }
-
-        /* About */
-        .about-content {
-            max-width: 800px;
-        }
-
-        .about-content h3 {
-            font-size: 24px;
-            margin-bottom: 16px;
-            color: var(--text-primary);
-        }
-
-        .about-content p {
-            font-size: 18px;
-            line-height: 1.7;
-            color: var(--text-secondary);
-            margin-bottom: 12px;
-        }
-
-        /* Contact */
-        .contact-email {
-            font-size: 24px;
-            color: var(--primary-blue);
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .contact-email:hover {
-            text-decoration: underline;
-        }
-
-        /* Footer */
-        footer {
-            padding: 40px 0;
-            text-align: center;
-            color: var(--text-secondary);
-            font-size: 14px;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 36px;
-            }
-
-            .hero .subheadline {
-                font-size: 20px;
-            }
-
-            h2 {
-                font-size: 28px;
-            }
-
-            .focus-grid,
-            .case-studies-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .cta-buttons {
-                flex-direction: column;
-            }
-
-            .btn {
-                text-align: center;
-            }
-
-            .carousel-container {
-                padding: 0 50px;
-            }
-
-            .carousel-nav {
-                width: 40px;
-                height: 40px;
-                font-size: 20px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Precision GTM -- GTM Systems for Vertical AI & Enterprise B2B</title>
+  <meta name="description" content="GTM systems for vertical AI and enterprise B2B software companies. Built by Mac Gupta - 15+ years running GTM across products, partners, and complex enterprise deals." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:       #0f0e0c;
+      --paper:     #f5f2ec;
+      --warm-mid:  #e8e2d8;
+      --rule:      #c9c0b0;
+      --accent:    #00b8d9;
+      --accent-dk: #0097b5;
+      --muted:     #6b6358;
+      --light-ink: #3a3630;
+
+      --f-serif: 'Libre Baskerville', Georgia, serif;
+      --f-sans:  'DM Sans', system-ui, sans-serif;
+
+      --max: 1080px;
+      --gap: clamp(1.5rem, 4vw, 3rem);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--f-sans);
+      font-size: 16px;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--paper);
+      border-bottom: 1px solid var(--rule);
+      padding: 0 var(--gap);
+    }
+    .nav-inner {
+      max-width: var(--max);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+    }
+    .nav-logo-text {
+      font-family: var(--f-sans);
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink);
+      line-height: 1;
+    }
+    .nav-logo-text span { color: var(--accent); }
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+      align-items: center;
+    }
+    .nav-links a {
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--ink); }
+    .nav-cta {
+      color: var(--accent) !important;
+      border: 1px solid var(--accent) !important;
+      padding: 0.4rem 1rem !important;
+      border-radius: 2px;
+      transition: background 0.2s, color 0.2s !important;
+    }
+    .nav-cta:hover { background: var(--accent) !important; color: #fff !important; }
+
+    /* ── HERO ── */
+    #hero {
+      padding: clamp(5rem, 10vw, 9rem) var(--gap) clamp(4rem, 8vw, 7rem);
+      border-bottom: 1px solid var(--rule);
+      position: relative;
+      overflow: hidden;
+    }
+    #hero::before {
+      content: '';
+      position: absolute;
+      top: -120px; right: -80px;
+      width: 480px; height: 480px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,184,217,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-inner {
+      max-width: var(--max);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 4rem;
+      align-items: start;
+    }
+    .hero-eyebrow {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.25rem;
+    }
+    .hero-h1 {
+      font-family: var(--f-serif);
+      font-size: clamp(2.2rem, 4.5vw, 3.4rem);
+      line-height: 1.18;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      max-width: 680px;
+      margin-bottom: 1.75rem;
+    }
+    .hero-h1 em { font-style: italic; color: var(--accent); }
+    .hero-sub {
+      font-size: 1.05rem;
+      line-height: 1.7;
+      color: var(--light-ink);
+      max-width: 560px;
+      margin-bottom: 2.5rem;
+      font-weight: 300;
+    }
+    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+    .btn-primary {
+      display: inline-block;
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      padding: 0.85rem 2rem;
+      text-decoration: none;
+      border-radius: 2px;
+      transition: background 0.2s;
+    }
+    .btn-primary:hover { background: var(--accent-dk); }
+    .btn-ghost {
+      display: inline-block;
+      color: var(--ink);
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      padding: 0.85rem 2rem;
+      text-decoration: none;
+      border: 1px solid var(--rule);
+      border-radius: 2px;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* Hero sidebar */
+    .hero-sidebar { padding-top: 0.5rem; }
+    .proof-block {
+      border-top: 1px solid var(--rule);
+      padding: 1.5rem 0;
+    }
+    .proof-block:first-child { border-top: 2px solid var(--accent); }
+    .proof-stat {
+      font-family: var(--f-serif);
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1;
+      margin-bottom: 0.4rem;
+    }
+    .proof-stat span { color: var(--accent); }
+    .proof-label {
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    /* ── SECTION SHELL ── */
+    section {
+      padding: clamp(4rem, 8vw, 7rem) var(--gap);
+      border-bottom: 1px solid var(--rule);
+    }
+    .section-inner { max-width: var(--max); margin: 0 auto; }
+    .section-label {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+    .section-h2 {
+      font-family: var(--f-serif);
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      line-height: 1.22;
+      letter-spacing: -0.015em;
+      color: var(--ink);
+      margin-bottom: 1rem;
+    }
+    .section-intro {
+      font-size: 1rem;
+      color: var(--muted);
+      max-width: 600px;
+      line-height: 1.7;
+      margin-bottom: 3.5rem;
+      font-weight: 300;
+    }
+
+    /* ── WHAT WE RAN ── */
+    .work-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0;
+      border-top: 1px solid var(--rule);
+      border-left: 1px solid var(--rule);
+    }
+    .work-card {
+      padding: 2.25rem 2.5rem;
+      border-right: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+    }
+    .work-num {
+      font-size: 0.75rem;
+      color: var(--accent);
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .work-card h3 {
+      font-family: var(--f-serif);
+      font-size: 1.1rem;
+      line-height: 1.3;
+      margin-bottom: 1rem;
+      color: var(--ink);
+    }
+    .work-card p {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.65;
+      font-weight: 300;
+    }
+    .work-card .outcome {
+      margin-top: 1.25rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--warm-mid);
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--light-ink);
+    }
+    .outcome-tag {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-right: 0.5rem;
+    }
+
+    /* ── CASE STUDIES ── */
+    .cases-list { display: flex; flex-direction: column; }
+    .case-item {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      border-top: 1px solid var(--rule);
+      padding: 2.5rem 0;
+      gap: 3rem;
+      align-items: start;
+    }
+    .case-item:last-child { border-bottom: 1px solid var(--rule); }
+    .case-tag {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+    }
+    .case-title {
+      font-family: var(--f-serif);
+      font-size: 1.1rem;
+      line-height: 1.35;
+      color: var(--ink);
+      margin-bottom: 0.75rem;
+    }
+    .case-industry {
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-style: italic;
+    }
+    .case-call {
+      font-family: var(--f-serif);
+      font-size: 1rem;
+      font-style: italic;
+      color: var(--light-ink);
+      margin-bottom: 1.5rem;
+      line-height: 1.55;
+      border-left: 3px solid var(--accent);
+      padding-left: 1rem;
+    }
+    .case-section-head {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin: 1.25rem 0 0.6rem;
+    }
+    .case-bullets {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+    .case-bullets li {
+      font-size: 0.9rem;
+      color: var(--muted);
+      padding-left: 1.25rem;
+      position: relative;
+      line-height: 1.55;
+      font-weight: 300;
+    }
+    .case-bullets li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-size: 0.8rem;
+      top: 0.05em;
+    }
+    .case-impact {
+      margin-top: 1.25rem;
+      padding: 1rem 1.25rem;
+      background: var(--warm-mid);
+      border-left: 3px solid var(--accent);
+      font-size: 0.88rem;
+      color: var(--light-ink);
+      line-height: 1.6;
+      font-weight: 400;
+    }
+    .case-impact-label {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.35rem;
+    }
+
+    /* ── HOW IT WORKS ── */
+    #how {
+      background: var(--ink);
+      color: var(--paper);
+    }
+    #how .section-label { color: var(--accent); }
+    #how .section-h2 { color: var(--paper); }
+    #how .section-intro { color: rgba(245,242,236,0.6); }
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      border-left: 1px solid rgba(255,255,255,0.08);
+    }
+    .step-item {
+      padding: 2.5rem 2rem;
+      border-right: 1px solid rgba(255,255,255,0.08);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .step-num {
+      font-family: var(--f-serif);
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: rgba(0,184,217,0.3);
+      line-height: 1;
+      margin-bottom: 1.25rem;
+    }
+    .step-item h3 {
+      font-family: var(--f-serif);
+      font-size: 1.05rem;
+      color: var(--paper);
+      margin-bottom: 0.75rem;
+    }
+    .step-item p {
+      font-size: 0.87rem;
+      color: rgba(245,242,236,0.55);
+      line-height: 1.65;
+      font-weight: 300;
+    }
+
+    /* ── GTM FRICTION AUDIT ── */
+    #audit { background: var(--warm-mid); }
+    .audit-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: start;
+    }
+    .audit-pricing {
+      display: flex;
+      gap: 3rem;
+      margin-bottom: 2.5rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--rule);
+    }
+    .audit-price-label {
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.4rem;
+    }
+    .audit-price-val {
+      font-family: var(--f-serif);
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1;
+    }
+    .audit-who h4 {
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+    .audit-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      margin-bottom: 2rem;
+    }
+    .audit-list li {
+      font-size: 0.9rem;
+      color: var(--muted);
+      padding-left: 1.25rem;
+      position: relative;
+      line-height: 1.55;
+      font-weight: 300;
+    }
+    .audit-list li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-size: 0.8rem;
+      top: 0.05em;
+    }
+    .audit-dimensions {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0;
+      border-top: 1px solid var(--rule);
+      border-left: 1px solid var(--rule);
+      margin-top: 2.5rem;
+    }
+    .audit-dim {
+      padding: 1.1rem 1.25rem;
+      border-right: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+      background: var(--paper);
+    }
+    .audit-dim-name {
+      font-family: var(--f-serif);
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 0.25rem;
+    }
+    .audit-dim-desc {
+      font-size: 0.78rem;
+      color: var(--muted);
+      line-height: 1.45;
+      font-weight: 300;
+    }
+    .audit-steps {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+    }
+    .audit-step {
+      padding: 1.25rem 0;
+      border-bottom: 1px solid var(--rule);
+      display: flex;
+      gap: 1.25rem;
+    }
+    .audit-step:first-child { border-top: 1px solid var(--rule); }
+    .audit-step-num {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      min-width: 28px;
+      padding-top: 0.1em;
+    }
+    .audit-step-title {
+      font-family: var(--f-serif);
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 0.25rem;
+    }
+    .audit-step-desc {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.55;
+      font-weight: 300;
+    }
+    .audit-severity {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background: var(--paper);
+      border-left: 3px solid var(--accent);
+    }
+    .audit-severity p {
+      font-size: 0.88rem;
+      color: var(--light-ink);
+      line-height: 1.7;
+      font-weight: 300;
+    }
+    .audit-severity strong { color: var(--ink); font-weight: 500; }
+
+    /* ── ABOUT ── */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 5rem;
+      align-items: start;
+    }
+    .about-body p {
+      font-size: 0.97rem;
+      color: var(--light-ink);
+      line-height: 1.75;
+      margin-bottom: 1.25rem;
+      font-weight: 300;
+    }
+    .about-body p strong { color: var(--ink); font-weight: 500; }
+    .credentials {
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .cred-item {
+      font-size: 0.8rem;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .cred-item::before {
+      content: '';
+      display: inline-block;
+      width: 20px;
+      height: 1px;
+      background: var(--rule);
+      flex-shrink: 0;
+    }
+    .about-headshot img {
+      width: 100%;
+      border-radius: 3px;
+      display: block;
+      filter: grayscale(15%);
+    }
+    .about-headshot-caption {
+      margin-top: 0.85rem;
+      font-family: var(--f-serif);
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--ink);
+    }
+    .about-headshot-caption span {
+      display: block;
+      font-family: var(--f-sans);
+      font-size: 0.78rem;
+      font-weight: 300;
+      color: var(--muted);
+      margin-top: 0.2rem;
+      font-style: italic;
+    }
+
+    /* ── INSIGHTS ── */
+    .insights-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      border-top: 1px solid var(--rule);
+      border-left: 1px solid var(--rule);
+    }
+    .insight-card {
+      background: var(--bg-card);
+      padding: 2rem;
+      text-decoration: none;
+      display: block;
+      border-right: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+      transition: background 0.2s;
+    }
+    .insight-card:hover { background: var(--warm-mid); }
+    .insight-cat {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+    .insight-title {
+      font-family: var(--f-serif);
+      font-size: 1rem;
+      line-height: 1.45;
+      color: var(--ink);
+      margin-bottom: 0.75rem;
+    }
+    .insight-blurb {
+      font-size: 0.83rem;
+      color: var(--muted);
+      line-height: 1.6;
+      font-weight: 300;
+    }
+    .insight-link {
+      display: inline-block;
+      margin-top: 1.25rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    /* ── CTA ── */
+    #cta { background: var(--warm-mid); text-align: center; }
+    #cta .section-inner { max-width: 680px; }
+    #cta .section-h2 { margin-bottom: 1rem; }
+    #cta .section-intro { margin: 0 auto 2.5rem; }
+    .cta-options {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+    .cta-fine { font-size: 0.8rem; color: var(--muted); }
+    .cta-fine a { color: var(--muted); text-decoration: underline; }
+    .cta-fine a:hover { color: var(--accent); }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 2rem var(--gap);
+      border-top: 1px solid var(--rule);
+    }
+    .footer-inner {
+      max-width: var(--max);
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .footer-logo {
+      font-family: var(--f-sans);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .footer-logo span { color: var(--accent); }
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+      list-style: none;
+    }
+    .footer-links a {
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .footer-links a:hover { color: var(--ink); }
+    .footer-copy { font-size: 0.75rem; color: var(--rule); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 860px) {
+      .hero-inner { grid-template-columns: 1fr; }
+      .hero-sidebar {
+        display: flex;
+        gap: 2rem;
+        border-top: 1px solid var(--rule);
+        padding-top: 2rem;
+        flex-wrap: wrap;
+      }
+      .proof-block { border-top: none; border-left: 2px solid var(--accent); padding: 0 0 0 1rem; margin: 0; }
+      .work-grid { grid-template-columns: 1fr; }
+      .case-item { grid-template-columns: 1fr; gap: 1.25rem; }
+      .steps-grid { grid-template-columns: 1fr; }
+      .audit-grid { grid-template-columns: 1fr; }
+      .audit-dimensions { grid-template-columns: 1fr; }
+      .about-grid { grid-template-columns: 1fr; }
+      .about-headshot { max-width: 300px; }
+      .insights-grid { grid-template-columns: 1fr; }
+      .footer-inner { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
 </head>
+
 <body>
-    <!-- Header -->
-    <header>
-        <div class="container">
-            <div class="header-content">
-                <img src="./PrecisionGTM_Logo.png" alt="Precision GTM" class="logo">
-                <span class="company-name">Precision GTM</span>
-            </div>
-        </div>
-    </header>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="container">
-            <h1>Precision GTM helps vertical AI and enterprise B2B software companies turn strong products into predictable revenue.</h1>
-            <p class="subheadline">GTM systems across products, partners, and complex deals.</p>
-            <div class="cta-buttons">
-                <a href="mailto:mac@precisiongotomarket.com" class="btn btn-primary">Start a conversation</a>
-            </div>
-        </div>
-    </section>
+  <!-- NAV -->
+  <nav>
+    <div class="nav-inner">
+      <a class="nav-logo" href="#">
+        <div class="nav-logo-text">PRECISION <span>GTM</span></div>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#work">Work</a></li>
+        <li><a href="#cases">Cases</a></li>
+        <li><a href="#audit">Audit</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#insights">Insights</a></li>
+        <li><a class="nav-cta" href="#cta">Start a Conversation</a></li>
+      </ul>
+    </div>
+  </nav>
 
-    <!-- Who I Work With -->
-    <section id="who-i-work-with">
-        <div class="container">
-            <h2>Who we work with</h2>
-            <p class="section-intro">Companies with strong products that aren't scaling the way they should.</p>
-            <p class="section-intro">Typically:</p>
-            <ul class="client-types">
-                <li>vertical AI companies entering enterprise markets</li>
-                <li>platforms repositioning from legacy to modern narratives</li>
-                <li>teams with traction, but inconsistent GTM execution</li>
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-inner">
+      <div class="hero-left">
+        <div class="hero-eyebrow">GTM Systems &middot; Vertical AI &middot; Enterprise B2B SaaS</div>
+        <h1 class="hero-h1">We ran the GTM. <em>The revenue followed.</em></h1>
+        <p class="hero-sub">
+          Across vertical AI and enterprise SaaS, we rebuilt GTM systems from the ground up -- ICP, category narrative, partner motion, sales playbook -- and watched deal velocity improve. This is what that looked like.
+        </p>
+        <div class="hero-actions">
+          <a class="btn-primary" href="#cta">Start a Conversation</a>
+          <a class="btn-ghost" href="#cases">See the Work</a>
+        </div>
+      </div>
+      <div class="hero-sidebar">
+        <div class="proof-block">
+          <div class="proof-stat">15<span>+</span></div>
+          <div class="proof-label">Years running GTM across products, partners, and complex enterprise deals</div>
+        </div>
+        <div class="proof-block">
+          <div class="proof-stat">2<span>x</span></div>
+          <div class="proof-label">ACV in under 3 months with pricing and packaging reset around economic buyers</div>
+        </div>
+        <div class="proof-block">
+          <div class="proof-stat">3<span>x</span></div>
+          <div class="proof-label">Growth in partner influenced revenue by relying on strategic sales plays rather than relationships</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHAT WE RAN -->
+  <section id="work">
+    <div class="section-inner">
+      <div class="section-label">What We Ran</div>
+      <h2 class="section-h2">Four problems that kept showing up.<br>Four systems we built to fix them.</h2>
+      <p class="section-intro">Most GTM failures are a combination of targeting failures, narrative failures, motion failures. We ran the diagnosis, made the call, and built the system.</p>
+
+      <div class="work-grid">
+        <div class="work-card">
+          <div class="work-num">01</div>
+          <h3>Defined a wedge that actually lands</h3>
+          <p>Strong products often struggle to enter new markets because the entry point is unclear. We defined a narrow, credible use case, aligned it to how buyers evaluate solutions, and created a path to initial adoption.</p>
+          <div class="outcome"><span class="outcome-tag">Result</span>Shorter cycles, higher win rates in the prioritized segment</div>
+        </div>
+        <div class="work-card">
+          <div class="work-num">02</div>
+          <h3>Sharpened the category and narrative</h3>
+          <p>When positioning is unclear, sales cycles stretch and teams improvise. We clarified the category, tightened the core narrative, and made value defensible in enterprise conversations.</p>
+          <div class="outcome"><span class="outcome-tag">Result</span>Faster qualification, fewer stalled discovery calls</div>
+        </div>
+        <div class="work-card">
+          <div class="work-num">03</div>
+          <h3>Aligned GTM to how enterprise deals actually work</h3>
+          <p>Deals stall when GTM is not aligned to buying dynamics. We aligned messaging to the economic buyer, connected ABM to deal qualification, and improved how opportunities progress.</p>
+          <div class="outcome"><span class="outcome-tag">Result</span>Pipeline quality improved, ACV expanded, win rates moved</div>
+        </div>
+        <div class="work-card">
+          <div class="work-num">04</div>
+          <h3>Designed a scalable route to market</h3>
+          <p>Growth slows when targeting and execution are not aligned. We refined ICP and segmentation, prioritized outbound, and connected inbound and outbound into a single coordinated motion.</p>
+          <div class="outcome"><span class="outcome-tag">Result</span>Predictable pipeline, efficient coverage, no headcount increase</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CASE STUDIES -->
+  <section id="cases">
+    <div class="section-inner">
+      <div class="section-label">Case Studies</div>
+      <h2 class="section-h2">The call that was made. What changed.</h2>
+      <p class="section-intro">Four engagements across different markets and problems. Each started with a clear diagnosis and a decision -- not a discovery workshop.</p>
+
+      <div class="cases-list">
+
+        <!-- CASE 01 -->
+        <div class="case-item">
+          <div class="case-meta">
+            <div class="case-tag">Case 01</div>
+            <div class="case-title">US Market Entry</div>
+            <div class="case-industry">Insurance AI Platform</div>
+          </div>
+          <div class="case-body">
+            <div class="case-call">"An insurance AI platform with traction in Asia and Europe needed to prioritize the strongest entry motion for US expansion."</div>
+            <div class="case-section-head">What Changed</div>
+            <ul class="case-bullets">
+              <li>Analyzed pipeline patterns across use cases such as claims and underwriting.</li>
+              <li>Compared US and similar EU deals for buyer patterns.</li>
+              <li>Identified the best entry point for US growth.</li>
             </ul>
-        </div>
-    </section>
-
-    <!-- Where I Focus -->
-    <section id="where-i-focus">
-        <div class="container">
-            <h2>Where we focus</h2>
-            <div class="focus-grid">
-                <div class="focus-card">
-                    <h3>1. Defining a wedge that actually lands</h3>
-                    <p>Strong products often struggle to enter new markets because the entry point is unclear.</p>
-                    <ul>
-                        <li>define a narrow, credible use case</li>
-                        <li>align it to how buyers evaluate solutions</li>
-                        <li>create a path to initial adoption</li>
-                    </ul>
-                </div>
-                <div class="focus-card">
-                    <h3>2. Sharpening the category and narrative</h3>
-                    <p>When positioning is unclear, sales cycles stretch and teams improvise.</p>
-                    <ul>
-                        <li>clarify the category you are competing in</li>
-                        <li>tighten the core narrative</li>
-                        <li>make value defensible in enterprise conversations</li>
-                    </ul>
-                </div>
-                <div class="focus-card">
-                    <h3>3. Aligning GTM to how enterprise deals actually work</h3>
-                    <p>Deals stall when GTM is not aligned to buying dynamics.</p>
-                    <ul>
-                        <li>align messaging to the economic buyer</li>
-                        <li>connect ABM to deal qualification</li>
-                        <li>improve how opportunities progress</li>
-                    </ul>
-                </div>
-                <div class="focus-card">
-                    <h3>4. Designing a scalable route to market</h3>
-                    <p>Growth slows when targeting and execution are not aligned.</p>
-                    <ul>
-                        <li>refine ICP and segmentation</li>
-                        <li>prioritize outbound</li>
-                        <li>connect inbound and outbound</li>
-                    </ul>
-                </div>
+            <div class="case-impact">
+              <div class="case-impact-label">Commercial Impact</div>
+              Clearer US entry focus and a more disciplined view of where sales and marketing resources should concentrate.
             </div>
+          </div>
         </div>
-    </section>
 
-    <!-- Case Studies -->
-    <section id="case-studies">
-        <div class="container">
-            <h2>How this shows up in practice</h2>
-            
-            <!-- Carousel Container -->
-            <div class="carousel-container">
-                <button class="carousel-nav prev" onclick="changeSlide(-1)" aria-label="Previous case study">‹</button>
-                
-                <div class="carousel-track">
-                    <!-- Case Study 1 -->
-                    <div class="carousel-slide active">
-                        <div class="case-study">
-                            <h3>US Market Entry</h3>
-                            <div class="problem">
-                                <div class="label">Problem</div>
-                                <div class="content">Insurance AI platform with success in Asia and Europe with multiple entry motions. Unclear which approach will scale in the US.</div>
-                            </div>
-                            <div class="what-changed">
-                                <div class="label">What changed</div>
-                                <ul>
-                                    <li>Analyzed pipeline for patterns across various use cases (claims, underwriting, etc.)</li>
-                                    <li>Compared US and comparable EU deals for buyer patterns</li>
-                                    <li>Identified best entry point for US growth</li>
-                                </ul>
-                            </div>
-                            <div class="outcome">
-                                <div class="label">Outcome</div>
-                                <div class="content">Clear recommendation on which approach to prioritize and where to efficiently focus sales and marketing resources.</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Case Study 2 -->
-                    <div class="carousel-slide">
-                        <div class="case-study">
-                            <h3>Scaling Growth Without Increasing Costs</h3>
-                            <div class="problem">
-                                <div class="label">Problem</div>
-                                <div class="content">Construction tech AI company needed to triple ARR in one year without increasing sales and marketing spend. Lacked systematic approach to deploy resources efficiently.</div>
-                            </div>
-                            <div class="what-changed">
-                                <div class="label">What changed</div>
-                                <ul>
-                                    <li>Analyzed 50 recent deals to refine ICP in contractor segment</li>
-                                    <li>Built account scoring system to prioritize 300 top targets from 3,000 accounts</li>
-                                    <li>Created repeatable outbound motion with target personas, entry messages, and weekly cadence</li>
-                                    <li>Established tracking for early signs of improving pipeline quality</li>
-                                </ul>
-                            </div>
-                            <div class="outcome">
-                                <div class="label">Outcome</div>
-                                <div class="content">Account scoring model and refined ICP that aligned paid media spend with sales targeting. Clear system for efficient resource deployment.</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Case Study 3 -->
-                    <div class="carousel-slide">
-                        <div class="case-study">
-                            <h3>Clarifying Category Narrative to Reduce Sales Cycle</h3>
-                            <div class="problem">
-                                <div class="label">Problem</div>
-                                <div class="content">Employee productivity AI company with unclear category and monitoring perception issues. Sales cycles were long, reps struggled with tribal knowledge, and "employee monitoring" narrative triggered cultural objections.</div>
-                            </div>
-                            <div class="what-changed">
-                                <div class="label">What changed</div>
-                                <ul>
-                                    <li>Analyzed website, case studies, and sales conversations to identify narrative friction</li>
-                                    <li>Reframed category from "monitoring" to "operational intelligence for service delivery"</li>
-                                    <li>Built sales playbook with objection handling for privacy and culture concerns</li>
-                                    <li>Created SDR messaging framework and discovery questions for US buyers</li>
-                                </ul>
-                            </div>
-                            <div class="outcome">
-                                <div class="label">Outcome</div>
-                                <div class="content">Clear US category narrative, repeatable sales story, and tools to address monitoring objections early. Reduced explanation burden and improved conversion rates.</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <button class="carousel-nav next" onclick="changeSlide(1)" aria-label="Next case study">›</button>
+        <!-- CASE 02 -->
+        <div class="case-item">
+          <div class="case-meta">
+            <div class="case-tag">Case 02</div>
+            <div class="case-title">Scaling Growth Without Increasing Costs</div>
+            <div class="case-industry">Construction Tech AI</div>
+          </div>
+          <div class="case-body">
+            <div class="case-call">"A construction tech AI company needed to scale growth efficiently without a proportional increase in sales and marketing spend."</div>
+            <div class="case-section-head">What Changed</div>
+            <ul class="case-bullets">
+              <li>Analyzed recent deals to refine ICP in the contractor segment.</li>
+              <li>Narrowed a broad account universe into a prioritized target list.</li>
+              <li>Created a repeatable outbound motion with personas, entry messages, and weekly cadence.</li>
+              <li>Established tracking for early signs of improving pipeline quality.</li>
+            </ul>
+            <div class="case-impact">
+              <div class="case-impact-label">Commercial Impact</div>
+              Sharper ICP and account prioritization helped align paid media and sales targeting around the same growth motion.
             </div>
+          </div>
+        </div>
 
-            <!-- Carousel Indicators -->
-            <div class="carousel-indicators">
-                <span class="indicator active" onclick="goToSlide(0)"></span>
-                <span class="indicator" onclick="goToSlide(1)"></span>
-                <span class="indicator" onclick="goToSlide(2)"></span>
+        <!-- CASE 03 -->
+        <div class="case-item">
+          <div class="case-meta">
+            <div class="case-tag">Case 03</div>
+            <div class="case-title">Clarifying Category Narrative</div>
+            <div class="case-industry">Workforce Analytics Platform</div>
+          </div>
+          <div class="case-body">
+            <div class="case-call">"A workforce analytics platform needed to shift the buyer conversation from activity tracking to operational intelligence and service delivery performance."</div>
+            <div class="case-section-head">What Changed</div>
+            <ul class="case-bullets">
+              <li>Analyzed website, case studies, and sales conversations to identify narrative friction.</li>
+              <li>Reframed the category around operational intelligence for service delivery.</li>
+              <li>Built guidance for privacy, culture, and change-management concerns.</li>
+              <li>Created SDR messaging and discovery questions for US buyers.</li>
+            </ul>
+            <div class="case-impact">
+              <div class="case-impact-label">Commercial Impact</div>
+              Clearer category narrative, repeatable sales story, and tools to address buyer concerns earlier in the cycle.
             </div>
+          </div>
         </div>
-    </section>
 
-    <!-- Insights -->
-    <section id="insights">
-        <div class="container">
-            <h2>Insights</h2>
-            <p class="section-intro">We write about how enterprise GTM actually works, especially for AI and complex systems.</p>
-            <div style="margin-top: 32px; display: flex; flex-direction: column; gap: 16px;">
-                <a href="https://precisiongtm.substack.com/p/fdes-should-not-just-deploy-ai-they" class="writing-link">FDEs Should Not Just Deploy AI—They Should Define and Defend the Category →</a>
-                <a href="https://precisiongtm.substack.com/p/where-ai-actually-helped-my-enterprise?r=8c6e98" class="writing-link">Where AI Actually Helped My Enterprise GTM Work →</a>
-                <a href="https://precisiongtm.substack.com/p/vertical-ai-gtm-the-implementation?r=8c6e98" class="writing-link">Vertical AI GTM: The Implementation Gap That Stalls Deals →</a>
+        <!-- CASE 04 -->
+        <div class="case-item">
+          <div class="case-meta">
+            <div class="case-tag">Case 04</div>
+            <div class="case-title">Aligning ABM and MEDDPICC</div>
+            <div class="case-industry">Enterprise SaaS - Data Governance / CRM Data Control</div>
+          </div>
+          <div class="case-body">
+            <div class="case-call">"Early qualification signals were inconsistent, and pipeline coverage varied across target segments. ABM needed to connect directly to deal qualification and stage progression."</div>
+            <div class="case-section-head">What Changed</div>
+            <ul class="case-bullets">
+              <li>Aligned ABM targeting and early qualification on the same firmographic and technographic signals.</li>
+              <li>Built account briefs with economic buyer, competitive positioning, stakeholder map, and 30-day messaging cadence.</li>
+              <li>Mapped ABM assets into MEDDPICC stages, including account intelligence, ROI and competitive proof, executive references, and compliance docs.</li>
+              <li>Built a deal support kit with CIO and VP Data wedge narratives, ROI frameworks, competitive positioning, and executive decks.</li>
+            </ul>
+            <div class="case-impact">
+              <div class="case-impact-label">Commercial Impact</div>
+              Pipeline quality and coverage discipline improved, with stronger buyer-stage alignment across the enterprise motion.
             </div>
+          </div>
         </div>
-    </section>
 
-    <!-- AI-enabled GTM Lab -->
-    <section id="ai-lab">
-        <div class="container">
-            <h2>AI-enabled GTM Lab</h2>
-            <p class="section-intro">Exploring how AI can support GTM systems: from signal integration to deal diagnostics and partner enablement.</p>
-            <p class="section-intro">Early work, evolving.</p>
-            
-            <div style="margin-top: 40px;">
-                <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 16px; color: var(--text-primary);">Win/Loss Diagnostic Agent</h3>
-                <p style="color: var(--text-secondary); margin-bottom: 24px;">AI-powered analysis to identify patterns in won and lost deals, surface key insights, and improve deal qualification.</p>
-                <video controls poster="winloss-demo-thumbnail.png" style="width: 100%; max-width: 800px; border-radius: 8px; border: 1px solid var(--border-color);">
-                    <source src="winloss-demo.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section id="how">
+    <div class="section-inner">
+      <div class="section-label">How an Engagement Works</div>
+      <h2 class="section-h2">Diagnosis first. No retainer before we know the problem.</h2>
+      <p class="section-intro">Most engagements start with a structured diagnostic -- not a proposal. We identify the misalignment, present the diagnosis, and then scope what it takes to fix it.</p>
+
+      <div class="steps-grid">
+        <div class="step-item">
+          <div class="step-num">01</div>
+          <h3>GTM Diagnostic</h3>
+          <p>We run a structured assessment across your ICP, positioning, motion, and pipeline data. You get a clear view of where the system is broken and why -- before any work is scoped.</p>
+        </div>
+        <div class="step-item">
+          <div class="step-num">02</div>
+          <h3>The Diagnosis Call</h3>
+          <p>We present what we found, make the call on priority, and recommend a scope. You decide what to fix first. No deliverable decks -- just a clear decision framework.</p>
+        </div>
+        <div class="step-item">
+          <div class="step-num">03</div>
+          <h3>System Build</h3>
+          <p>We run the work: ICP refinement, narrative rebuild, account scoring, playbook, partner motion. Engagements are scoped by outcome, not by hours. You get a system that runs without us.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GTM FRICTION AUDIT -->
+  <section id="audit">
+    <div class="section-inner">
+      <div class="section-label">GTM Friction Audit</div>
+      <h2 class="section-h2">A commercial diagnosis of your GTM narrative -- not a copy review.</h2>
+      <p class="section-intro">Find out whether your GTM friction is a messaging problem or a structural issue before you spend more on campaigns, hiring, or a website overhaul.</p>
+
+      <div class="audit-grid">
+        <div>
+          <div class="audit-pricing">
+            <div>
+              <div class="audit-price-label">Fixed Price</div>
+              <div class="audit-price-val">$2,450</div>
             </div>
-        </div>
-    </section>
-
-    <!-- About Us -->
-    <section id="about">
-        <div class="container">
-            <h2>About Us</h2>
-            <div class="about-content">
-                <div style="display: flex; gap: 40px; align-items: flex-start; flex-wrap: wrap;">
-                    <img src="./MacGupta_Pic.png" alt="Mac Gupta" style="width: 200px; height: 200px; border-radius: 50%; object-fit: cover; flex-shrink: 0;">
-                    <div style="flex: 1; min-width: 300px;">
-                        <h3 style="font-weight: 600;">Mac Gupta, <span style="font-weight: 400;">Principal, Precision GTM LLC</span></h3>
-                        <p>B2B marketing executive with 20+ years building GTM systems that make enterprise software growth repeatable and predictable. Known for translating complex product portfolios into clear market narratives and commercial plays that measurably improve pipeline quality, ACV, and win rates. Trained as an engineer with deep technical fluency in AI, distributed systems, and cloud architecture, he brings a rare combination of strategic vision and technical credibility to diagnose where GTM breaks upstream and architect systems that scale. MBA from Chicago Booth. MS and BS in Computer Science.</p>
-                    </div>
-                </div>
+            <div>
+              <div class="audit-price-label">Delivery</div>
+              <div class="audit-price-val">14 days</div>
             </div>
-        </div>
-    </section>
+          </div>
 
-    <!-- Connect with Us -->
-    <section id="social">
-        <div class="container">
-            <h2>Connect with Us</h2>
-            <div style="display: flex; gap: 24px; flex-wrap: wrap; margin-top: 24px;">
-                <a href="https://x.com/precisiongtm" target="_blank" style="display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--primary-blue); font-size: 18px; font-weight: 500;">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                    </svg>
-                    @precisiongtm
-                </a>
-                <a href="https://www.youtube.com/@precisiongtm" target="_blank" style="display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--primary-blue); font-size: 18px; font-weight: 500;">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                    </svg>
-                    @precisiongtm
-                </a>
-                <a href="https://precisiongtm.substack.com" target="_blank" style="display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--primary-blue); font-size: 18px; font-weight: 500;">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/>
-                    </svg>
-                    @precisiongtm
-                </a>
-                <a href="mailto:mac@precisiongotomarket.com" style="display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--primary-blue); font-size: 18px; font-weight: 500;">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                        <polyline points="22,6 12,13 2,6"></polyline>
-                    </svg>
-                    mac@precisiongotomarket.com
-                </a>
+          <div class="audit-who">
+            <h4>Who This Is For</h4>
+            <ul class="audit-list">
+              <li>Generating pipeline but losing deals earlier than expected</li>
+              <li>Preparing for a US market push and pressure-testing narrative before scaling spend</li>
+              <li>Seeing content and campaign activity without enough conversion</li>
+              <li>Suspecting the problem is upstream of sales execution</li>
+            </ul>
+          </div>
+
+          <a class="btn-primary" href="mailto:mac@precisiongotomarket.com?subject=GTM Friction Audit">Request the Audit</a>
+
+          <div class="audit-dimensions">
+            <div class="audit-dim">
+              <div class="audit-dim-name">ICP Clarity</div>
+              <div class="audit-dim-desc">Is there a defined, prioritized ideal customer?</div>
             </div>
+            <div class="audit-dim">
+              <div class="audit-dim-name">Value Proposition</div>
+              <div class="audit-dim-desc">Does the core claim hold across content?</div>
+            </div>
+            <div class="audit-dim">
+              <div class="audit-dim-name">Use Case Specificity</div>
+              <div class="audit-dim-desc">Are the strongest wedge use cases visible?</div>
+            </div>
+            <div class="audit-dim">
+              <div class="audit-dim-name">Proof Point Strength</div>
+              <div class="audit-dim-desc">Does the proof match the category claim?</div>
+            </div>
+            <div class="audit-dim">
+              <div class="audit-dim-name">Route-to-Market Fit</div>
+              <div class="audit-dim-desc">Does the motion match the buyer and segment?</div>
+            </div>
+            <div class="audit-dim">
+              <div class="audit-dim-name">Narrative Consistency</div>
+              <div class="audit-dim-desc">Does the story hold across the content set?</div>
+            </div>
+          </div>
         </div>
-    </section>
 
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <p>&copy; 2026 Precision GTM LLC. All rights reserved.</p>
+        <div>
+          <ol class="audit-steps">
+            <li class="audit-step">
+              <div class="audit-step-num">01</div>
+              <div>
+                <div class="audit-step-title">Intake</div>
+                <div class="audit-step-desc">Submit your website URL and up to 4 external assets -- blogs, customer deck, white papers, case studies.</div>
+              </div>
+            </li>
+            <li class="audit-step">
+              <div class="audit-step-num">02</div>
+              <div>
+                <div class="audit-step-title">Signal Analysis</div>
+                <div class="audit-step-desc">External GTM signals reviewed across six dimensions before the call.</div>
+              </div>
+            </li>
+            <li class="audit-step">
+              <div class="audit-step-num">03</div>
+              <div>
+                <div class="audit-step-title">Discovery Call</div>
+                <div class="audit-step-desc">60 minutes with your CEO, CRO, CMO, or VP Sales to pressure-test the hypothesis.</div>
+              </div>
+            </li>
+            <li class="audit-step">
+              <div class="audit-step-num">04</div>
+              <div>
+                <div class="audit-step-title">Report + Walkthrough</div>
+                <div class="audit-step-desc">Structured findings with severity rating and prioritized next steps sequenced by commercial impact.</div>
+              </div>
+            </li>
+          </ol>
+
+          <div class="audit-severity">
+            <p><strong>Why the severity rating matters.</strong> A messaging problem needs sharper narrative. A structural problem means something bigger is off: wrong ICP, weak wedge, route-to-market mismatch, or a category claim without proof. Better copy will not fix a structural GTM problem. This audit tells you which one you have before you commit more budget.</p>
+          </div>
         </div>
-    </footer>
-    <script>
-        let currentSlide = 0;
-        const slides = document.querySelectorAll('.carousel-slide');
-        const indicators = document.querySelectorAll('.indicator');
+      </div>
+    </div>
+  </section>
 
-        function showSlide(n) {
-            if (n >= slides.length) {
-                currentSlide = 0;
-            } else if (n < 0) {
-                currentSlide = slides.length - 1;
-            } else {
-                currentSlide = n;
-            }
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="section-inner">
+      <div class="section-label">About</div>
+      <div class="about-grid">
+        <div class="about-body">
+          <h2 class="section-h2">Mac Gupta</h2>
+          <p>
+            Spent 15+ years inside B2B software companies building GTM systems -- first as an engineer who kept getting pulled into go-to-market decisions, then as a product marketing and partnerships executive who ran them. Built partner programs from scratch, rebuilt sales playbooks when pipeline stalled, and rewritten category narratives when deals started dying at the wrong stage.
+          </p>
+          <p>
+            <strong>The pattern that kept showing up:</strong> strong products with broken GTM systems. Not broken because the team was bad -- broken because nobody had made the structural calls. Which segment first. Which narrative for which buyer. Which accounts to concentrate on. Which motion to run through which channel.
+          </p>
+          <p>
+            Precision GTM runs that work. We make the diagnostic calls, build the system, and hand it off to a team that can run it without us. The goal isn't a retainer -- it's a machine that works.
+          </p>
+          <div class="credentials">
+            <div class="cred-item">MBA, University of Chicago Booth School of Business</div>
+            <div class="cred-item">MS + BS, Computer Science</div>
+            <div class="cred-item">15+ years in enterprise B2B GTM -- product marketing, partnerships, AI platforms</div>
+            <div class="cred-item">@precisiongtm on X, YouTube, and Substack</div>
+          </div>
+        </div>
+        <div class="about-headshot">
+          <img src="MacGupta_Pic.png" alt="Mac Gupta, Founder of Precision GTM" />
+          <div class="about-headshot-caption">
+            Mac Gupta
+            <span>Founder, Precision GTM</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-            slides.forEach((slide, index) => {
-                slide.classList.remove('active');
-                indicators[index].classList.remove('active');
-            });
+  <!-- INSIGHTS -->
+  <section id="insights">
+    <div class="section-inner">
+      <div class="section-label">Insights</div>
+      <h2 class="section-h2">From The GTM Operator</h2>
+      <p class="section-intro">Published on Substack. Written for founders and GTM leaders who have traction and are trying to figure out what's blocking scale.</p>
 
-            slides[currentSlide].classList.add('active');
-            indicators[currentSlide].classList.add('active');
-        }
+      <div class="insights-grid">
+        <a class="insight-card" href="https://precisiongtm.substack.com/p/fdes-should-not-just-deploy-ai-they" target="_blank" rel="noopener">
+          <div class="insight-cat">Category Design</div>
+          <div class="insight-title">FDEs Should Not Just Deploy AI -- They Should Define and Defend the Category</div>
+          <div class="insight-blurb">The implementation role is a category-defining moment. Most companies let it pass. Here is what it looks like when they don't.</div>
+          <div class="insight-link">Read on Substack &rarr;</div>
+        </a>
+        <a class="insight-card" href="https://precisiongtm.substack.com/p/where-ai-actually-helped-my-enterprise" target="_blank" rel="noopener">
+          <div class="insight-cat">AI and GTM</div>
+          <div class="insight-title">Where AI Actually Helped My Enterprise GTM Work</div>
+          <div class="insight-blurb">Not a list of tools. A specific account of where AI moved the work forward and where it didn't -- in real GTM engagements.</div>
+          <div class="insight-link">Read on Substack &rarr;</div>
+        </a>
+        <a class="insight-card" href="https://precisiongtm.substack.com/p/vertical-ai-gtm-the-implementation" target="_blank" rel="noopener">
+          <div class="insight-cat">Vertical AI</div>
+          <div class="insight-title">Vertical AI GTM: The Implementation Gap That Stalls Deals</div>
+          <div class="insight-blurb">Most vertical AI deals stall after the demo. The problem is rarely the product. Here is what the implementation gap looks like and how to close it.</div>
+          <div class="insight-link">Read on Substack &rarr;</div>
+        </a>
+      </div>
+    </div>
+  </section>
 
-        function changeSlide(direction) {
-            showSlide(currentSlide + direction);
-        }
+  <!-- CTA -->
+  <section id="cta">
+    <div class="section-inner">
+      <div class="section-label">Start Here</div>
+      <h2 class="section-h2">If you have traction and your GTM isn't converting it -- that's the conversation.</h2>
+      <p class="section-intro">We start with a diagnostic. If there's a fit, we'll tell you what's broken and what we'd build to fix it. No proposal decks, no vague retainer scope.</p>
+      <div class="cta-options">
+        <a class="btn-primary" href="mailto:mac@precisiongotomarket.com?subject=GTM Diagnostic">Request a Diagnostic</a>
+        <a class="btn-ghost" href="https://precisiongtm.substack.com" target="_blank" rel="noopener">Read the Substack First</a>
+      </div>
+      <div class="cta-fine">
+        Or reach us directly: <a href="mailto:mac@precisiongotomarket.com">mac@precisiongotomarket.com</a>
+        &nbsp;&middot;&nbsp; <a href="https://x.com/precisiongtm" target="_blank" rel="noopener">@precisiongtm</a>
+      </div>
+    </div>
+  </section>
 
-        function goToSlide(n) {
-            showSlide(n);
-        }
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <a class="footer-logo" href="#">PRECISION <span>GTM</span></a>
+      <ul class="footer-links">
+        <li><a href="#work">Work</a></li>
+        <li><a href="#cases">Cases</a></li>
+        <li><a href="#audit">Audit</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#insights">Insights</a></li>
+        <li><a href="https://precisiongtm.substack.com" target="_blank" rel="noopener">Substack</a></li>
+      </ul>
+      <div class="footer-copy">&copy; 2026 Precision GTM LLC</div>
+    </div>
+  </footer>
 
-        // Optional: Auto-advance carousel every 8 seconds
-        // setInterval(() => changeSlide(1), 8000);
-    </script>
 </body>
 </html>

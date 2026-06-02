@@ -551,8 +551,8 @@
     /* ── ABOUT ── */
     .about-grid {
       display: grid;
-      grid-template-columns: 1fr 380px;
-      gap: 5rem;
+      grid-template-columns: 200px 1fr;
+      gap: 3rem;
       align-items: start;
     }
     .about-body p {
@@ -563,27 +563,7 @@
       font-weight: 300;
     }
     .about-body p strong { color: var(--ink); font-weight: 500; }
-    .credentials {
-      margin-top: 2rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-    .cred-item {
-      font-size: 0.8rem;
-      color: var(--muted);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .cred-item::before {
-      content: '';
-      display: inline-block;
-      width: 20px;
-      height: 1px;
-      background: var(--rule);
-      flex-shrink: 0;
-    }
+    .about-body .section-h2 { margin-bottom: 1.25rem; }
     .about-headshot img {
       width: 100%;
       border-radius: 3px;
@@ -591,16 +571,16 @@
       filter: grayscale(15%);
     }
     .about-headshot-caption {
-      margin-top: 0.85rem;
+      margin-top: 0.75rem;
       font-family: var(--f-serif);
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       font-weight: 700;
       color: var(--ink);
     }
     .about-headshot-caption span {
       display: block;
       font-family: var(--f-sans);
-      font-size: 0.78rem;
+      font-size: 0.75rem;
       font-weight: 300;
       color: var(--muted);
       margin-top: 0.2rem;
@@ -615,6 +595,20 @@
       border-top: 1px solid var(--rule);
       border-left: 1px solid var(--rule);
     }
+    .social-links {
+      display: flex;
+      gap: 1.25rem;
+      justify-content: center;
+      align-items: center;
+      margin-top: 0.25rem;
+    }
+    .social-links a {
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      transition: color 0.2s;
+    }
+    .social-links a:hover { color: var(--accent); }
     .insight-card {
       background: var(--bg-card);
       padding: 2rem;
@@ -1053,40 +1047,6 @@
     </div>
   </section>
 
-  <!-- ABOUT -->
-  <section id="about">
-    <div class="section-inner">
-      <div class="section-label">About</div>
-      <div class="about-grid">
-        <div class="about-body">
-          <h2 class="section-h2">Mac Gupta</h2>
-          <p>
-            Spent 20+ years inside B2B software companies building GTM systems -- first as an engineer who kept getting pulled into go-to-market decisions, then as a product marketing and partnerships executive who ran them. Built partner programs from scratch, rebuilt sales playbooks when pipeline stalled, and rewritten category narratives when deals started dying at the wrong stage.
-          </p>
-          <p>
-            <strong>The pattern that kept showing up:</strong> strong products with broken GTM systems. Not broken because the team was bad -- broken because nobody had made the structural calls. Which segment first. Which narrative for which buyer. Which accounts to concentrate on. Which motion to run through which channel.
-          </p>
-          <p>
-            Precision GTM runs that work. We make the diagnostic calls, build the system, and hand it off to a team that can run it without us. The goal isn't a retainer -- it's a machine that works.
-          </p>
-          <div class="credentials">
-            <div class="cred-item">MBA, University of Chicago Booth School of Business</div>
-            <div class="cred-item">MS + BS, Computer Science</div>
-            <div class="cred-item">20+ years in enterprise B2B GTM -- product marketing, partnerships, AI platforms</div>
-            <div class="cred-item">@precisiongtm on X, YouTube, and Substack</div>
-          </div>
-        </div>
-        <div class="about-headshot">
-          <img src="MacGupta_Pic.png" alt="Mac Gupta, Founder of Precision GTM" />
-          <div class="about-headshot-caption">
-            Mac Gupta
-            <span>Founder, Precision GTM</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- INSIGHTS -->
   <section id="insights">
     <div class="section-inner">
@@ -1113,6 +1073,37 @@
           <div class="insight-blurb">AI changed the mainframe modernization conversation, and not entirely for the better. The hard part was never the code.</div>
           <div class="insight-link">Read on Substack &rarr;</div>
         </a>
+        <a class="insight-card" href="https://precisiongtm.substack.com/p/vertical-ai-gtm-the-implementation" target="_blank" rel="noopener">
+          <div class="insight-cat">Vertical AI</div>
+          <div class="insight-title">Vertical AI GTM: The Implementation Gap That Stalls Deals</div>
+          <div class="insight-blurb">Most vertical AI deals stall after the demo. The problem is rarely the product. Here is what the implementation gap looks like and how to close it.</div>
+          <div class="insight-link">Read on Substack &rarr;</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="section-inner">
+      <div class="section-label">About</div>
+      <div class="about-grid">
+        <div class="about-headshot">
+          <img src="MacGupta_Pic.png" alt="Mac Gupta, Founder of Precision GTM" />
+          <div class="about-headshot-caption">
+            Mac Gupta
+            <span>Founder, Precision GTM</span>
+          </div>
+        </div>
+        <div class="about-body">
+          <h2 class="section-h2">Mac Gupta</h2>
+          <p>
+            I started out as a software engineer and kept getting pulled into go-to-market decisions. Eventually I stopped resisting and ran them full time. That was 20 years ago. Since then I have worked across product marketing, partner GTM, and sales enablement at companies like IBM, Software AG, Pitney Bowes, WealthEngine and Rocket Software -- most of them complex, multi-product portfolios selling into enterprise accounts.
+          </p>
+          <p>
+            What I kept finding was that the GTM system was broken upstream of where people were looking. The product was fine. The team was working hard. But the ICP had drifted, or the narrative wasn't landing with the actual economic buyer, or the partner motion was running on relationships instead of a repeatable play. Precision GTM is built around fixing those things specifically. I have an MBA from Chicago Booth, and a Masters and Bachelors in Computer Science.
+          </p>
+        </div>
       </div>
     </div>
   </section>
@@ -1128,8 +1119,20 @@
         <a class="btn-ghost" href="https://precisiongtm.substack.com" target="_blank" rel="noopener">Read the Substack First</a>
       </div>
       <div class="cta-fine">
-        Or reach us directly: <a href="mailto:mac@precisiongotomarket.com">mac@precisiongotomarket.com</a>
-        &nbsp;&middot;&nbsp; <a href="https://x.com/precisiongtm" target="_blank" rel="noopener">@precisiongtm</a>
+        <div class="social-links">
+          <!-- X / Twitter -->
+          <a href="https://x.com/precisiongtm" target="_blank" rel="noopener" aria-label="X (Twitter)">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.736-8.858L1.254 2.25H8.08l4.259 5.632 5.905-5.632zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+          <!-- YouTube -->
+          <a href="https://www.youtube.com/@precisiongtm" target="_blank" rel="noopener" aria-label="YouTube">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+          </a>
+          <!-- Substack -->
+          <a href="https://precisiongtm.substack.com" target="_blank" rel="noopener" aria-label="Substack">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/></svg>
+          </a>
+        </div>
       </div>
     </div>
   </section>

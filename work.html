@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Work -- Mac Gupta</title>
+  <meta name="description" content="A selection of work by Mac Gupta -- product marketing, partner GTM, and AI workflows across enterprise B2B software." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:       #0f0e0c;
+      --paper:     #f5f2ec;
+      --warm-mid:  #e8e2d8;
+      --rule:      #c9c0b0;
+      --accent:    #00b8d9;
+      --accent-dk: #0097b5;
+      --muted:     #6b6358;
+      --light-ink: #3a3630;
+
+      --f-serif: 'Libre Baskerville', Georgia, serif;
+      --f-sans:  'DM Sans', system-ui, sans-serif;
+
+      --max: 1080px;
+      --gap: clamp(1.5rem, 4vw, 3rem);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--f-sans);
+      font-size: 16px;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      padding: clamp(3.5rem, 7vw, 6rem) var(--gap) clamp(2.5rem, 5vw, 4rem);
+      border-bottom: 1px solid var(--rule);
+      max-width: var(--max);
+      margin: 0 auto;
+    }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      margin-bottom: 2rem;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--accent); }
+    .back-link svg {
+      width: 14px; height: 14px;
+      stroke: currentColor; fill: none;
+      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+    }
+    .page-eyebrow {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+    .page-h1 {
+      font-family: var(--f-serif);
+      font-size: clamp(2rem, 4vw, 3rem);
+      line-height: 1.18;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      margin-bottom: 1rem;
+    }
+    .page-intro {
+      font-size: 0.97rem;
+      color: var(--muted);
+      max-width: 560px;
+      line-height: 1.7;
+      font-weight: 300;
+    }
+
+    /* ── FILTER TABS ── */
+    .filter-bar {
+      padding: 1.5rem var(--gap);
+      border-bottom: 1px solid var(--rule);
+      max-width: var(--max);
+      margin: 0 auto;
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.4rem 1rem;
+      border: 1px solid var(--rule);
+      background: transparent;
+      color: var(--muted);
+      border-radius: 2px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .filter-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+    /* ── WORK GRID ── */
+    .work-section {
+      padding: clamp(3rem, 6vw, 5rem) var(--gap);
+    }
+    .work-section-inner { max-width: var(--max); margin: 0 auto; }
+
+    .category-label {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .tiles-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--rule);
+      border: 1px solid var(--rule);
+      margin-bottom: 0;
+    }
+
+    /* ── TILE ── */
+    .tile {
+      background: var(--paper);
+      display: flex;
+      flex-direction: column;
+      text-decoration: none;
+      color: inherit;
+      transition: background 0.2s;
+      position: relative;
+    }
+    .tile:hover { background: #faf8f4; }
+    .tile-thumb {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: var(--warm-mid);
+      overflow: hidden;
+      position: relative;
+      flex-shrink: 0;
+    }
+    .tile-thumb img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .tile-thumb.no-image {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .tile-thumb.no-image svg {
+      width: 32px; height: 32px;
+      stroke: var(--rule); fill: none;
+      stroke-width: 1.5;
+    }
+    /* Video play overlay */
+    .play-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(15,14,12,0.3);
+      transition: background 0.2s;
+    }
+    .tile:hover .play-overlay { background: rgba(15,14,12,0.45); }
+    .play-btn {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .play-btn svg {
+      width: 18px; height: 18px;
+      fill: var(--ink);
+      margin-left: 2px;
+    }
+
+    .tile-body {
+      padding: 1.5rem 1.75rem 1.75rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    .tile-type {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.6rem;
+    }
+    .tile-title {
+      font-family: var(--f-serif);
+      font-size: 1rem;
+      line-height: 1.4;
+      color: var(--ink);
+      margin-bottom: 0.75rem;
+      font-weight: 700;
+    }
+    .tile-desc {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.65;
+      font-weight: 300;
+      flex: 1;
+    }
+    .tile-footer {
+      margin-top: 1.25rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--warm-mid);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .tile-company {
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+    .tile-arrow {
+      font-size: 0.75rem;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 2rem var(--gap);
+      border-top: 1px solid var(--rule);
+      max-width: var(--max);
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .footer-logo {
+      font-family: var(--f-sans);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .footer-logo span { color: var(--accent); }
+    .footer-copy { font-size: 0.75rem; color: var(--rule); }
+
+    @media (max-width: 860px) {
+      .tiles-grid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; align-items: flex-start; }
+    }
+    @media (max-width: 540px) {
+      .tiles-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- PAGE HEADER -->
+  <div style="border-bottom: 1px solid var(--rule);">
+    <div class="page-header">
+      <a class="back-link" href="index.html#about">
+        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        Back to Precision GTM
+      </a>
+      <div class="page-eyebrow">Body of Work</div>
+      <h1 class="page-h1">Selected work across 20 years of enterprise GTM.</h1>
+      <p class="page-intro">Product launches, platform narratives, partner programs, analyst strategy, and AI-enabled GTM workflows. Each piece reflects a real business problem and a decision about how to solve it.</p>
+    </div>
+  </div>
+
+  <!-- WORK GRID -->
+  <div class="work-section">
+    <div class="work-section-inner">
+
+      <div class="tiles-grid">
+
+        <!-- TILE: Win/Loss Demo Video -->
+        <a class="tile" href="https://www.youtube.com/watch?v=3H8LKqwW3dE" target="_blank" rel="noopener">
+          <div class="tile-thumb">
+            <img src="https://img.youtube.com/vi/3H8LKqwW3dE/maxresdefault.jpg" alt="Win/Loss Diagnostic Agent Demo" />
+            <div class="play-overlay">
+              <div class="play-btn">
+                <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              </div>
+            </div>
+          </div>
+          <div class="tile-body">
+            <div class="tile-type">Video Demo &middot; Agentic AI</div>
+            <div class="tile-title">Win/Loss Diagnostic Agent</div>
+            <div class="tile-desc">A working demo of an agentic AI workflow built to analyze deal signals, identify win/loss patterns across the pipeline, and surface ICP drift before the next quarter of outbound runs.</div>
+            <div class="tile-footer">
+              <span class="tile-company">Precision GTM</span>
+              <span class="tile-arrow">Watch &rarr;</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- TILE: AI as Co-Pilot -->
+        <a class="tile" href="https://www.youtube.com/watch?v=1lyRvLbE-mQ" target="_blank" rel="noopener">
+          <div class="tile-thumb">
+            <img src="https://img.youtube.com/vi/1lyRvLbE-mQ/maxresdefault.jpg" alt="AI as Co-Pilot in Cybersecurity Operations" />
+            <div class="play-overlay">
+              <div class="play-btn">
+                <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              </div>
+            </div>
+          </div>
+          <div class="tile-body">
+            <div class="tile-type">Video &middot; Cybersecurity and AI</div>
+            <div class="tile-title">AI as Co-Pilot in Cybersecurity Operations</div>
+            <div class="tile-desc">How AI augments decision-making in security operations without replacing human judgment -- covering anomaly detection, faster response, and closing visibility gaps in legacy mainframe environments. Includes practical Zero Trust recommendations for federal agencies.</div>
+            <div class="tile-footer">
+              <span class="tile-company">Rocket Software</span>
+              <span class="tile-arrow">Watch &rarr;</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- TILE: Knowledge Fabric Whitepaper -->
+        <a class="tile" href="https://www.pitneybowes.com/content/dam/pitneybowes/australia/en/pdf/knowledge-fabric-whitepaper.pdf" target="_blank" rel="noopener">
+          <div class="tile-thumb">
+            <img src="pb-knowledge-fabric.png" alt="The Knowledge Fabric -- Pitney Bowes" />
+          </div>
+          <div class="tile-body">
+            <div class="tile-type">Whitepaper &middot; Platform Positioning</div>
+            <div class="tile-title">The Knowledge Fabric -- Pitney Bowes</div>
+            <div class="tile-desc">Platform narrative for a $400M+ data and software portfolio. Repositioned Pitney Bowes from a postage and mailing company to an address intelligence and data activation platform, framing a century of address data as a strategic enterprise asset.</div>
+            <div class="tile-footer">
+              <span class="tile-company">Pitney Bowes</span>
+              <span class="tile-arrow">Read &rarr;</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- TILE: SOA Video -->
+        <a class="tile" href="https://youtu.be/QkOQBvlgXNE" target="_blank" rel="noopener">
+          <div class="tile-thumb">
+            <img src="https://img.youtube.com/vi/QkOQBvlgXNE/maxresdefault.jpg" alt="7 SOA Practices that Unlock Business Value" />
+            <div class="play-overlay">
+              <div class="play-btn">
+                <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              </div>
+            </div>
+          </div>
+          <div class="tile-body">
+            <div class="tile-type">Video &middot; Platform Positioning</div>
+            <div class="tile-title">7 SOA Practices that Unlock Business Value</div>
+            <div class="tile-desc">Platform narrative for IBM's WebSphere SOA portfolio -- making the case for service-oriented architecture in terms enterprise buyers understood: operational efficiency, faster time to market, and reusable services across the portfolio.</div>
+            <div class="tile-footer">
+              <span class="tile-company">IBM</span>
+              <span class="tile-arrow">Watch &rarr;</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- TILE: SOA Slides -->
+        <a class="tile" href="https://www.slideshare.net/slideshow/7-soa-practices-that-unlock-business-value-10625229/10625229" target="_blank" rel="noopener">
+          <div class="tile-thumb">
+            <img src="https://cdn.slidesharecdn.com/ss_thumbnails/7soapracticesthatunlockbusinessvalue-111217141453-phpapp02-thumbnail.jpg?width=640&height=640&fit=bounds" alt="7 SOA Practices slides" />
+          </div>
+          <div class="tile-body">
+            <div class="tile-type">Slides &middot; Platform Positioning</div>
+            <div class="tile-title">7 SOA Practices that Unlock Business Value</div>
+            <div class="tile-desc">The accompanying slide deck -- seven concrete practices for extracting business value from SOA, built for a technical and executive audience across global enterprises. Covers SOA governance, channel integration, and composable application design.</div>
+            <div class="tile-footer">
+              <span class="tile-company">IBM</span>
+              <span class="tile-arrow">View slides &rarr;</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- TILE: API Management Demystified -->
+        <a class="tile" href="https://www.slideshare.net/slideshow/api-management-demystified/16923115" target="_blank" rel="noopener">
+          <div class="tile-thumb">
+            <img src="https://cdn.slidesharecdn.com/ss_thumbnails/apimanagementwebinar-final-130304100919-phpapp02-thumbnail.jpg?width=640&height=640&fit=bounds" alt="API Management Demystified" />
+          </div>
+          <div class="tile-body">
+            <div class="tile-type">Slides &middot; Platform Positioning</div>
+            <div class="tile-title">API Management Demystified</div>
+            <div class="tile-desc">Positioning framework for API management built for the webMethods platform at Software AG -- translating technical infrastructure into enterprise value. Covers the case for API governance, security, versioning, and operational oversight in a connected enterprise.</div>
+            <div class="tile-footer">
+              <span class="tile-company">Software AG</span>
+              <span class="tile-arrow">View slides &rarr;</span>
+            </div>
+          </div>
+        </a>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <a class="footer-logo" href="index.html">PRECISION <span>GTM</span></a>
+    <div class="footer-copy">&copy; 2026 Precision GTM LLC</div>
+  </footer>
+
+</body>
+</html>

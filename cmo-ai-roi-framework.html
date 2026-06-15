@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI ROI Framework for CMOs: Precision GTM</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:           #f5f2ec;
+    --navy:         #0f0e0c;
+    --blue:         #00b8d9;
+    --blue-dk:      #0097b5;
+    --mid:          #6b6358;
+    --border:       #c9c0b0;
+    --row-hover:    #ede8e0;
+    --expanded-bg:  #ede8e0;
+    --score-bg:     rgba(0,184,217,0.08);
+    --risk-bg:      #fff4f0;
+    --ttv-bg:       #f0fff4;
+    --tag-bg:       #e2dbd0;
+    --light-ink:    #3a3630;
+    --warm-mid:     #e8e2d8;
+  }
+
+  body {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--navy);
+    font-size: 14px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* HEADER */
+  .header {
+    padding: 64px 48px 48px;
+    max-width: 1100px;
+    margin: 0 auto;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .eyebrow {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 1rem;
+  }
+
+  h1 {
+    font-family: 'Libre Baskerville', Georgia, serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.18;
+    letter-spacing: -0.02em;
+    font-weight: 700;
+    color: var(--navy);
+    max-width: 700px;
+    margin-bottom: 1.25rem;
+  }
+
+  .subtitle {
+    color: var(--mid);
+    font-size: 1rem;
+    max-width: 580px;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  /* MATRIX */
+  .matrix-section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 48px 48px 0;
+  }
+
+  .section-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--mid);
+    margin-bottom: 20px;
+  }
+
+  .matrix-wrap {
+    position: relative;
+    width: 100%;
+    max-width: 640px;
+    margin: 0 auto 8px;
+  }
+
+  .matrix-canvas {
+    width: 100%;
+    aspect-ratio: 1;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .matrix-canvas svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .axis-label-x {
+    text-align: center;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.68rem;
+    color: var(--mid);
+    margin-top: 8px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .axis-label-y {
+    position: absolute;
+    left: -36px;
+    top: 50%;
+    transform: translateY(-50%) rotate(-90deg);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.68rem;
+    color: var(--mid);
+    white-space: nowrap;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .matrix-tooltip {
+    position: fixed;
+    background: var(--navy);
+    color: white;
+    padding: 6px 10px;
+    border-radius: 2px;
+    font-size: 12px;
+    font-family: 'DM Sans', sans-serif;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s;
+    z-index: 100;
+    white-space: nowrap;
+    max-width: 220px;
+  }
+
+  /* FILTERS */
+  .filter-bar {
+    max-width: 1100px;
+    margin: 40px auto 0;
+    padding: 0 48px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .filter-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.68rem;
+    color: var(--mid);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-right: 4px;
+    font-weight: 500;
+  }
+
+  .filter-btn {
+    padding: 5px 12px;
+    border-radius: 2px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--navy);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-weight: 400;
+  }
+
+  .filter-btn:hover { border-color: var(--blue); color: var(--blue); }
+  .filter-btn.active { background: var(--navy); color: white; border-color: var(--navy); }
+
+  /* TABLE */
+  .table-section {
+    max-width: 1100px;
+    margin: 24px auto 0;
+    padding: 0 48px 80px;
+  }
+
+  .use-case-row {
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.1s;
+  }
+
+  .use-case-row:first-child { border-top: 1px solid var(--border); }
+  .use-case-row:hover .row-main { background: var(--row-hover); }
+  .use-case-row.highlighted .row-main { background: var(--score-bg); }
+  .use-case-row.hidden { display: none; }
+
+  .row-main {
+    display: grid;
+    grid-template-columns: 28px 1fr 120px 80px 80px 80px 80px;
+    gap: 0;
+    padding: 14px 16px;
+    align-items: center;
+    transition: background 0.1s;
+  }
+
+  .row-rank {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.68rem;
+    color: var(--mid);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+  }
+
+  .row-name {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--navy);
+    padding-right: 16px;
+  }
+
+  .row-desc {
+    font-size: 0.8rem;
+    color: var(--mid);
+    line-height: 1.5;
+    margin-top: 3px;
+    font-weight: 300;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .row-effort {
+    font-size: 0.78rem;
+    color: var(--mid);
+    padding-right: 8px;
+  }
+
+  .score-cell {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-align: center;
+    letter-spacing: 0.04em;
+  }
+
+  .score-roi { color: var(--blue); }
+  .score-risk-low { color: #16a34a; }
+  .score-risk-mid { color: #d97706; }
+  .score-risk-high { color: #dc2626; }
+  .score-ttv { color: #7c3aed; }
+
+  .col-header {
+    display: grid;
+    grid-template-columns: 28px 1fr 120px 80px 80px 80px 80px;
+    gap: 0;
+    padding: 10px 16px;
+    border-bottom: 2px solid var(--navy);
+    margin-top: 16px;
+  }
+
+  .col-h {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--mid);
+    text-align: center;
+  }
+
+  .col-h:nth-child(1), .col-h:nth-child(2) { text-align: left; }
+  .col-h:nth-child(3) { text-align: left; }
+
+  /* EXPANDED */
+  .row-expanded {
+    display: none;
+    background: var(--expanded-bg);
+    padding: 0 16px 24px 44px;
+  }
+
+  .row-expanded.open { display: block; }
+
+  .expanded-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 20px;
+    padding-top: 20px;
+  }
+
+  .expanded-block h4 {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 8px;
+  }
+
+  .expanded-block.effort h4 { color: var(--mid); }
+  .expanded-block.roi h4 { color: var(--blue); }
+  .expanded-block.risk h4 { color: #dc2626; }
+  .expanded-block.ttv h4 { color: #7c3aed; }
+
+  .expanded-block p {
+    font-size: 0.85rem;
+    line-height: 1.65;
+    color: var(--light-ink);
+    font-weight: 300;
+  }
+
+  .score-badge {
+    display: inline-block;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 2px;
+    margin-bottom: 8px;
+    letter-spacing: 0.04em;
+  }
+
+  .badge-roi { background: var(--score-bg); color: var(--blue); }
+  .badge-risk-1, .badge-risk-2 { background: #f0fdf4; color: #16a34a; }
+  .badge-risk-3 { background: #fffbeb; color: #d97706; }
+  .badge-risk-4, .badge-risk-5 { background: #fef2f2; color: #dc2626; }
+  .badge-ttv { background: #f5f3ff; color: #7c3aed; }
+
+  .stack-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 6px;
+  }
+
+  .stack-tag {
+    background: var(--tag-bg);
+    color: var(--mid);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 500;
+    padding: 2px 7px;
+    border-radius: 2px;
+    letter-spacing: 0.04em;
+  }
+
+  .chevron {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    margin-left: 6px;
+    vertical-align: middle;
+    opacity: 0.4;
+    transition: transform 0.2s;
+  }
+
+  .use-case-row.open .chevron { transform: rotate(180deg); }
+
+  /* LEGEND */
+  .legend {
+    display: flex;
+    gap: 24px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.68rem;
+    color: var(--mid);
+    font-family: 'DM Sans', sans-serif;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  @media (max-width: 768px) {
+    .header, .matrix-section, .filter-bar, .table-section { padding-left: 20px; padding-right: 20px; }
+    .row-main { grid-template-columns: 24px 1fr 70px 56px 56px; }
+    .row-main .col-risk, .row-main .col-ttv { display: none; }
+    .col-header { grid-template-columns: 24px 1fr 70px 56px 56px; }
+    .col-h.hide-mobile { display: none; }
+    .expanded-grid { grid-template-columns: 1fr 1fr; }
+    .axis-label-y { display: none; }
+    .matrix-wrap { padding-left: 0; }
+    .methodology-inner { grid-template-columns: 1fr; }
+    .quadrant-cards { grid-template-columns: 1fr 1fr; }
+    .feedback-section { padding: 32px 20px; }
+  }
+
+  /* METHODOLOGY */
+  .methodology {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 48px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .methodology-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 32px;
+  }
+
+  .method-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--blue);
+    margin-bottom: 10px;
+  }
+
+  .method-block p {
+    font-size: 0.85rem;
+    line-height: 1.7;
+    color: var(--light-ink);
+    font-weight: 300;
+  }
+
+  .method-block strong {
+    color: var(--navy);
+    font-weight: 500;
+  }
+
+  /* QUADRANT CALLOUTS */
+  .quadrant-cards {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 48px 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+
+  .q-card {
+    background: var(--bg);
+    padding: 20px 20px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .q-card:hover { background: var(--warm-mid); }
+  .q-card.active { background: var(--navy); }
+  .q-card.active .q-title { color: white; }
+  .q-card.active .q-desc { color: rgba(245,242,236,0.55); }
+  .q-card.active .q-tag { background: rgba(255,255,255,0.1); color: rgba(245,242,236,0.7); }
+
+  .q-tag {
+    display: inline-block;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: var(--tag-bg);
+    color: var(--mid);
+    padding: 2px 8px;
+    border-radius: 2px;
+    margin-bottom: 10px;
+  }
+
+  .q-title {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 6px;
+  }
+
+  .q-desc {
+    font-size: 0.78rem;
+    color: var(--mid);
+    line-height: 1.55;
+    font-weight: 300;
+  }
+
+  /* FEEDBACK */
+  .feedback-section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 48px 48px 80px;
+    border-top: 1px solid var(--border);
+  }
+
+  .feedback-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--mid);
+    margin-bottom: 8px;
+  }
+
+  .feedback-prompt {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 6px;
+  }
+
+  .feedback-sub {
+    font-size: 0.87rem;
+    color: var(--mid);
+    margin-bottom: 20px;
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  .feedback-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 640px;
+  }
+
+  .feedback-name-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .feedback-input {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.87rem;
+    color: var(--navy);
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 10px 14px;
+    outline: none;
+    transition: border-color 0.15s;
+    width: 100%;
+  }
+
+  .feedback-input:focus { border-color: var(--blue); }
+
+  .feedback-textarea {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.87rem;
+    color: var(--navy);
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 10px 14px;
+    outline: none;
+    transition: border-color 0.15s;
+    width: 100%;
+    resize: vertical;
+    min-height: 100px;
+  }
+
+  .feedback-textarea:focus { border-color: var(--blue); }
+
+  .feedback-rating {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .rating-label {
+    font-size: 0.78rem;
+    color: var(--mid);
+    margin-bottom: 6px;
+    font-weight: 400;
+  }
+
+  .rating-btn {
+    padding: 6px 14px;
+    border-radius: 2px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--navy);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .rating-btn:hover { border-color: var(--blue); color: var(--blue); }
+  .rating-btn.selected { background: var(--navy); color: white; border-color: var(--navy); }
+
+  .feedback-submit {
+    align-self: flex-start;
+    padding: 0.85rem 2rem;
+    background: var(--blue);
+    color: white;
+    border: none;
+    border-radius: 2px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .feedback-submit:hover { background: var(--blue-dk); }
+  .feedback-success { display: none; font-size: 0.87rem; color: #16a34a; font-weight: 500; padding: 12px 0; }
+</style>
+<style>
+  .pgtm-nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(248,248,246,0.95);
+    border-bottom: 1px solid var(--border);
+    padding: 0 48px;
+    backdrop-filter: blur(10px);
+  }
+  .pgtm-nav-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: flex; align-items: center;
+    justify-content: space-between; height: 56px;
+  }
+  .pgtm-logo {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.82rem; font-weight: 700;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--navy); text-decoration: none;
+  }
+  .pgtm-logo span { color: #00b8d9; }
+  .pgtm-back {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem; font-weight: 500;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: #6b7280; text-decoration: none;
+    transition: color 0.2s;
+  }
+  .pgtm-back:hover { color: #00b8d9; }
+  .pgtm-back svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+</style>
+</head>
+<body>
+
+<nav class="pgtm-nav">
+  <div class="pgtm-nav-inner">
+    <a class="pgtm-logo" href="index.html">PRECISION <span>GTM</span></a>
+    <a class="pgtm-back" href="ai-workflows.html">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      Back to AI Workflows
+    </a>
+  </div>
+</nav>
+
+<div class="header">
+  <div class="eyebrow">Precision GTM: CMO Intelligence Series</div>
+  <h1>Where AI Pays Off in GTM. And Where It Doesn't.</h1>
+  <p class="subtitle">Fourteen product marketing use cases ranked by ROI a CFO can defend, effort to implement, risk of failure, and time to first result. Built for CMOs who need to move fast and show proof.</p>
+</div>
+
+<!-- METHODOLOGY -->
+<div class="methodology">
+  <div class="methodology-inner">
+    <div class="method-block">
+      <div class="method-label">How to read this</div>
+      <p>Every use case is scored on four dimensions. <strong>ROI</strong> measures direct pipeline impact. <strong>Effort</strong> reflects systems to connect and implementation complexity. <strong>Risk</strong> flags the failure modes that kill most AI investments before they prove anything. Data quality and adoption are the two that matter most. <strong>Time to Value</strong> is how fast you can show a result a CFO will recognize.</p>
+    </div>
+    <div class="method-block">
+      <div class="method-label">Revenue Impact: Defined</div>
+      <p>A use case earns a Revenue label only when it can be used inside a live deal to directly influence whether that deal closes this quarter. If the connection to a closed deal requires more than one inference step, it is labeled Strategic or Efficiency instead. That distinction matters when you are defending AI spend to a board.</p>
+    </div>
+    <div class="method-block">
+      <div class="method-label">Where to start</div>
+      <p>The matrix plots ROI against Effort. Top-left is Quick Wins: high ROI, low effort, start here. Top-right is Major Bets: high ROI, high effort, typically requiring a data foundation first. Everything in the bottom half should be weighed against opportunity cost before committing resources.</p>
+    </div>
+  </div>
+</div>
+
+<!-- MATRIX -->
+<div class="matrix-section">
+  <div class="section-label">ROI vs. Effort: click any dot to highlight in the table</div>
+  <div class="matrix-wrap">
+    <div class="axis-label-y">ROI ↑</div>
+    <div class="matrix-canvas">
+      <svg id="matrix-svg" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+    <div class="axis-label-x">Effort →</div>
+  </div>
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#1A6BFF"></div> Revenue Impact</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#7c3aed"></div> Efficiency</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#d97706"></div> Strategic</div>
+  </div>
+</div>
+
+<div class="matrix-tooltip" id="tooltip"></div>
+
+<!-- QUADRANT CARDS -->
+<div class="quadrant-cards">
+  <div class="q-card" data-qfilter="quick-wins">
+    <div class="q-tag">Start Here</div>
+    <div class="q-title">Quick Wins</div>
+    <div class="q-desc">High ROI, low effort. Provable impact within a quarter. No major data infrastructure required.</div>
+  </div>
+  <div class="q-card" data-qfilter="major-bets">
+    <div class="q-tag">Build Toward</div>
+    <div class="q-title">Major Bets</div>
+    <div class="q-desc">High ROI, higher effort. Require a data foundation. The compounding investments that separate good GTM from great.</div>
+  </div>
+  <div class="q-card" data-qfilter="strategic">
+    <div class="q-tag">Situational</div>
+    <div class="q-title">Strategic Plays</div>
+    <div class="q-desc">Indirect revenue impact. Defend market position, protect ARR, or shape long-cycle decisions like pricing.</div>
+  </div>
+  <div class="q-card" data-qfilter="efficiency">
+    <div class="q-tag">Supporting</div>
+    <div class="q-title">Efficiency Gains</div>
+    <div class="q-desc">Time savings and output quality. Real value, but not the argument to lead with in a board conversation.</div>
+  </div>
+</div>
+
+<!-- FILTERS -->
+<div class="filter-bar">
+  <span class="filter-label">Filter</span>
+  <button class="filter-btn active" data-filter="all">All</button>
+  <button class="filter-btn" data-filter="quick-wins">Quick Wins</button>
+  <button class="filter-btn" data-filter="major-bets">Major Bets</button>
+  <button class="filter-btn" data-filter="revenue">Revenue Impact</button>
+  <button class="filter-btn" data-filter="strategic">Strategic</button>
+  <button class="filter-btn" data-filter="efficiency">Efficiency</button>
+</div>
+
+<!-- TABLE -->
+<div class="table-section">
+  <div class="col-header">
+    <div class="col-h">#</div>
+    <div class="col-h">Use Case</div>
+    <div class="col-h">Effort</div>
+    <div class="col-h">ROI</div>
+    <div class="col-h">Risk</div>
+    <div class="col-h hide-mobile">TTV</div>
+    <div class="col-h hide-mobile">Type</div>
+  </div>
+  <div id="table-body"></div>
+</div>
+
+<!-- FEEDBACK -->
+<div class="feedback-section">
+  <div class="feedback-label">Your input</div>
+  <div class="feedback-prompt">Does this reflect how you think about AI ROI?</div>
+  <div class="feedback-sub">What's missing, misranked, or mislabeled from where you sit. Every response goes directly to Precision GTM.</div>
+  <div class="feedback-form">
+    <div class="feedback-name-row">
+      <input class="feedback-input" id="fb-name" type="text" placeholder="Name">
+      <input class="feedback-input" id="fb-company" type="text" placeholder="Company">
+    </div>
+    <div>
+      <div class="rating-label">How useful is this framework for your current situation?</div>
+      <div class="feedback-rating" id="rating-group">
+        <button class="rating-btn" data-rating="1">Not useful</button>
+        <button class="rating-btn" data-rating="2">Somewhat useful</button>
+        <button class="rating-btn" data-rating="3">Useful</button>
+        <button class="rating-btn" data-rating="4">Very useful</button>
+      </div>
+    </div>
+    <textarea class="feedback-textarea" id="fb-comment" placeholder="What would you add, remove, or rerank? What's missing from your situation?"></textarea>
+    <button class="feedback-submit" id="fb-submit">Send feedback</button>
+    <div class="feedback-success" id="fb-success">Feedback received. Thank you.</div>
+  </div>
+</div>
+
+<script>
+const useCases = [
+  {
+    rank: 1,
+    name: "Win/Loss Dashboard",
+    desc: "Surface why deals close and why they don't, by competitor, persona, and stage. The foundation every other use case builds on.",
+    effort: "Medium",
+    effortScore: 3,
+    roi: "Highest",
+    roiScore: 5,
+    roiLabel: "5/5",
+    risk: 3,
+    ttv: 4,
+    type: "revenue",
+    stack: ["Salesforce", "Gong", "Tableau"],
+    effortDetail: "Medium. Salesforce + Gong + Tableau. Three systems, clean data model, most enterprises already have the connectors.",
+    roiDetail: "Highest. Win rate is a board metric. Every point of improvement is directly calculable in revenue. CFO can model it immediately.",
+    riskDetail: "Salesforce closed-lost data is usually garbage. Reps disposition deals to protect their narrative, not to generate insight. If you build the dashboard on CRM fields alone without conversation data validation, you'll systematize bad information. Sales leadership has to trust the output enough to act on it.",
+    ttvDetail: "First meaningful patterns visible within 60 days if Gong and Salesforce data are clean. You're mining historical deals from day one. No need to wait for new data."
+  },
+  {
+    rank: 2,
+    name: "ICP Scoring on Live Deals",
+    desc: "Score every deal in the pipe against your validated ICP profile. Highest scores get PMM firepower. Lowest get self-serve.",
+    effort: "Medium-High",
+    effortScore: 4,
+    roi: "Very High",
+    roiScore: 5,
+    roiLabel: "5/5",
+    risk: 4,
+    ttv: 3,
+    type: "revenue",
+    stack: ["Salesforce", "Gong", "6sense", "Snowflake"],
+    effortDetail: "Medium-High. Salesforce + Gong + 6sense + Snowflake. Requires a data model to normalize deal attributes against historical outcomes. Four to five systems.",
+    roiDetail: "Very High. Concentrates sales and PMM resources on highest-probability deals. Shows up in win rate, ACV, and CAC simultaneously. Three metrics a CFO cares about.",
+    riskDetail: "The score is only as good as the historical data it's built on. If your win/loss foundation is weak, the ICP profile will be wrong and the model will confidently prioritize the wrong deals. Sales adoption is the second risk: reps who disagree with a score will ignore it.",
+    ttvDetail: "Depends on win/loss foundation being in place first. Scoring model live within a quarter. Revenue impact visible in the following quarter as scored deals close or stall."
+  },
+  {
+    rank: 3,
+    name: "Deal Signal Analysis",
+    desc: "Identify the exact moments (talk tracks, proof points, actions) that separate won deals from lost ones at the same stage.",
+    effort: "Medium",
+    effortScore: 3,
+    roi: "Very High",
+    roiScore: 5,
+    roiLabel: "5/5",
+    risk: 4,
+    ttv: 3,
+    type: "revenue",
+    stack: ["Salesforce", "Gong", "Slack", "Tableau"],
+    effortDetail: "Medium. Salesforce + Gong + Slack + Tableau. The complexity is less about connectors and more about defining what a signal is before you can measure it.",
+    roiDetail: "Very High. Identifies exact conversion triggers. Directly actionable by sales and PMM. Revenue impact is traceable to specific interventions.",
+    riskDetail: "Teams often confuse correlation with causation. A signal that appears in won deals isn't necessarily what caused the win. Getting this wrong produces confident but misleading guidance to reps. Slack data is also politically sensitive and requires internal alignment before you start.",
+    ttvDetail: "Signal definition and validation takes 60 to 90 days to get right. Field behavior change adds another quarter before revenue impact is measurable."
+  },
+  {
+    rank: 4,
+    name: "Real-Time Account Team Training",
+    desc: "A late-stage deal needs a briefed rep, not a boot camp. Pulls live deal context and delivers a deal-specific briefing before the next call.",
+    effort: "Low-Medium",
+    effortScore: 2,
+    roi: "Very High",
+    roiScore: 5,
+    roiLabel: "5/5",
+    risk: 2,
+    ttv: 5,
+    type: "revenue",
+    stack: ["Salesforce", "Gong", "Slack"],
+    effortDetail: "Low-Medium. Salesforce for deal context, Gong for conversation history, Slack for delivery. Most enterprises have all three. The workflow is lightweight once the trigger logic is defined.",
+    roiDetail: "Very High. Late-stage deals are the highest-leverage moment in the pipeline. A rep who walks into a CIO meeting with a stale pitch loses deals that should close. The ROI is directly tied to late-stage win rate.",
+    riskDetail: "Brief quality depends on data completeness. If the CRM record is sparse or Gong coverage is low, the briefing will be thin and reps will stop trusting it. Requires a minimum data quality threshold before deploying at scale.",
+    ttvDetail: "Immediate. The value is delivered before the next call. No ramp period, no adoption curve. First briefing is useful from day one."
+  },
+  {
+    rank: 5,
+    name: "Executive Brief Before a CIO Meeting",
+    desc: "Generates a one-page brief from account profile and deal context before an economic buyer meeting. Frames risk, cost, and strategic priority, not features.",
+    effort: "Low",
+    effortScore: 1,
+    roi: "High",
+    roiScore: 4,
+    roiLabel: "4/5",
+    risk: 2,
+    ttv: 5,
+    type: "revenue",
+    stack: ["Salesforce", "6sense"],
+    effortDetail: "Low. Account profile from Salesforce and intent signals from 6sense. Two systems, minimal integration work. The generation layer does the heavy lifting.",
+    roiDetail: "High. CIO and CFO meetings are the moments that close or kill enterprise deals. A rep who walks in with an executive-level brief framed around business outcomes closes at a materially higher rate than one leading with product.",
+    riskDetail: "Brief accuracy is the risk. A brief with wrong financial data, a misidentified initiative, or an outdated org chart undermines rep credibility at the worst possible moment. Must include a rep review step before the meeting.",
+    ttvDetail: "Immediate. Brief generated on demand before each meeting. Value is felt the first time a rep uses it in a live executive conversation."
+  },
+  {
+    rank: 6,
+    name: "Searchable Objection Library",
+    desc: "Give reps instant access to responses that actually closed deals, pulled from Gong and searchable mid-call.",
+    effort: "Low-Medium",
+    effortScore: 2,
+    roi: "High",
+    roiScore: 4,
+    roiLabel: "4/5",
+    risk: 2,
+    ttv: 4,
+    type: "revenue",
+    stack: ["Gong", "Highspot"],
+    effortDetail: "Low-Medium. Gong + Highspot or Seismic. Two systems. Gong surfaces the objections, Highspot delivers the responses. Most enterprises already have both.",
+    roiDetail: "High. Measurable in competitive win rate on deals where reps used the library versus those who didn't. Gong makes that comparison straightforward.",
+    riskDetail: "Libraries go stale fast. Without a quarterly refresh cadence owned by someone specific, reps will stop trusting it within two quarters. Findability is the second risk: if reps can't surface the right response in under 30 seconds mid-call, they won't use it.",
+    ttvDetail: "Fast to build on top of existing Gong data. First version deployable in 30 days. Rep adoption drives the value timeline. Early adopters show results within a quarter."
+  },
+  {
+    rank: 7,
+    name: "Automated Competitive Monitoring",
+    desc: "Track competitor pricing pages, product updates, and announcements automatically. Delivers a structured digest every Monday.",
+    effort: "Low",
+    effortScore: 1,
+    roi: "Medium-High",
+    roiScore: 3,
+    roiLabel: "3/5",
+    risk: 2,
+    ttv: 5,
+    type: "strategic",
+    stack: ["Semrush", "Scraper", "Slack"],
+    effortDetail: "Low. Semrush or Similarweb + a scraping tool + Slack for delivery. Lightweight stack, fast to build, easy to maintain.",
+    roiDetail: "Medium-High. Faster competitive response means fewer deals lost to a move you didn't see coming. Hard to isolate as a metric but directionally clear.",
+    riskDetail: "Volume without curation is noise. A system that dumps every competitor pricing page change into Slack will get muted within a month. Needs an owner who synthesizes the output into a weekly brief, not just a pipeline into Slack.",
+    ttvDetail: "Fastest time to value on the list. System live in days. First competitive brief deliverable within a week. Immediate visibility for a CMO who needs to show something is moving."
+  },
+  {
+    rank: 8,
+    name: "ICP Refinement",
+    desc: "Cut low-velocity segments and tighten target market definition using closed pipeline data. Concentrates resources where they convert.",
+    effort: "Medium",
+    effortScore: 3,
+    roi: "High",
+    roiScore: 4,
+    roiLabel: "4/5",
+    risk: 3,
+    ttv: 2,
+    type: "strategic",
+    stack: ["Salesforce", "Snowflake", "6sense"],
+    effortDetail: "Medium. Salesforce + Snowflake + 6sense. Requires clean historical data. Most Salesforce instances have data quality problems that surface here.",
+    roiDetail: "High. Cutting low-velocity segments reduces wasted sales motion. CAC improvement directly measurable in sales efficiency ratio.",
+    riskDetail: "Narrowing ICP is politically difficult in a multi-product SaaS company. Sales will resist cutting segments they're actively working. A refined ICP that improves win rate can also reduce stated TAM. Communicate carefully to investors.",
+    ttvDetail: "Analysis done in 30 days but revenue impact requires a full pipeline cycle. Expect two quarters minimum before CAC movement is visible in the data."
+  },
+  {
+    rank: 9,
+    name: "Competitive Battle Cards",
+    desc: "Structured rep-ready documents built from win/loss data. What competitors claim, where they're weak, and how to counter.",
+    effort: "Low",
+    effortScore: 1,
+    roi: "Medium",
+    roiScore: 3,
+    roiLabel: "3/5",
+    risk: 3,
+    ttv: 4,
+    type: "revenue",
+    stack: ["Gong", "Highspot"],
+    effortDetail: "Low. Gong + Highspot. Same stack as the objection library. Can be built on the back of win/loss analysis without additional connectors.",
+    roiDetail: "Medium. Field adoption is the variable. High impact when reps use them, invisible when they don't. Hard to isolate as a standalone CFO metric.",
+    riskDetail: "Adoption is everything and PMM rarely controls it. Cards built without rep input get ignored. Cards not updated when a competitor makes a move become a liability. Outdated positioning is worse than no card at all.",
+    ttvDetail: "Fast to produce on top of win/loss foundation. First cards deployable within 30 days. Adoption curve is the variable. Full field impact takes a quarter to materialize."
+  },
+  {
+    rank: 10,
+    name: "Tailored Sales One-Pagers",
+    desc: "Industry-specific leave-behinds generated from deal context. Reps get proof points matched to the buyer in front of them.",
+    effort: "Low",
+    effortScore: 1,
+    roi: "Low-Medium",
+    roiScore: 2,
+    roiLabel: "2/5",
+    risk: 2,
+    ttv: 4,
+    type: "efficiency",
+    stack: ["Highspot", "Salesforce"],
+    effortDetail: "Low. Highspot + Salesforce for personalization at scale. Manual if not automated.",
+    roiDetail: "Low-Medium. Useful in deals but attribution is nearly impossible. CFO can't model it.",
+    riskDetail: "Personalization at scale produces inconsistent quality. An AI-generated one-pager with a factual error about the prospect or a misquoted competitor claim will damage the deal and the rep's credibility. Quality control is non-negotiable before this goes to field.",
+    ttvDetail: "Fast to produce. First batch deliverable within weeks. Rep feedback immediate. Revenue attribution remains the constraint."
+  },
+  {
+    rank: 11,
+    name: "Inbound Content Matched to ICP Segments",
+    desc: "Map existing content to ICP priority tiers, identify gaps, and generate targeted assets for the segments most likely to convert.",
+    effort: "Medium",
+    effortScore: 3,
+    roi: "Medium",
+    roiScore: 3,
+    roiLabel: "3/5",
+    risk: 3,
+    ttv: 3,
+    type: "efficiency",
+    stack: ["CMS", "6sense", "Marketo"],
+    effortDetail: "Medium. Requires a content inventory, a defined ICP segment map, and a generation layer. Three to four systems depending on CMS and MAP setup.",
+    roiDetail: "Medium. Improves inbound conversion by matching content to buyer profile. Attribution is indirect and hard to isolate from other demand gen variables.",
+    riskDetail: "Content gap analysis is only as good as the ICP definition feeding it. If ICP is wrong or stale, you generate assets for the wrong segments. Second risk is content proliferation: generating assets faster than the team can maintain quality or update them.",
+    ttvDetail: "First mapped content set and gap analysis ready in 30 to 45 days. New assets deployable shortly after. Conversion signal takes a full demand gen cycle to materialize."
+  },
+  {
+    rank: 12,
+    name: "Account Brief Generation",
+    desc: "Draft rep briefs from firmographics and pipeline data. Lets practitioners edit rather than write from scratch before every call.",
+    effort: "Low",
+    effortScore: 1,
+    roi: "Low-Medium",
+    roiScore: 2,
+    roiLabel: "2/5",
+    risk: 2,
+    ttv: 5,
+    type: "efficiency",
+    stack: ["Salesforce", "6sense", "LinkedIn"],
+    effortDetail: "Low. Salesforce + 6sense + LinkedIn data. Lightweight stack.",
+    roiDetail: "Low-Medium. Efficiency win for reps but the revenue connection is too indirect for a CFO conversation.",
+    riskDetail: "Firmographic data quality is the risk. 6sense and LinkedIn data are often stale for mid-market accounts. A brief with wrong headcount or a misidentified decision-maker kills rep trust in the tool immediately.",
+    ttvDetail: "Fast to deploy. First briefs generated within days. Rep time savings immediate. Revenue impact indirect and slow to attribute."
+  },
+  {
+    rank: 13,
+    name: "M&A Announcement with Joint Value Proposition",
+    desc: "When an acquisition closes, the joint narrative needs to land fast. Drafts the press release and partner-facing announcement built around shared customer value.",
+    effort: "Medium",
+    effortScore: 3,
+    roi: "Medium-High",
+    roiScore: 3,
+    roiLabel: "3/5",
+    risk: 3,
+    ttv: 5,
+    type: "strategic",
+    stack: ["CRM", "PR Tools", "Internal Comms"],
+    effortDetail: "Medium. Requires cross-functional input from comms, legal, and product marketing. Systems are light but coordination overhead is high. Speed is the constraint, not technical complexity.",
+    roiDetail: "Medium-High. The revenue case is defensive. A slow or misaligned narrative accelerates customer churn and partner defection at exactly the moment ARR is most exposed. Speed protects existing pipeline and retention. It does not generate new revenue directly.",
+    riskDetail: "Legal and comms sensitivity is high. An AI-drafted press release with wrong claims, uncleared quotes, or misaligned messaging creates regulatory and reputational exposure. Requires mandatory legal review before any external distribution.",
+    ttvDetail: "By definition this must be fast. The value of the use case is same-day or next-day output. If it takes a week it has missed the moment entirely."
+  },
+  {
+    rank: 14,
+    name: "Pricing and Packaging Strategy",
+    desc: "Value metric analysis across product usage, expansion, and churn data to recommend tier structures. Highest upside, highest consequence.",
+    effort: "High",
+    effortScore: 5,
+    roi: "Very High*",
+    roiScore: 5,
+    roiLabel: "5/5*",
+    risk: 5,
+    ttv: 1,
+    type: "strategic",
+    stack: ["Salesforce", "Pendo", "Gainsight", "Finance Data"],
+    effortDetail: "High. Salesforce + Pendo + Gainsight + finance data. Requires product usage data, expansion revenue data, and churn data. Most complex data model on this list.",
+    roiDetail: "Very High when right, expensive when wrong. CFO loves the upside but the cycle time to prove it is measured in quarters not weeks.",
+    riskDetail: "Highest consequence of any use case. A wrong pricing recommendation affects every deal in the pipeline simultaneously. In a multi-product SaaS company, bundle decisions and tier boundaries interact in ways that are hard to model completely. An AI-assisted recommendation that is wrong is harder to defend than a wrong human judgment call.",
+    ttvDetail: "Slowest on the list. Analysis takes 60 to 90 days. Implementation requires sales, finance, and product alignment. Revenue impact visible only after a full pricing cycle, minimum two quarters, often three."
+  }
+];
+
+function getRiskClass(score) {
+  if (score <= 2) return 'score-risk-low';
+  if (score === 3) return 'score-risk-mid';
+  return 'score-risk-high';
+}
+
+function getRiskBadgeClass(score) {
+  if (score <= 2) return 'badge-risk-1';
+  if (score === 3) return 'badge-risk-3';
+  return 'badge-risk-4';
+}
+
+function getTypeColor(type) {
+  if (type === 'revenue') return '#00b8d9';
+  if (type === 'efficiency') return '#7c3aed';
+  return '#d97706';
+}
+
+function getTypeLabel(type) {
+  if (type === 'revenue') return 'Revenue';
+  if (type === 'efficiency') return 'Efficiency';
+  return 'Strategic';
+}
+
+// Build table
+const tableBody = document.getElementById('table-body');
+useCases.forEach((uc, i) => {
+  const row = document.createElement('div');
+  row.className = 'use-case-row';
+  row.dataset.type = uc.type;
+  row.dataset.effort = uc.effortScore;
+  row.dataset.roi = uc.roiScore;
+  row.dataset.index = i;
+
+  const riskClass = getRiskClass(uc.risk);
+  const badgeClass = getRiskBadgeClass(uc.risk);
+  const typeColor = getTypeColor(uc.type);
+  const typeLabel = getTypeLabel(uc.type);
+
+  row.innerHTML = `
+    <div class="row-main">
+      <div class="row-rank">${uc.rank}</div>
+      <div class="row-name">
+        <div>${uc.name}<svg class="chevron" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 4.5L7 9.5L12 4.5" stroke="#0D1B2A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="row-desc">${uc.desc}</div>
+      </div>
+      <div class="row-effort">${uc.effort}</div>
+      <div class="score-cell score-roi">${uc.roiLabel}</div>
+      <div class="score-cell ${riskClass}">${uc.risk}/5</div>
+      <div class="score-cell score-ttv">${uc.ttv}/5</div>
+      <div class="score-cell" style="color:${typeColor};font-size:11px;">${typeLabel}</div>
+    </div>
+    <div class="row-expanded">
+      <div class="expanded-grid">
+        <div class="expanded-block effort">
+          <h4>Effort</h4>
+          <p>${uc.effortDetail}</p>
+          <div class="stack-tags">${uc.stack.map(s => `<span class="stack-tag">${s}</span>`).join('')}</div>
+        </div>
+        <div class="expanded-block roi">
+          <h4>ROI</h4>
+          <div class="score-badge badge-roi">${uc.roiLabel}</div>
+          <p>${uc.roiDetail}</p>
+        </div>
+        <div class="expanded-block risk">
+          <h4>Risk</h4>
+          <div class="score-badge ${badgeClass}">${uc.risk}/5</div>
+          <p>${uc.riskDetail}</p>
+        </div>
+        <div class="expanded-block ttv">
+          <h4>Time to Value</h4>
+          <div class="score-badge badge-ttv">${uc.ttv}/5</div>
+          <p>${uc.ttvDetail}</p>
+        </div>
+      </div>
+    </div>
+  `;
+
+  row.querySelector('.row-main').addEventListener('click', () => {
+    const expanded = row.querySelector('.row-expanded');
+    const isOpen = row.classList.contains('open');
+    row.classList.toggle('open', !isOpen);
+    expanded.classList.toggle('open', !isOpen);
+  });
+
+  tableBody.appendChild(row);
+});
+
+// Build matrix
+const svg = document.getElementById('matrix-svg');
+const tooltip = document.getElementById('tooltip');
+const padding = 48;
+const size = 500;
+const innerSize = size - padding * 2;
+
+// Grid lines
+for (let i = 1; i <= 4; i++) {
+  const x = padding + (i / 5) * innerSize;
+  const y = padding + (i / 5) * innerSize;
+  const lineX = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+  lineX.setAttribute('x1', x); lineX.setAttribute('y1', padding);
+  lineX.setAttribute('x2', x); lineX.setAttribute('y2', size - padding);
+  lineX.setAttribute('stroke', '#E2E2DE'); lineX.setAttribute('stroke-width', '1');
+  svg.appendChild(lineX);
+
+  const lineY = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+  lineY.setAttribute('x1', padding); lineY.setAttribute('y1', y);
+  lineY.setAttribute('x2', size - padding); lineY.setAttribute('y2', y);
+  lineY.setAttribute('stroke', '#E2E2DE'); lineY.setAttribute('stroke-width', '1');
+  svg.appendChild(lineY);
+}
+
+// Quadrant labels
+const quadLabels = [
+  { text: 'Quick Wins', x: padding + innerSize * 0.12, y: padding + innerSize * 0.08, anchor: 'start' },
+  { text: 'Major Bets', x: padding + innerSize * 0.88, y: padding + innerSize * 0.08, anchor: 'end' },
+  { text: 'Low Priority', x: padding + innerSize * 0.12, y: padding + innerSize * 0.96, anchor: 'start' },
+  { text: 'Hard Calls', x: padding + innerSize * 0.88, y: padding + innerSize * 0.96, anchor: 'end' },
+];
+
+quadLabels.forEach(ql => {
+  const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  t.setAttribute('x', ql.x); t.setAttribute('y', ql.y);
+  t.setAttribute('text-anchor', ql.anchor);
+  t.setAttribute('font-family', 'JetBrains Mono, monospace');
+  t.setAttribute('font-size', '11');
+  t.setAttribute('fill', '#D1D5DB');
+  t.setAttribute('letter-spacing', '0.05em');
+  t.textContent = ql.text;
+  svg.appendChild(t);
+});
+
+// Dots: jitter overlapping points
+const placed = {};
+useCases.forEach((uc, i) => {
+  const baseX = padding + ((uc.effortScore - 1) / 4) * innerSize;
+  const baseY = size - padding - ((uc.roiScore - 1) / 4) * innerSize;
+  const key = `${uc.effortScore}-${uc.roiScore}`;
+  placed[key] = (placed[key] || 0) + 1;
+  const count = placed[key];
+  const jitterX = ((count - 1) % 3) * 14 - 14;
+  const jitterY = Math.floor((count - 1) / 3) * 14 - 7;
+  const cx = baseX + jitterX;
+  const cy = baseY + jitterY;
+
+  const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+  circle.setAttribute('cx', cx); circle.setAttribute('cy', cy);
+  circle.setAttribute('r', '9');
+  circle.setAttribute('fill', getTypeColor(uc.type));
+  circle.setAttribute('fill-opacity', '0.85');
+  circle.setAttribute('stroke', 'white');
+  circle.setAttribute('stroke-width', '1.5');
+  circle.setAttribute('cursor', 'pointer');
+  circle.dataset.index = i;
+
+  const rankText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  rankText.setAttribute('x', cx); rankText.setAttribute('y', cy + 4);
+  rankText.setAttribute('text-anchor', 'middle');
+  rankText.setAttribute('font-family', 'JetBrains Mono, monospace');
+  rankText.setAttribute('font-size', '8');
+  rankText.setAttribute('font-weight', '600');
+  rankText.setAttribute('fill', 'white');
+  rankText.setAttribute('pointer-events', 'none');
+  rankText.textContent = uc.rank;
+
+  circle.addEventListener('mouseenter', (e) => {
+    tooltip.style.opacity = '1';
+    tooltip.textContent = `#${uc.rank} ${uc.name}`;
+    circle.setAttribute('r', '11');
+  });
+
+  circle.addEventListener('mousemove', (e) => {
+    tooltip.style.left = (e.clientX + 12) + 'px';
+    tooltip.style.top = (e.clientY - 28) + 'px';
+  });
+
+  circle.addEventListener('mouseleave', () => {
+    tooltip.style.opacity = '0';
+    circle.setAttribute('r', '9');
+  });
+
+  circle.addEventListener('click', () => {
+    // Clear all highlights
+    document.querySelectorAll('.use-case-row').forEach(r => r.classList.remove('highlighted'));
+    // Highlight the right row
+    const targetRow = document.querySelector(`.use-case-row[data-index="${i}"]`);
+    if (targetRow) {
+      targetRow.classList.add('highlighted');
+      // Open the row
+      const expanded = targetRow.querySelector('.row-expanded');
+      targetRow.classList.add('open');
+      expanded.classList.add('open');
+      // Scroll
+      setTimeout(() => targetRow.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100);
+    }
+  });
+
+  svg.appendChild(circle);
+  svg.appendChild(rankText);
+});
+
+// Filters
+function applyFilter(filter) {
+  document.querySelectorAll('.use-case-row').forEach(row => {
+    let show = true;
+    const effort = parseInt(row.dataset.effort);
+    const roi = parseInt(row.dataset.roi);
+    if (filter === 'revenue') show = row.dataset.type === 'revenue';
+    else if (filter === 'efficiency') show = row.dataset.type === 'efficiency';
+    else if (filter === 'strategic') show = row.dataset.type === 'strategic';
+    else if (filter === 'quick-wins') show = roi >= 4 && effort <= 2;
+    else if (filter === 'major-bets') show = roi >= 4 && effort >= 3;
+    row.classList.toggle('hidden', !show);
+  });
+}
+
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.q-card').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    applyFilter(btn.dataset.filter);
+  });
+});
+
+document.querySelectorAll('.q-card').forEach(card => {
+  card.addEventListener('click', () => {
+    const filter = card.dataset.qfilter;
+    const alreadyActive = card.classList.contains('active');
+    document.querySelectorAll('.q-card').forEach(c => c.classList.remove('active'));
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    if (alreadyActive) {
+      document.querySelector('.filter-btn[data-filter="all"]').classList.add('active');
+      applyFilter('all');
+    } else {
+      card.classList.add('active');
+      applyFilter(filter);
+    }
+  });
+});
+
+// Feedback
+let selectedRating = null;
+document.querySelectorAll('.rating-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedRating = btn.dataset.rating;
+  });
+});
+
+document.getElementById('fb-submit').addEventListener('click', () => {
+  const name = document.getElementById('fb-name').value.trim();
+  const company = document.getElementById('fb-company').value.trim();
+  const comment = document.getElementById('fb-comment').value.trim();
+
+  if (!comment) {
+    document.getElementById('fb-comment').focus();
+    return;
+  }
+
+  const btn = document.getElementById('fb-submit');
+  btn.textContent = 'Sending...';
+  btn.disabled = true;
+
+  // Build form and submit via hidden iframe to avoid CORS issues with Apps Script
+  const iframe = document.createElement('iframe');
+  iframe.name = 'hidden-iframe';
+  iframe.style.display = 'none';
+  document.body.appendChild(iframe);
+
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = 'https://script.google.com/macros/s/AKfycbz0Sqczu3exzwFhB8XYPXrE3KoHAUxpt0n-QuokfWO-xEJ-XpODfPuVX1uFB2gxPqLMAQ/exec';
+  form.target = 'hidden-iframe';
+  form.style.display = 'none';
+
+  const fields = { name, company, rating: selectedRating || '', comment };
+  Object.entries(fields).forEach(([key, value]) => {
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = key;
+    input.value = value;
+    form.appendChild(input);
+  });
+
+  document.body.appendChild(form);
+  form.submit();
+
+  setTimeout(() => {
+    btn.style.display = 'none';
+    document.getElementById('fb-success').style.display = 'block';
+    document.body.removeChild(form);
+    document.body.removeChild(iframe);
+  }, 2000);
+});
+</script>
+</body>
+</html>

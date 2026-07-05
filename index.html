@@ -78,6 +78,12 @@
       gap: 2rem;
       list-style: none;
       align-items: center;
+      height: 100%;
+    }
+    .nav-links > li {
+      display: flex;
+      align-items: center;
+      height: 100%;
     }
     .nav-links a {
       font-size: 0.78rem;
@@ -89,6 +95,64 @@
       transition: color 0.2s;
     }
     .nav-links a:hover { color: var(--ink); }
+
+    /* Dropdown */
+    .nav-dropdown { position: relative; display: flex; align-items: center; height: 100%; }
+    .nav-dropdown-toggle {
+      display: flex; align-items: center; gap: 0.3rem;
+      cursor: pointer;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-dropdown:hover .nav-dropdown-toggle { color: var(--ink); }
+    .nav-dropdown-toggle svg {
+      width: 10px; height: 10px;
+      stroke: currentColor; fill: none;
+      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+      transition: transform 0.2s;
+    }
+    .nav-dropdown:hover .nav-dropdown-toggle svg { transform: rotate(180deg); }
+    .nav-dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      padding-top: 1px;
+      z-index: 200;
+    }
+    .nav-dropdown-menu::before {
+      content: '';
+      display: block;
+      height: 8px;
+      position: absolute;
+      top: 0; left: 0; right: 0;
+    }
+    .nav-dropdown:hover .nav-dropdown-menu { display: block; }
+    .nav-dropdown-menu-inner {
+      background: var(--paper);
+      border: 1px solid var(--rule);
+      min-width: 180px;
+    }
+    .nav-dropdown-menu a {
+      display: block;
+      padding: 0.65rem 1rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      border-bottom: 1px solid var(--rule);
+      transition: color 0.15s, background 0.15s;
+    }
+    .nav-dropdown-menu a:last-child { border-bottom: none; }
+    .nav-dropdown-menu a:hover { color: var(--ink); background: var(--warm-mid); }
+
     .nav-cta {
       color: var(--accent) !important;
       border: 1px solid var(--accent) !important;
@@ -746,12 +810,32 @@
       <ul class="nav-links">
         <li><a href="#work">Work</a></li>
         <li><a href="#cases">Cases</a></li>
-        <li><a href="#audit">Audit</a></li>
-        <li><a href="#about">About</a></li>
         <li><a href="#insights">Insights</a></li>
-        <li><a href="ai-workflows.html">AI Workflows</a></li>
-        <li><a href="cmo-ai-roi-framework.html">AI Use Cases</a></li>
-        <li><a href="gtm-friction-audit-ai-partners.html">AI Partner Audit</a></li>
+        <li class="nav-dropdown">
+          <span class="nav-dropdown-toggle">
+            Audit
+            <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+          </span>
+          <div class="nav-dropdown-menu">
+            <div class="nav-dropdown-menu-inner">
+              <a href="#audit">GTM Audit</a>
+              <a href="gtm-friction-audit-ai-partners.html">AI Partner Audit</a>
+            </div>
+          </div>
+        </li>
+        <li class="nav-dropdown">
+          <span class="nav-dropdown-toggle">
+            AI Workflows
+            <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+          </span>
+          <div class="nav-dropdown-menu">
+            <div class="nav-dropdown-menu-inner">
+              <a href="cmo-ai-roi-framework.html">GTM Workflows</a>
+              <a href="ai-workflows.html">Marketing Workflows</a>
+            </div>
+          </div>
+        </li>
+        <li><a href="#about">About</a></li>
         <li><a class="nav-cta" href="#cta">Start a Conversation</a></li>
       </ul>
     </div>
@@ -1156,12 +1240,13 @@
       <ul class="footer-links">
         <li><a href="#work">Work</a></li>
         <li><a href="#cases">Cases</a></li>
-        <li><a href="#audit">Audit</a></li>
-        <li><a href="#about">About</a></li>
-        <li><a href="index.html#insights">Insights</a></li>
-        <li><a href="ai-workflows.html">AI Workflows</a></li>
-        <li><a href="cmo-ai-roi-framework.html">AI Use Cases</a></li>
+        <li><a href="#audit">GTM Audit</a></li>
         <li><a href="gtm-friction-audit-ai-partners.html">AI Partner Audit</a></li>
+        <li><a href="index.html#insights">Insights</a></li>
+        <li><a href="ai-workflows.html#product">GTM Workflows</a></li>
+        <li><a href="ai-workflows.html#partner">Marketing Workflows</a></li>
+        <li><a href="cmo-ai-roi-framework.html">AI Use Cases</a></li>
+        <li><a href="#about">About</a></li>
         <li><a href="https://precisiongtm.substack.com" target="_blank" rel="noopener">Substack</a></li>
       </ul>
       <div class="footer-copy">&copy; 2026 Precision GTM LLC</div>

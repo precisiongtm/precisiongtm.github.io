@@ -619,7 +619,7 @@ document.getElementById('bk-submit').addEventListener('click', () => {
   form.target = 'hidden-iframe';
   form.style.display = 'none';
 
-  const fields = { name, company, email, message, page: 'AI Partner Track -- Booking' };
+  const fields = { name, company, email, message, page: 'AI Partner Track -- Booking', source: 'gtm-friction-audit-ai-partners' };
   Object.entries(fields).forEach(([key, value]) => {
     const input = document.createElement('input');
     input.type = 'hidden';

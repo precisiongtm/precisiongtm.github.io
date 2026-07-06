@@ -1314,7 +1314,7 @@ document.getElementById('fb-submit').addEventListener('click', () => {
   form.target = 'hidden-iframe';
   form.style.display = 'none';
 
-  const fields = { name, company, rating: selectedRating || '', comment };
+  const fields = { name, company, rating: selectedRating || '', comment, page: 'CMO AI ROI Framework -- Feedback', source: 'cmo-ai-roi-framework' };
   Object.entries(fields).forEach(([key, value]) => {
     const input = document.createElement('input');
     input.type = 'hidden';

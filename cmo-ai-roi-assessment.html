@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Use Case Audit: Precision GTM</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:#f5f2ec; --navy:#0f0e0c; --blue:#00b8d9; --blue-dk:#0097b5;
+    --mid:#6b6358; --border:#c9c0b0; --score-bg:rgba(0,184,217,0.08);
+    --risk-bg:#fff4f0; --tag-bg:#e2dbd0; --light-ink:#3a3630; --warm-mid:#e8e2d8;
+  }
+
+  body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:var(--navy); font-size:14px; line-height:1.65; -webkit-font-smoothing:antialiased; }
+
+  .pgtm-nav { position:sticky; top:0; z-index:100; background:rgba(248,248,246,0.95); border-bottom:1px solid var(--border); padding:0 48px; backdrop-filter:blur(10px); }
+  .pgtm-nav-inner { max-width:1100px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; height:56px; }
+  .pgtm-logo { font-size:0.82rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--navy); text-decoration:none; }
+  .pgtm-logo span { color:#00b8d9; }
+  .pgtm-back { display:inline-flex; align-items:center; gap:0.4rem; font-size:0.75rem; font-weight:500; letter-spacing:0.08em; text-transform:uppercase; color:#6b7280; text-decoration:none; transition:color 0.2s; }
+  .pgtm-back:hover { color:#00b8d9; }
+  .pgtm-back svg { width:14px; height:14px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+
+  .header { padding:64px 48px 40px; max-width:1100px; margin:0 auto; border-bottom:1px solid var(--border); }
+  .eyebrow { font-size:0.68rem; font-weight:500; letter-spacing:0.14em; text-transform:uppercase; color:var(--blue); margin-bottom:1rem; }
+  h1 { font-family:'Libre Baskerville',Georgia,serif; font-size:clamp(2rem,4vw,3rem); line-height:1.18; letter-spacing:-0.02em; font-weight:700; color:var(--navy); max-width:720px; margin-bottom:1.25rem; }
+  .subtitle { color:var(--mid); font-size:1rem; max-width:640px; line-height:1.7; font-weight:300; }
+
+  .objective { max-width:1100px; margin:0 auto; padding:28px 48px; border-bottom:1px solid var(--border); }
+  .objective-inner { background:var(--score-bg); border-left:3px solid var(--blue); border-radius:2px; padding:18px 22px; max-width:760px; }
+  .objective-label { font-size:0.62rem; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--blue); margin-bottom:7px; }
+  .objective p { font-size:0.9rem; line-height:1.65; color:var(--light-ink); font-weight:300; }
+  .objective p strong { font-weight:500; color:var(--navy); }
+
+  .wrap { max-width:1100px; margin:0 auto; padding:44px 48px 48px; }
+
+  .progress-bar { display:flex; gap:6px; margin-bottom:40px; }
+  .progress-seg { flex:1; height:3px; background:var(--border); border-radius:2px; transition:background 0.3s; }
+  .progress-seg.done { background:var(--blue); }
+  .progress-seg.current { background:var(--navy); }
+
+  .question-block { display:none; }
+  .question-block.active { display:block; animation:fade 0.35s ease; }
+  @keyframes fade { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+
+  .q-count { font-size:0.68rem; font-weight:500; letter-spacing:0.14em; text-transform:uppercase; color:var(--mid); margin-bottom:14px; }
+  .q-text { font-family:'Libre Baskerville',serif; font-size:clamp(1.35rem,2.6vw,1.75rem); line-height:1.35; font-weight:700; color:var(--navy); max-width:720px; margin-bottom:10px; letter-spacing:-0.01em; }
+  .q-help { font-size:0.9rem; color:var(--mid); max-width:660px; line-height:1.65; font-weight:300; margin-bottom:20px; }
+
+  .picker-warning { display:flex; gap:10px; background:var(--risk-bg); border:1px solid #f0d4c8; border-radius:2px; padding:14px 16px; max-width:760px; margin-bottom:26px; }
+  .picker-warning svg { flex-shrink:0; width:18px; height:18px; stroke:#dc2626; fill:none; stroke-width:2; margin-top:1px; }
+  .picker-warning p { font-size:0.85rem; line-height:1.6; color:var(--light-ink); font-weight:300; }
+  .picker-warning strong { font-weight:600; color:#b91c1c; }
+
+  .system-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; max-width:760px; }
+  .system-cat-label { grid-column:1/-1; font-size:0.62rem; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:var(--mid); margin-top:12px; margin-bottom:-2px; }
+  .system-cat-label:first-child { margin-top:0; }
+  .system { display:flex; align-items:flex-start; gap:12px; padding:14px 16px; background:white; border:1px solid var(--border); border-radius:2px; cursor:pointer; transition:all 0.15s; }
+  .system:hover { border-color:var(--blue); background:#fdfcfa; }
+  .system.selected { border-color:var(--navy); background:var(--score-bg); }
+  .system.assumed { opacity:0.9; }
+  .system-check { flex-shrink:0; width:18px; height:18px; border-radius:3px; border:1.5px solid var(--border); margin-top:1px; position:relative; transition:all 0.15s; }
+  .system.selected .system-check { border-color:var(--blue); background:var(--blue); }
+  .system.selected .system-check::after { content:''; position:absolute; left:5px; top:1px; width:5px; height:10px; border:solid white; border-width:0 2px 2px 0; transform:rotate(45deg); }
+  .system-body { flex:1; }
+  .system-name { font-size:0.88rem; font-weight:500; color:var(--navy); line-height:1.35; }
+  .system-egs { font-size:0.76rem; color:var(--mid); font-weight:300; margin-top:2px; }
+  .system-tag { display:inline-block; font-size:0.58rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--mid); background:var(--tag-bg); padding:1px 6px; border-radius:2px; margin-left:6px; vertical-align:middle; }
+
+  .options { display:flex; flex-direction:column; gap:10px; max-width:760px; }
+  .option { display:flex; align-items:flex-start; gap:14px; padding:18px 20px; background:white; border:1px solid var(--border); border-radius:2px; cursor:pointer; transition:all 0.15s; }
+  .option:hover { border-color:var(--blue); background:#fdfcfa; }
+  .option.selected { border-color:var(--navy); background:var(--score-bg); }
+  .option-marker { flex-shrink:0; width:20px; height:20px; border-radius:50%; border:1.5px solid var(--border); margin-top:1px; position:relative; transition:all 0.15s; }
+  .option.selected .option-marker { border-color:var(--blue); }
+  .option.selected .option-marker::after { content:''; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:10px; height:10px; border-radius:50%; background:var(--blue); }
+  .option-body { flex:1; }
+  .option-title { font-size:0.92rem; font-weight:500; color:var(--navy); line-height:1.4; }
+  .option-desc { font-size:0.82rem; color:var(--mid); font-weight:300; line-height:1.55; margin-top:3px; }
+
+  .q-nav { display:flex; align-items:center; justify-content:space-between; margin-top:36px; max-width:760px; }
+  .btn { font-family:'DM Sans',sans-serif; font-size:0.78rem; font-weight:500; letter-spacing:0.07em; text-transform:uppercase; padding:0.85rem 2rem; border-radius:2px; cursor:pointer; transition:all 0.15s; border:1px solid var(--border); background:var(--bg); color:var(--navy); text-decoration:none; display:inline-block; }
+  .btn:hover { border-color:var(--blue); color:var(--blue); }
+  .btn-primary { background:var(--blue); color:white; border-color:var(--blue); }
+  .btn-primary:hover { background:var(--blue-dk); border-color:var(--blue-dk); color:white; }
+  .btn-primary:disabled { background:var(--border); border-color:var(--border); color:var(--mid); cursor:not-allowed; }
+  .btn-ghost { border:none; background:none; color:var(--mid); padding-left:0; }
+  .btn-ghost:hover { color:var(--blue); }
+  .btn-ghost:disabled { color:transparent; cursor:default; }
+
+  .results { display:none; }
+  .results.active { display:block; animation:fade 0.4s ease; }
+  .results-head { padding-bottom:32px; border-bottom:1px solid var(--border); margin-bottom:8px; }
+  .results-eyebrow { font-size:0.68rem; font-weight:500; letter-spacing:0.14em; text-transform:uppercase; color:var(--blue); margin-bottom:14px; }
+  .results-title { font-family:'Libre Baskerville',serif; font-size:clamp(1.6rem,3vw,2.2rem); line-height:1.25; font-weight:700; color:var(--navy); max-width:720px; margin-bottom:16px; letter-spacing:-0.01em; }
+  .results-summary { font-size:0.95rem; color:var(--light-ink); max-width:720px; line-height:1.7; font-weight:300; }
+  .results-summary strong { font-weight:500; color:var(--navy); }
+
+  .profile-chips { display:flex; flex-wrap:wrap; gap:8px; margin-top:22px; }
+  .profile-chip { font-size:0.72rem; font-weight:500; letter-spacing:0.04em; background:var(--tag-bg); color:var(--light-ink); padding:5px 12px; border-radius:2px; }
+  .profile-chip span { color:var(--mid); font-weight:400; }
+
+  .rec-section-label { font-size:0.68rem; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--mid); margin:44px 0 6px; }
+  .rec-section-sub { font-size:0.87rem; color:var(--mid); font-weight:300; margin-bottom:22px; max-width:720px; line-height:1.6; }
+
+  .rec-card { background:white; border:1px solid var(--border); border-radius:2px; padding:24px 26px; margin-bottom:12px; }
+  .rec-card.top { border-left:3px solid var(--blue); }
+  .rec-card-head { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+  .rec-rank { font-size:0.68rem; font-weight:600; letter-spacing:0.08em; color:var(--blue); text-transform:uppercase; margin-bottom:4px; }
+  .rec-name { font-family:'Libre Baskerville',serif; font-size:1.1rem; font-weight:700; color:var(--navy); line-height:1.3; }
+  .rec-desc { font-size:0.85rem; color:var(--mid); font-weight:300; line-height:1.55; margin-top:6px; max-width:620px; }
+  .rec-scores { display:flex; gap:16px; flex-shrink:0; }
+  .rec-score { text-align:center; }
+  .rec-score-val { font-size:0.95rem; font-weight:600; letter-spacing:0.02em; }
+  .rec-score-val .cal { font-size:0.62rem; font-weight:600; margin-left:2px; }
+  .rec-score-lbl { font-size:0.6rem; font-weight:600; text-transform:uppercase; letter-spacing:0.1em; color:var(--mid); margin-top:2px; }
+  .sc-roi { color:var(--blue); }
+  .sc-risk-low { color:#16a34a; }
+  .sc-risk-mid { color:#d97706; }
+  .sc-risk-high { color:#dc2626; }
+  .sc-ttv { color:#7c3aed; }
+  .sc-effort { color:var(--light-ink); }
+  .cal-down { color:#16a34a; }
+  .cal-up { color:#dc2626; }
+
+  .rec-why { margin-top:18px; padding-top:16px; border-top:1px solid var(--warm-mid); }
+  .rec-why-label { font-size:0.62rem; font-weight:600; text-transform:uppercase; letter-spacing:0.12em; color:var(--blue); margin-bottom:7px; }
+  .rec-why p { font-size:0.87rem; line-height:1.65; color:var(--light-ink); font-weight:300; }
+  .rec-why p strong { font-weight:500; color:var(--navy); }
+  .cal-note { margin-top:10px; font-size:0.8rem; color:var(--mid); font-weight:300; line-height:1.55; }
+  .cal-note strong { color:var(--light-ink); font-weight:500; }
+  .rec-caution { display:flex; gap:8px; margin-top:12px; padding:10px 12px; background:var(--risk-bg); border:1px solid #f0d4c8; border-radius:2px; }
+  .rec-caution svg { flex-shrink:0; width:15px; height:15px; stroke:#dc2626; fill:none; stroke-width:2; margin-top:2px; }
+  .rec-caution p { font-size:0.8rem; line-height:1.55; color:var(--light-ink); font-weight:300; }
+  .rec-caution strong { color:#b91c1c; font-weight:600; }
+
+  .rec-stack { display:flex; flex-wrap:wrap; gap:4px; margin-top:12px; }
+  .rec-stack-tag { background:var(--tag-bg); color:var(--mid); font-size:0.65rem; font-weight:500; padding:2px 7px; border-radius:2px; letter-spacing:0.04em; }
+  .rec-stack-tag.missing { background:#fef2f2; color:#dc2626; }
+
+  .gated-card { background:transparent; border:1px dashed var(--border); border-radius:2px; padding:20px 22px; margin-bottom:10px; }
+  .gated-head { display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+  .gated-name { font-family:'Libre Baskerville',serif; font-size:0.98rem; font-weight:700; color:var(--light-ink); }
+  .gated-reason { font-size:0.72rem; font-weight:500; letter-spacing:0.04em; color:#dc2626; text-transform:uppercase; }
+  .gated-fix { font-size:0.85rem; line-height:1.6; color:var(--mid); font-weight:300; margin-top:8px; max-width:720px; }
+  .gated-fix strong { font-weight:500; color:var(--light-ink); }
+
+  .results-actions { display:flex; gap:12px; flex-wrap:wrap; margin-top:44px; padding-top:32px; border-top:1px solid var(--border); }
+  .cta-note { font-size:0.87rem; color:var(--mid); font-weight:300; line-height:1.6; max-width:720px; margin-top:20px; }
+  .cta-note a { color:var(--blue); text-decoration:none; }
+  .cta-note a:hover { text-decoration:underline; }
+
+  .email-capture {
+    margin-top: 2.5rem;
+    padding: 1.75rem 2rem;
+    background: var(--warm-mid);
+    border-left: 3px solid var(--blue);
+    max-width: 680px;
+  }
+  .email-capture-label {
+    font-size: 0.68rem; font-weight: 600;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--blue); margin-bottom: 0.5rem;
+  }
+  .email-capture-sub {
+    font-size: 0.87rem; color: var(--mid);
+    line-height: 1.65; font-weight: 300;
+    margin-bottom: 1.25rem;
+  }
+  .email-capture-row {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 10px; margin-bottom: 10px;
+  }
+  .email-input {
+    font-family: 'DM Sans', sans-serif; font-size: 0.87rem;
+    color: var(--navy); background: #fff;
+    border: 1px solid var(--border); border-radius: 2px;
+    padding: 10px 14px; outline: none;
+    transition: border-color 0.15s; width: 100%;
+  }
+  .email-input:focus { border-color: var(--blue); }
+  .email-success {
+    display: none; font-size: 0.87rem;
+    color: #16a34a; font-weight: 500; padding: 10px 0;
+  }
+
+  .legend-row { display:flex; gap:18px; flex-wrap:wrap; margin-top:14px; }
+  .legend-i { font-size:0.72rem; color:var(--mid); font-weight:300; }
+  .legend-i strong { font-weight:600; color:var(--light-ink); }
+
+  @media (max-width:768px) {
+    .pgtm-nav { padding:0 20px; }
+    .header, .wrap, .objective { padding-left:20px; padding-right:20px; }
+    .header { padding-top:40px; }
+    .wrap { padding-top:32px; padding-bottom:48px; }
+    .system-grid { grid-template-columns:1fr; }
+    .rec-scores { gap:12px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="pgtm-nav">
+  <div class="pgtm-nav-inner">
+    <a class="pgtm-logo" href="index.html">PRECISION <span>GTM</span></a>
+    <a class="pgtm-back" href="cmo-ai-roi-framework.html">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      Back to the Framework
+    </a>
+  </div>
+</nav>
+
+<div class="header">
+  <div class="eyebrow">Precision GTM: AI Use Case Audit</div>
+  <h1>Which AI Use Case Should You Start With?</h1>
+  <p class="subtitle">Four questions on the systems you run, your confidence in the data, the field's willingness to adopt, and how fast you need proof. Every use case is scored on ROI, risk, time to value, and effort, then calibrated to your answers and ranked.</p>
+</div>
+
+<div class="objective">
+  <div class="objective-inner">
+    <div class="objective-label">The objective this assessment optimizes for</div>
+    <p>Every recommendation is ranked to do one thing: <strong>demonstrate revenue value a CFO would believe</strong>. That means impact on deals that close, not activity, time saved, or output volume. Efficiency and strategic use cases still rank when you are ready for them, but they never outrank a revenue play, because a defensible pipeline result is what earns you room to do everything else.</p>
+  </div>
+</div>
+
+<div class="wrap">
+  <div id="assessment">
+    <div class="progress-bar" id="progress"></div>
+    <div id="questions"></div>
+    <div class="q-nav">
+      <button class="btn btn-ghost" id="back-btn" onclick="goBack()">Back</button>
+      <button class="btn btn-primary" id="next-btn" onclick="goNext()" disabled>Next</button>
+    </div>
+  </div>
+  <div class="results" id="results"></div>
+</div>
+
+<script>
+/* ---------------------------------------------------------------
+   Scoring model
+   Base scores from the framework. Four factors, calibrated:
+   - ROI: fixed, never moves
+   - Risk: -1 if confidence is high AND the full required stack is present (floor 1)
+   - TTV: if room-to-build, a slow base TTV (<3) lifts to neutral 3
+   - Effort: +1 if exactly one required system missing (cap 5)
+   - 2+ required systems missing => gated out of the ranking
+   - adoption-dependent use case + contested field => gated
+   Trivial + instant-messaging systems are assumed available and never gate.
+---------------------------------------------------------------- */
+const useCases = [
+  { rank:1, name:"Win/Loss Analysis Dashboard", type:"revenue",
+    desc:"Mine closed deals for the patterns that separate wins from losses. Feeds every other revenue use case.",
+    roi:5, effort:3, risk:3, ttv:4, adoption:false,
+    requires:["crm","ci","bi"], stack:["Salesforce","Gong","Tableau"] },
+  { rank:2, name:"ICP Scoring on Live Deals", type:"revenue",
+    desc:"Score every open deal against your validated ICP. Highest scores get PMM firepower, lowest get self-serve.",
+    roi:5, effort:4, risk:4, ttv:3, adoption:true,
+    requires:["crm","ci","intent","warehouse"], stack:["Salesforce","Gong","6sense","Snowflake"] },
+  { rank:3, name:"Deal Signal Analysis", type:"revenue",
+    desc:"Find the exact talk tracks, proof points, and actions that separate won deals from lost ones at the same stage.",
+    roi:5, effort:3, risk:4, ttv:3, adoption:true,
+    requires:["crm","ci","bi"], stack:["Salesforce","Gong","Tableau"] },
+  { rank:4, name:"Real-Time Account Team Training", type:"revenue",
+    desc:"Pull live deal context and deliver a deal-specific briefing before the next call. No boot camp required.",
+    roi:5, effort:2, risk:2, ttv:5, adoption:true,
+    requires:["crm","ci"], stack:["Salesforce","Gong"] },
+  { rank:5, name:"Executive Brief Before a CIO Meeting", type:"revenue",
+    desc:"A one-page brief framed around risk, cost, and priority before an economic-buyer meeting. Not features.",
+    roi:4, effort:1, risk:2, ttv:5, adoption:true,
+    requires:["crm","intent"], stack:["Salesforce","6sense"] },
+  { rank:6, name:"Searchable Objection Library", type:"revenue",
+    desc:"Instant access to responses that actually closed deals, pulled from conversation data and searchable mid-call.",
+    roi:4, effort:2, risk:2, ttv:4, adoption:true,
+    requires:["ci","enablement"], stack:["Gong","Highspot"] },
+  { rank:7, name:"Automated Competitive Monitoring", type:"strategic",
+    desc:"Track competitor pricing, product updates, and announcements automatically. A structured digest every Monday.",
+    roi:3, effort:1, risk:2, ttv:5, adoption:false,
+    requires:[], stack:["Semrush","Scraper"] },
+  { rank:8, name:"ICP Refinement", type:"strategic",
+    desc:"Cut low-velocity segments and tighten your target-market definition using closed pipeline data.",
+    roi:4, effort:3, risk:3, ttv:2, adoption:false,
+    requires:["crm","warehouse","intent"], stack:["Salesforce","Snowflake","6sense"] },
+  { rank:9, name:"Competitive Battle Cards", type:"revenue",
+    desc:"Rep-ready documents built from win/loss data. What competitors claim, where they are weak, how to counter.",
+    roi:3, effort:1, risk:3, ttv:4, adoption:true,
+    requires:["ci","enablement"], stack:["Gong","Highspot"] },
+  { rank:10, name:"Tailored Sales One-Pagers", type:"efficiency",
+    desc:"Industry-specific leave-behinds generated from deal context. Proof points matched to the buyer in the room.",
+    roi:2, effort:1, risk:2, ttv:4, adoption:true,
+    requires:["enablement","crm"], stack:["Highspot","Salesforce"] },
+  { rank:11, name:"Inbound Content Matched to ICP Segments", type:"efficiency",
+    desc:"Map content to ICP priority tiers, find gaps, and generate assets for the segments most likely to convert.",
+    roi:3, effort:3, risk:3, ttv:3, adoption:false,
+    requires:["intent","map"], stack:["6sense","Marketo"] },
+  { rank:12, name:"Account Brief Generation", type:"efficiency",
+    desc:"Draft rep briefs from firmographics and pipeline data so practitioners edit rather than write from scratch.",
+    roi:2, effort:1, risk:2, ttv:5, adoption:true,
+    requires:["crm","intent"], stack:["Salesforce","6sense"] },
+  { rank:13, name:"M&A Announcement with Joint Value Prop", type:"strategic",
+    desc:"When an acquisition closes, the joint narrative has to land fast. Drafts the release and partner announcement.",
+    roi:3, effort:3, risk:3, ttv:5, adoption:false,
+    requires:["crm"], stack:["CRM","PR Tools"] },
+  { rank:14, name:"Pricing and Packaging Strategy", type:"strategic",
+    desc:"Value-metric analysis across usage, expansion, and churn to recommend tier structures. Highest upside, highest consequence.",
+    roi:5, effort:5, risk:5, ttv:1, adoption:false,
+    requires:["crm","product","cs","finance"], stack:["Salesforce","Pendo","Gainsight","Finance Data"] }
+];
+
+const systems = [
+  { cat:"Core deal systems", items:[
+    { id:"crm",        name:"CRM",                       egs:"Salesforce, HubSpot" },
+    { id:"ci",         name:"Conversation intelligence", egs:"Gong, Chorus" },
+    { id:"bi",         name:"BI / reporting",            egs:"Tableau, Looker, Power BI" }
+  ]},
+  { cat:"Targeting and data foundation", items:[
+    { id:"intent",     name:"Intent / ABM data",         egs:"6sense, Demandbase" },
+    { id:"warehouse",  name:"Data warehouse",            egs:"Snowflake, BigQuery, Databricks" },
+    { id:"map",        name:"Marketing automation",      egs:"Marketo, Pardot, HubSpot" }
+  ]},
+  { cat:"Enablement and product", items:[
+    { id:"enablement", name:"Sales enablement",          egs:"Highspot, Seismic" },
+    { id:"product",    name:"Product analytics",         egs:"Pendo, Amplitude" },
+    { id:"cs",         name:"Customer success",          egs:"Gainsight, ChurnZero" },
+    { id:"finance",    name:"Finance / revenue data",    egs:"Usage, expansion, churn data" }
+  ]},
+  { cat:"Collaboration", items:[
+    { id:"im",         name:"Instant messaging",         egs:"Slack, Microsoft Teams", assumed:true }
+  ]}
+];
+
+const systemNames = {
+  crm:"CRM", ci:"conversation intelligence", bi:"BI", intent:"intent data",
+  warehouse:"a data warehouse", map:"marketing automation", enablement:"sales enablement",
+  product:"product analytics", cs:"customer success data", finance:"finance data", im:"instant messaging"
+};
+
+const questions = [
+  {
+    id:"confidence",
+    count:"Question 2 of 4",
+    text:"Across the systems you selected, how clean is the underlying data?",
+    help:"You confirmed you have these systems. This is a separate question: how much you trust the data inside them. It calibrates risk, but only for use cases whose full required stack you confirmed. High lowers their risk. Low raises it, because a system can be fully deployed and still full of unreliable data.",
+    options:[
+      { title:"High. Clean and defensible. I would put it in front of the CFO.",
+        desc:"Populated fields, reliable dispositions, coverage you would stand behind.",
+        confidence:"high" },
+      { title:"Medium. Usable with known gaps. I would not vouch for all of it.",
+        desc:"Good enough to work with, with inconsistencies you are aware of.",
+        confidence:"medium" },
+      { title:"Low. In the systems, but I would not trust a decision made on it.",
+        desc:"Deployed but messy. Stale records, unreliable closed-lost reasons, thin coverage.",
+        confidence:"low" }
+    ]
+  },
+  {
+    id:"adoption",
+    count:"Question 3 of 4",
+    text:"Will the sales field actually use what you build?",
+    help:"Several revenue use cases create value only when reps adopt them. If field trust is low or PMM does not control enablement, adoption-dependent use cases stall no matter how good the output is.",
+    options:[
+      { title:"Contested. Field trust is low and PMM does not own enablement.",
+        desc:"Reps ignore tools they did not ask for. New workflows get muted fast.",
+        adoptionOk:false },
+      { title:"Workable. Reps will try what leadership backs and PMM can influence rollout.",
+        desc:"Adoption is not automatic but a credible tool with sales-leadership air cover lands.",
+        adoptionOk:true }
+    ]
+  },
+  {
+    id:"proof",
+    count:"Question 4 of 4",
+    text:"How fast do you need proof a CFO will recognize?",
+    help:"Time to value is how quickly a use case produces a result once it is live, separate from how hard it was to deploy. If you have room to build, a slower time to value stops counting against a use case. Under this-quarter pressure, it stays a penalty.",
+    options:[
+      { title:"This quarter. I have to show a defensible result fast.",
+        desc:"Credibility depends on a visible win in weeks, not quarters.",
+        proofWeight:"fast" },
+      { title:"This half or beyond. I have room to build toward a bigger result.",
+        desc:"A foundation now that compounds over two or three quarters is fine.",
+        proofWeight:"patient" }
+    ]
+  }
+];
+
+let current = 0;
+const selectedSystems = new Set();
+const answers = {};
+const TOTAL_STEPS = 1 + questions.length;
+
+function renderProgress() {
+  const p = document.getElementById('progress');
+  p.innerHTML = '';
+  for (let i = 0; i < TOTAL_STEPS; i++) {
+    const seg = document.createElement('div');
+    seg.className = 'progress-seg' + (i < current ? ' done' : i === current ? ' current' : '');
+    p.appendChild(seg);
+  }
+}
+
+function renderStep() {
+  const container = document.getElementById('questions');
+  if (current === 0) {
+    container.innerHTML = `
+      <div class="question-block active">
+        <div class="q-count">Question 1 of 4</div>
+        <div class="q-text">Which systems do you run today with reliable, populated data?</div>
+        <div class="q-help">This sets what you can build and how hard it is. A use case missing one required system still ranks, with a higher effort score. Missing two or more moves it to a build-toward list. Instant messaging and lightweight tools like a CMS or scraper are assumed available and never block a use case.</div>
+        <div class="picker-warning">
+          <svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
+          <p><strong>Only check a system where the data is populated and reliable today.</strong> If you bought it but have not fully deployed it, or the data quality is questionable, leave it unchecked. Checking a box is you vouching that a use case built on that data would hold up in front of the CFO.</p>
+        </div>
+        <div class="system-grid">
+          ${systems.map(group => `
+            <div class="system-cat-label">${group.cat}</div>
+            ${group.items.map(s => `
+              <div class="system ${selectedSystems.has(s.id) ? 'selected' : ''} ${s.assumed ? 'assumed' : ''}" onclick="toggleSystem('${s.id}')">
+                <div class="system-check"></div>
+                <div class="system-body">
+                  <div class="system-name">${s.name}${s.assumed ? '<span class="system-tag">assumed</span>' : ''}</div>
+                  <div class="system-egs">${s.egs}</div>
+                </div>
+              </div>
+            `).join('')}
+          `).join('')}
+        </div>
+      </div>
+    `;
+    document.getElementById('back-btn').disabled = true;
+    const nextBtn = document.getElementById('next-btn');
+    nextBtn.disabled = false;
+    nextBtn.textContent = 'Next';
+  } else {
+    const qi = current - 1;
+    const q = questions[qi];
+    const selected = answers[qi];
+    container.innerHTML = `
+      <div class="question-block active">
+        <div class="q-count">${q.count}</div>
+        <div class="q-text">${q.text}</div>
+        <div class="q-help">${q.help}</div>
+        <div class="options">
+          ${q.options.map((o, i) => `
+            <div class="option ${selected === i ? 'selected' : ''}" onclick="selectOption(${i})">
+              <div class="option-marker"></div>
+              <div class="option-body">
+                <div class="option-title">${o.title}</div>
+                <div class="option-desc">${o.desc}</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+    document.getElementById('back-btn').disabled = false;
+    const nextBtn = document.getElementById('next-btn');
+    nextBtn.disabled = selected === undefined;
+    nextBtn.textContent = current === TOTAL_STEPS - 1 ? 'See Results' : 'Next';
+  }
+  renderProgress();
+}
+
+function toggleSystem(id) {
+  if (selectedSystems.has(id)) selectedSystems.delete(id);
+  else selectedSystems.add(id);
+  renderStep();
+}
+function selectOption(i) { answers[current - 1] = i; renderStep(); }
+function goNext() {
+  if (current > 0 && answers[current - 1] === undefined) return;
+  if (current === TOTAL_STEPS - 1) { showResults(); return; }
+  current++; renderStep();
+}
+function goBack() { if (current === 0) return; current--; renderStep(); }
+
+function getProfile() {
+  return {
+    systems: selectedSystems,
+    confidence: questions[0].options[answers[0]].confidence,
+    adoptionOk: questions[1].options[answers[1]].adoptionOk,
+    proof: questions[2].options[answers[2]].proofWeight,
+    labels: {
+      conf: (["High","Medium","Low"][answers[0]]) + " data cleanliness",
+      adopt: answers[1] === 0 ? "Contested adoption" : "Workable adoption",
+      proof: answers[2] === 0 ? "Proof this quarter" : "Room to build"
+    }
+  };
+}
+
+function calibrate(uc, p) {
+  const missing = uc.requires.filter(r => !p.systems.has(r));
+  const fullStack = missing.length === 0;
+  const roi = uc.roi;
+  let risk = uc.risk, riskMoved = false, riskDir = null;
+  if (fullStack) {
+    if (p.confidence === 'high') { risk = Math.max(1, uc.risk - 1); riskMoved = (risk !== uc.risk); riskDir = 'down'; }
+    else if (p.confidence === 'low') { risk = Math.min(5, uc.risk + 1); riskMoved = (risk !== uc.risk); riskDir = 'up'; }
+  }
+  const riskCaution = (fullStack && risk === 5);
+  let ttv = uc.ttv, ttvMoved = false;
+  if (p.proof === 'patient' && uc.ttv < 3) { ttv = 3; ttvMoved = true; }
+  let effort = uc.effort, effortMoved = false;
+  if (missing.length === 1) { effort = Math.min(5, uc.effort + 1); effortMoved = (effort !== uc.effort); }
+  return { missing, fullStack, roi, risk, riskMoved, riskDir, riskCaution, ttv, ttvMoved, effort, effortMoved };
+}
+
+function evaluate(uc, p) {
+  const c = calibrate(uc, p);
+  const gates = [];
+  if (c.missing.length >= 2) gates.push({ type:'systems', missing:c.missing });
+  if (uc.adoption && !p.adoptionOk) gates.push({ type:'adoption' });
+  let score = 0;
+  if (uc.type === 'revenue') score += 40; else if (uc.type === 'strategic') score += 10; else score += 4;
+  score += c.roi * 6;
+  score += (6 - c.risk) * 3;
+  score += (p.proof === 'fast' ? c.ttv * 7 : c.ttv * 3);
+  score += (6 - c.effort) * 3;
+  return { c, gates, score };
+}
+
+function riskClass(v) { return v <= 2 ? 'sc-risk-low' : v === 3 ? 'sc-risk-mid' : 'sc-risk-high'; }
+function typeLabel(t) { return t === 'revenue' ? 'Revenue' : t === 'efficiency' ? 'Efficiency' : 'Strategic'; }
+
+function whyRecommended(uc, p, c) {
+  const bits = [];
+  if (uc.type === 'revenue') bits.push(`It is a <strong>revenue play</strong>. It can influence a live deal, which is the impact a CFO will credit directly.`);
+  else if (uc.type === 'strategic') bits.push(`It is a strategic play. It supports the revenue motion, though the pipeline connection is one step removed.`);
+  else bits.push(`It is an efficiency play. It saves the team real time, but it is a supporting move, not the CFO headline.`);
+
+  if (c.missing.length === 0) bits.push(`You confirmed every system it needs, so it runs on data you already vouch for.`);
+  else bits.push(`You have all but one system it needs. It still ranks, with effort raised to reflect the gap.`);
+
+  const riskWord = c.risk <= 2 ? "low" : c.risk === 3 ? "moderate" : "high";
+  bits.push(`Calibrated risk is ${riskWord} (${c.risk}/5).`);
+  return bits.join(' ');
+}
+
+function calibrationNote(uc, c, p) {
+  const notes = [];
+  if (c.riskMoved && c.riskDir === 'down') notes.push(`<strong>Risk lowered</strong> from ${uc.risk} to ${c.risk}, because you confirmed its full stack and rated that data clean.`);
+  if (c.riskMoved && c.riskDir === 'up') notes.push(`<strong>Risk raised</strong> from ${uc.risk} to ${c.risk}, because it runs entirely on systems whose data you rated low.`);
+  if (c.ttvMoved) notes.push(`<strong>Time to value neutralized</strong> from ${uc.ttv} to ${c.ttv}, because you have room to build, so its slow payoff no longer counts against it.`);
+  if (c.effortMoved) {
+    const m = c.missing.map(x => systemNames[x]).join(', ');
+    notes.push(`<strong>Effort raised</strong> from ${uc.effort} to ${c.effort}, because you are missing ${m}.`);
+  }
+  if (!notes.length) return '';
+  return `<div class="cal-note">Calibration: ${notes.join(' ')}</div>`;
+}
+
+function whatWouldChange(uc, p, gates, c) {
+  const fixes = [];
+  const sysGate = gates.find(g => g.type === 'systems');
+  if (sysGate) {
+    const names = sysGate.missing.map(m => systemNames[m]);
+    const readable = names.length === 1 ? names[0] : names.slice(0, -1).join(', ') + ' and ' + names[names.length - 1];
+    fixes.push(`<strong>Systems.</strong> It is missing ${sysGate.missing.length} required systems: ${readable}. Two or more gaps is too much to calibrate around, so it sits here until you close them. Deploy or clean up those systems until you would trust the data in front of the CFO. Full stack: ${uc.stack.join(', ')}.`);
+  }
+  if (gates.find(g => g.type === 'adoption')) {
+    fixes.push(`<strong>Field adoption.</strong> Its value depends on reps using it, and you flagged adoption as contested. Secure sales-leadership air cover and give PMM a real hand in enablement rollout before building it.`);
+  }
+  return fixes.join(' ');
+}
+
+function showResults() {
+  const p = getProfile();
+  const scored = useCases.map(uc => ({ uc, ...evaluate(uc, p) }));
+  const ranked = scored.filter(s => s.gates.length === 0).sort((a, b) => b.score - a.score);
+  const gated = scored.filter(s => s.gates.length > 0).sort((a, b) => b.score - a.score);
+  const topN = ranked.slice(0, Math.min(4, ranked.length));
+  const rest = ranked.slice(topN.length);
+  const revenueReady = ranked.filter(s => s.uc.type === 'revenue').length;
+
+  document.getElementById('assessment').style.display = 'none';
+  const r = document.getElementById('results');
+  r.classList.add('active');
+
+  const proofText = p.proof === 'fast' ? "a result a CFO recognizes inside a quarter" : "a foundation that compounds over the next two or three quarters";
+  const sysList = [...p.systems].filter(id => id !== 'im').map(id => systemNames[id].replace(/^a /, '')).join(', ') || "no heavy systems confirmed";
+
+  let html = `
+    <div class="results-head">
+      <div class="results-eyebrow">Your AI Use Case Audit</div>
+      <div class="results-title">${ranked.length} use case${ranked.length === 1 ? '' : 's'} ranked for you. ${gated.length} to build toward.</div>
+      <p class="results-summary">Objective held fixed: <strong>demonstrate revenue value a CFO would believe</strong>, and you need <strong>${proofText}</strong>. Each use case starts from its base ROI, risk, time to value, and effort, then calibrates to your answers. ${ranked.length} of 14 are buildable now${revenueReady ? `, ${revenueReady} of them revenue plays` : ''}. ${gated.length ? `${gated.length} are missing two or more systems or blocked by adoption and sit in build-toward.` : ''}</p>
+      <div class="profile-chips">
+        <div class="profile-chip"><span>Systems:</span> ${sysList}</div>
+        <div class="profile-chip"><span>Data:</span> ${p.labels.conf}</div>
+        <div class="profile-chip"><span>Adoption:</span> ${p.labels.adopt}</div>
+        <div class="profile-chip"><span>Proof:</span> ${p.labels.proof}</div>
+      </div>
+      <div class="legend-row">
+        <div class="legend-i"><strong>ROI</strong> pipeline impact, fixed</div>
+        <div class="legend-i"><strong>Effort</strong> systems to connect</div>
+        <div class="legend-i"><strong>Risk</strong> exposure to data quality</div>
+        <div class="legend-i"><strong>TTV</strong> speed to result once live</div>
+      </div>
+    </div>
+  `;
+
+  if (topN.length) {
+    html += `<div class="rec-section-label">Start here</div>`;
+    html += `<div class="rec-section-sub">Top of the ranked list. Revenue plays lead by design. Scores shown are calibrated to your answers, with any adjustment noted on the card.</div>`;
+    topN.forEach((s, i) => { html += recCard(s.uc, p, s.c, i + 1, true); });
+  } else {
+    html += `<div class="rec-section-label">Start here</div>`;
+    html += `<div class="rec-section-sub">Nothing is buildable now on the systems you confirmed. The build-toward list shows what is closest and what unlocks it.</div>`;
+  }
+
+  if (rest.length) {
+    html += `<div class="rec-section-label">Also ranked</div>`;
+    html += `<div class="rec-section-sub">Buildable now, lower on the calibrated ranking. The next wave once the shortlist is moving.</div>`;
+    rest.forEach((s) => { html += recCard(s.uc, p, s.c, null, false); });
+  }
+
+  if (gated.length) {
+    html += `<div class="rec-section-label">Build toward these</div>`;
+    html += `<div class="rec-section-sub">Missing two or more required systems, or blocked by a contested field. Each lists exactly what would move it into the ranking.</div>`;
+    gated.forEach((s) => { html += gatedCard(s.uc, p, s.gates, s.c); });
+  }
+
+  html += `
+    <div class="results-actions">
+      <button class="btn btn-primary" onclick="retake()">Retake the Assessment</button>
+      <a class="btn" href="cmo-ai-roi-framework.html">See the Full Framework</a>
+    </div>
+    <div class="email-capture">
+      <div class="email-capture-label">Get this assessment emailed to you</div>
+      <p class="email-capture-sub">Enter your name and work email and we will send you a copy of your results to share or revisit.</p>
+      <div class="email-capture-form" id="email-capture-form">
+        <div class="email-capture-row">
+          <input class="email-input" id="ec-name" type="text" placeholder="Name" />
+          <input class="email-input" id="ec-email" type="email" placeholder="Work email" />
+        </div>
+        <button class="btn btn-primary" id="ec-submit" onclick="submitEmailCapture()">Send me the results</button>
+        <div class="email-success" id="ec-success">Got it. You will receive your results shortly.</div>
+      </div>
+    </div>
+  `;
+
+  r.innerHTML = html;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function scoreCell(val, base, cls, moved, dir) {
+  const arrow = moved ? `<span class="cal ${dir === 'down' ? 'cal-down' : 'cal-up'}">${dir === 'down' ? '▼' : '▲'}</span>` : '';
+  return `<div class="rec-score-val ${cls}">${val}/5${arrow}</div>`;
+}
+
+function recCard(uc, p, c, rank, top) {
+  const note = calibrationNote(uc, c, p);
+  const caution = c.riskCaution ? `
+    <div class="rec-caution">
+      <svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
+      <p><strong>Buildable, but only as trustworthy as the data underneath it.</strong> Risk is maxed on the systems this runs on. A CFO will scrutinize the result, so clean the underlying data before you put a number in front of one.</p>
+    </div>` : '';
+  return `
+    <div class="rec-card ${top ? 'top' : ''}">
+      <div class="rec-card-head">
+        <div>
+          ${rank ? `<div class="rec-rank">Rank ${rank}</div>` : `<div class="rec-rank">${typeLabel(uc.type)}</div>`}
+          <div class="rec-name">${uc.name}</div>
+          <div class="rec-desc">${uc.desc}</div>
+        </div>
+        <div class="rec-scores">
+          <div class="rec-score">${scoreCell(c.roi, uc.roi, 'sc-roi', false)}<div class="rec-score-lbl">ROI</div></div>
+          <div class="rec-score">${scoreCell(c.effort, uc.effort, 'sc-effort', c.effortMoved, 'up')}<div class="rec-score-lbl">Effort</div></div>
+          <div class="rec-score">${scoreCell(c.risk, uc.risk, riskClass(c.risk), c.riskMoved, c.riskDir || 'down')}<div class="rec-score-lbl">Risk</div></div>
+          <div class="rec-score">${scoreCell(c.ttv, uc.ttv, 'sc-ttv', c.ttvMoved, 'down')}<div class="rec-score-lbl">TTV</div></div>
+        </div>
+      </div>
+      <div class="rec-why">
+        <div class="rec-why-label">Why this ranks here</div>
+        <p>${whyRecommended(uc, p, c)}</p>
+        ${note}
+        ${caution}
+        <div class="rec-stack">${uc.stack.map(s => `<span class="rec-stack-tag">${s}</span>`).join('')}</div>
+      </div>
+    </div>
+  `;
+}
+
+function gatedCard(uc, p, gates, c) {
+  const reasons = [];
+  const sg = gates.find(g => g.type === 'systems');
+  if (sg) reasons.push(`${sg.missing.length} systems missing`);
+  if (gates.find(g => g.type === 'adoption')) reasons.push("Adoption risk");
+  return `
+    <div class="gated-card">
+      <div class="gated-head">
+        <div class="gated-name">${uc.name}</div>
+        <div class="gated-reason">${reasons.join(' + ')}</div>
+      </div>
+      <div class="gated-fix">${whatWouldChange(uc, p, gates, c)}</div>
+    </div>
+  `;
+}
+
+function retake() {
+  current = 0;
+  selectedSystems.clear();
+  for (const k in answers) delete answers[k];
+  document.getElementById('results').classList.remove('active');
+  document.getElementById('results').innerHTML = '';
+  document.getElementById('assessment').style.display = 'block';
+  renderStep();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function submitEmailCapture() {
+  const name = document.getElementById('ec-name').value.trim();
+  const email = document.getElementById('ec-email').value.trim();
+  if (!name || !email) {
+    if (!name) document.getElementById('ec-name').focus();
+    else document.getElementById('ec-email').focus();
+    return;
+  }
+  const btn = document.getElementById('ec-submit');
+  btn.textContent = 'Sending...';
+  btn.disabled = true;
+
+  const iframe = document.createElement('iframe');
+  iframe.name = 'ec-iframe';
+  iframe.style.display = 'none';
+  document.body.appendChild(iframe);
+
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = 'https://script.google.com/macros/s/AKfycbz0Sqczu3exzwFhB8XYPXrE3KoHAUxpt0n-QuokfWO-xEJ-XpODfPuVX1uFB2gxPqLMAQ/exec';
+  form.target = 'ec-iframe';
+  form.style.display = 'none';
+
+  const fields = { name, email, page: 'CMO AI ROI Assessment -- Email Results', source: 'cmo-ai-roi-assessment' };
+  Object.entries(fields).forEach(([key, value]) => {
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = key;
+    input.value = value;
+    form.appendChild(input);
+  });
+
+  document.body.appendChild(form);
+  form.submit();
+
+  setTimeout(() => {
+    btn.style.display = 'none';
+    document.getElementById('ec-success').style.display = 'block';
+    document.body.removeChild(form);
+    document.body.removeChild(iframe);
+  }, 2000);
+}
+
+renderStep();
+</script>
+
+</body>
+</html>

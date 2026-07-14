@@ -608,7 +608,7 @@ function showResults() {
       resultsSummary.push('Rank ' + (i + 1) + ': ' + s.uc.name);
       resultsSummary.push(s.uc.desc);
       resultsSummary.push('ROI: ' + s.c.roi + '/5  |  Effort: ' + s.c.effort + '/5  |  Risk: ' + s.c.risk + '/5  |  TTV: ' + s.c.ttv + '/5');
-      resultsSummary.push('Why: ' + whyRecommended(s.uc, p, s.c));
+      resultsSummary.push('Why: ' + whyRecommended(s.uc, p, s.c).replace(/<[^>]+>/g, ''));
     });
   }
 
@@ -686,15 +686,14 @@ function showResults() {
       <a class="btn" href="cmo-ai-roi-framework.html">See the Full Framework</a>
     </div>
     <div class="email-capture">
-      <div class="email-capture-label">Save or share your results</div>
-      <p class="email-capture-sub">Download a PDF of your results now, or enter your email and we will send it to you.</p>
+      <div class="email-capture-label">Get this assessment emailed to you</div>
+      <p class="email-capture-sub">Enter your details and we will send you a copy of your results to share or revisit.</p>
       <div class="email-capture-form" id="email-capture-form">
-        <button class="btn btn-primary" onclick="downloadPDF()">Download PDF</button>
-        <div class="email-divider">or email it to yourself</div>
         <div class="email-capture-row">
           <input class="email-input" id="ec-name" type="text" placeholder="Name" />
-          <input class="email-input" id="ec-email" type="email" placeholder="Work email" />
+          <input class="email-input" id="ec-company" type="text" placeholder="Company" />
         </div>
+        <input class="email-input" id="ec-email" type="email" placeholder="Work email" style="margin-bottom:10px;" />
         <button class="btn btn-primary" id="ec-submit" onclick="submitEmailCapture()">Send me the results</button>
         <div class="email-success" id="ec-success">Got it. You will receive your results shortly.</div>
       </div>
@@ -963,6 +962,7 @@ function downloadPDF() {
 
 function submitEmailCapture() {
   const name = document.getElementById('ec-name').value.trim();
+  const company = document.getElementById('ec-company').value.trim();
   const email = document.getElementById('ec-email').value.trim();
   if (!name || !email) {
     if (!name) document.getElementById('ec-name').focus();
@@ -986,6 +986,7 @@ function submitEmailCapture() {
 
   const fields = {
     name,
+    company,
     email,
     page: 'CMO AI ROI Assessment -- Email Results',
     source: 'cmo-ai-roi-assessment',

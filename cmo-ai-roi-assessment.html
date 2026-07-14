@@ -573,8 +573,14 @@ function showResults() {
   const rest = ranked.slice(topN.length);
   const revenueReady = ranked.filter(s => s.uc.type === 'revenue').length;
 
+  document.getElementById('assessment').style.display = 'none';
+  const r = document.getElementById('results');
+  r.classList.add('active');
+
+  const proofText = p.proof === 'fast' ? "a result a CFO recognizes inside a quarter" : "a foundation that compounds over the next two or three quarters";
+  const sysList = [...p.systems].filter(id => id !== 'im').map(id => systemNames[id].replace(/^a /, '')).join(', ') || "no heavy systems confirmed";
+
   // Serialize results as plain text for email
-  const sysList = [...p.systems].filter(id => id !== 'im').map(id => systemNames[id].replace(/^a /, '')).join(', ') || 'none confirmed';
   let resultsSummary = [
     'AI USE CASE AUDIT RESULTS',
     'Precision GTM | precisiongotomarket.com',
@@ -626,13 +632,6 @@ function showResults() {
   resultsSummary.push('Questions? mac@precisiongotomarket.com');
 
   window._auditResultsText = resultsSummary.join('\n');
-
-  document.getElementById('assessment').style.display = 'none';
-  const r = document.getElementById('results');
-  r.classList.add('active');
-
-  const proofText = p.proof === 'fast' ? "a result a CFO recognizes inside a quarter" : "a foundation that compounds over the next two or three quarters";
-  const sysList = [...p.systems].filter(id => id !== 'im').map(id => systemNames[id].replace(/^a /, '')).join(', ') || "no heavy systems confirmed";
 
   let html = `
     <div class="results-head">

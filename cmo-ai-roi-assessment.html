@@ -96,6 +96,90 @@
   .results.active { display:block; animation:fade 0.4s ease; }
   .results-head { padding-bottom:32px; border-bottom:1px solid var(--border); margin-bottom:8px; }
   .results-eyebrow { font-size:0.68rem; font-weight:500; letter-spacing:0.14em; text-transform:uppercase; color:var(--blue); margin-bottom:14px; }
+
+  .readiness-block {
+    margin-bottom: 2rem;
+    padding: 1.75rem 2rem;
+    background: var(--warm-mid);
+    border-left: 3px solid var(--blue);
+    max-width: 760px;
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+    flex-wrap: wrap;
+  }
+  .readiness-score-wrap {
+    flex-shrink: 0;
+    text-align: center;
+  }
+  .readiness-score-num {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1;
+  }
+  .readiness-score-denom {
+    font-size: 1rem;
+    color: var(--mid);
+    font-weight: 300;
+  }
+  .readiness-label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-top: 6px;
+  }
+  .readiness-label.ready { color: #16a34a; }
+  .readiness-label.conditional { color: var(--blue); }
+  .readiness-label.partial { color: #d97706; }
+  .readiness-label.not-ready { color: #dc2626; }
+  .readiness-breakdown {
+    flex: 1;
+    min-width: 220px;
+  }
+  .readiness-breakdown-title {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--mid);
+    margin-bottom: 0.75rem;
+  }
+  .readiness-dim {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+  .readiness-dim-label {
+    font-size: 0.78rem;
+    color: var(--navy);
+    font-weight: 400;
+    width: 130px;
+    flex-shrink: 0;
+  }
+  .readiness-bar-wrap {
+    flex: 1;
+    height: 5px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .readiness-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    background: var(--blue);
+  }
+  .readiness-dim-val {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--navy);
+    width: 32px;
+    text-align: right;
+    flex-shrink: 0;
+  }
   .results-title { font-family:'Libre Baskerville',serif; font-size:clamp(1.6rem,3vw,2.2rem); line-height:1.25; font-weight:700; color:var(--navy); max-width:720px; margin-bottom:16px; letter-spacing:-0.01em; }
   .results-summary { font-size:0.95rem; color:var(--light-ink); max-width:720px; line-height:1.7; font-weight:300; }
   .results-summary strong { font-weight:500; color:var(--navy); }
@@ -570,6 +654,74 @@ function whatWouldChange(uc, p, gates, c) {
   return fixes.join(' ');
 }
 
+function calcReadiness(p, scored) {
+  const allSystems = ['crm','ci','bi','intent','warehouse','enablement','map','product','cs','finance'];
+
+  // 1. Stack score (0-100): % of all system slots across use cases that are filled
+  const totalSlots = useCases.reduce((acc, uc) => acc + uc.requires.length, 0);
+  const filledSlots = useCases.reduce((acc, uc) => acc + uc.requires.filter(r => p.systems.has(r)).length, 0);
+  const stackScore = totalSlots > 0 ? Math.round((filledSlots / totalSlots) * 100) : 0;
+
+  // 2. Data confidence score (0-100)
+  const dataScore = { high: 100, medium: 55, low: 20 }[p.confidence] ?? 55;
+
+  // 3. Adoption score (0-100)
+  const adoptionScore = p.adoptionOk ? 90 : 30;
+
+  // 4. Flexibility score (0-100): patient = more options = more ready
+  const flexScore = p.proof === 'patient' ? 85 : 60;
+
+  // Weighted overall: stack and data matter most
+  const overall = Math.round(
+    stackScore   * 0.40 +
+    dataScore    * 0.30 +
+    adoptionScore * 0.20 +
+    flexScore    * 0.10
+  );
+
+  let tier, tierClass;
+  if (overall >= 86)      { tier = 'Ready';                tierClass = 'ready'; }
+  else if (overall >= 66) { tier = 'Conditionally Ready';  tierClass = 'conditional'; }
+  else if (overall >= 41) { tier = 'Partially Ready';      tierClass = 'partial'; }
+  else                    { tier = 'Not Ready';             tierClass = 'not-ready'; }
+
+  return { overall, tier, tierClass, stackScore, dataScore, adoptionScore, flexScore };
+}
+
+function readinessBlock(r) {
+  return `
+    <div class="readiness-block">
+      <div class="readiness-score-wrap">
+        <div class="readiness-score-num">${r.overall}<span class="readiness-score-denom">/100</span></div>
+        <div class="readiness-label ${r.tierClass}">${r.tier}</div>
+      </div>
+      <div class="readiness-breakdown">
+        <div class="readiness-breakdown-title">Score breakdown</div>
+        <div class="readiness-dim">
+          <div class="readiness-dim-label">Stack coverage</div>
+          <div class="readiness-bar-wrap"><div class="readiness-bar-fill" style="width:${r.stackScore}%"></div></div>
+          <div class="readiness-dim-val">${r.stackScore}</div>
+        </div>
+        <div class="readiness-dim">
+          <div class="readiness-dim-label">Data confidence</div>
+          <div class="readiness-bar-wrap"><div class="readiness-bar-fill" style="width:${r.dataScore}%"></div></div>
+          <div class="readiness-dim-val">${r.dataScore}</div>
+        </div>
+        <div class="readiness-dim">
+          <div class="readiness-dim-label">Adoption readiness</div>
+          <div class="readiness-bar-wrap"><div class="readiness-bar-fill" style="width:${r.adoptionScore}%"></div></div>
+          <div class="readiness-dim-val">${r.adoptionScore}</div>
+        </div>
+        <div class="readiness-dim">
+          <div class="readiness-dim-label">Build flexibility</div>
+          <div class="readiness-bar-wrap"><div class="readiness-bar-fill" style="width:${r.flexScore}%"></div></div>
+          <div class="readiness-dim-val">${r.flexScore}</div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
 function showResults() {
   const p = getProfile();
   const scored = useCases.map(uc => ({ uc, ...evaluate(uc, p) }));
@@ -586,10 +738,18 @@ function showResults() {
   const proofText = p.proof === 'fast' ? "a result a CFO recognizes inside a quarter" : "a foundation that compounds over the next two or three quarters";
   const sysList = [...p.systems].filter(id => id !== 'im').map(id => systemNames[id].replace(/^a /, '')).join(', ') || "no heavy systems confirmed";
 
+  const readiness = calcReadiness(p, scored);
+
   // Serialize results as plain text for email
   let resultsSummary = [
     'AI USE CASE AUDIT RESULTS',
     'Precision GTM | precisiongotomarket.com',
+    '',
+    'AI READINESS SCORE: ' + readiness.overall + '/100 -- ' + readiness.tier,
+    'Stack coverage: ' + readiness.stackScore + '/100',
+    'Data confidence: ' + readiness.dataScore + '/100',
+    'Adoption readiness: ' + readiness.adoptionScore + '/100',
+    'Build flexibility: ' + readiness.flexScore + '/100',
     '',
     'YOUR PROFILE',
     'Systems: ' + sysList,
@@ -658,6 +818,8 @@ function showResults() {
       </div>
     </div>
   `;
+
+  html += readinessBlock(readiness);
 
   if (topN.length) {
     html += `<div class="rec-section-label">Start here</div>`;

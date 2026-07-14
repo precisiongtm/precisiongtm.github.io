@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI Use Case Audit: Precision GTM</title>
 <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -185,6 +186,11 @@
   .email-success {
     display: none; font-size: 0.87rem;
     color: #16a34a; font-weight: 500; padding: 10px 0;
+  }
+  .email-divider {
+    font-size: 0.75rem; color: var(--mid);
+    letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 0.75rem 0 0.5rem; font-weight: 400;
   }
 
   .legend-row { display:flex; gap:18px; flex-wrap:wrap; margin-top:14px; }
@@ -680,9 +686,11 @@ function showResults() {
       <a class="btn" href="cmo-ai-roi-framework.html">See the Full Framework</a>
     </div>
     <div class="email-capture">
-      <div class="email-capture-label">Get this assessment emailed to you</div>
-      <p class="email-capture-sub">Enter your name and work email and we will send you a copy of your results to share or revisit.</p>
+      <div class="email-capture-label">Save or share your results</div>
+      <p class="email-capture-sub">Download a PDF of your results now, or enter your email and we will send it to you.</p>
       <div class="email-capture-form" id="email-capture-form">
+        <button class="btn btn-primary" onclick="downloadPDF()">Download PDF</button>
+        <div class="email-divider">or email it to yourself</div>
         <div class="email-capture-row">
           <input class="email-input" id="ec-name" type="text" placeholder="Name" />
           <input class="email-input" id="ec-email" type="email" placeholder="Work email" />
@@ -760,6 +768,197 @@ function retake() {
   document.getElementById('assessment').style.display = 'block';
   renderStep();
   window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function downloadPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+
+  const navy = [15, 14, 12];
+  const cyan = [0, 184, 217];
+  const mid = [107, 99, 88];
+  const warm = [232, 226, 216];
+  const pageW = doc.internal.pageSize.getWidth();
+  const margin = 48;
+  const contentW = pageW - margin * 2;
+  let y = 48;
+
+  function checkPage(needed) {
+    if (y + needed > doc.internal.pageSize.getHeight() - 48) {
+      doc.addPage();
+      y = 48;
+    }
+  }
+
+  function drawRule(color) {
+    doc.setDrawColor(...color);
+    doc.setLineWidth(0.5);
+    doc.line(margin, y, pageW - margin, y);
+    y += 10;
+  }
+
+  // Header bar
+  doc.setFillColor(15, 14, 12);
+  doc.rect(0, 0, pageW, 52, 'F');
+  doc.setFontSize(9);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(255, 255, 255);
+  doc.text('PRECISION', margin, 32);
+  const pW = doc.getTextWidth('PRECISION');
+  doc.setTextColor(...cyan);
+  doc.text(' GTM', margin + pW, 32);
+  doc.setTextColor(107, 99, 88);
+  doc.setFont('helvetica', 'normal');
+  doc.text('precisiongotomarket.com', pageW - margin, 32, { align: 'right' });
+
+  y = 80;
+
+  // Title
+  doc.setFontSize(22);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(...navy);
+  doc.text('AI Use Case Audit Results', margin, y);
+  y += 10;
+  drawRule(warm);
+  y += 4;
+
+  // Profile chips
+  const results = window._auditResultsText || '';
+  const lines = results.split('\n');
+  const profileStart = lines.indexOf('YOUR PROFILE');
+  if (profileStart >= 0) {
+    doc.setFontSize(7);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(...mid);
+    let chipX = margin;
+    for (let i = profileStart + 1; i < profileStart + 5 && i < lines.length; i++) {
+      if (!lines[i]) break;
+      const parts = lines[i].split(': ');
+      if (parts.length < 2) continue;
+      const label = parts[0].trim();
+      const value = parts.slice(1).join(': ').trim();
+      const chipW = doc.getTextWidth(label + ': ' + value) + 16;
+      doc.setFillColor(232, 226, 216);
+      doc.roundedRect(chipX, y - 9, chipW, 14, 2, 2, 'F');
+      doc.setTextColor(...mid);
+      doc.setFont('helvetica', 'bold');
+      doc.text(label + ': ', chipX + 8, y);
+      const lW = doc.getTextWidth(label + ': ');
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(...navy);
+      doc.text(value, chipX + 8 + lW, y);
+      chipX += chipW + 8;
+    }
+    y += 20;
+  }
+
+  // Parse and render sections
+  const sections = ['START HERE', 'ALSO RANKED', 'BUILD TOWARD THESE'];
+  let currentSection = null;
+  let i = 0;
+
+  while (i < lines.length) {
+    const line = lines[i];
+
+    if (sections.includes(line)) {
+      checkPage(30);
+      y += 8;
+      doc.setFontSize(7.5);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(...cyan);
+      doc.text(line, margin, y);
+      y += 4;
+      drawRule(cyan);
+      currentSection = line;
+      i++;
+      continue;
+    }
+
+    if (line.startsWith('Rank ') || (currentSection === 'START HERE' && line && !line.startsWith('ROI') && !line.startsWith('Why') && lines[i - 1] === '')) {
+      checkPage(60);
+      y += 6;
+      // Card title
+      doc.setFontSize(11);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(...navy);
+      const titleText = line.startsWith('Rank ') ? line : line;
+      doc.text(titleText, margin, y);
+      y += 14;
+      i++;
+
+      // Description
+      if (i < lines.length && lines[i] && !lines[i].startsWith('ROI') && !lines[i].startsWith('Why')) {
+        doc.setFontSize(8.5);
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(...mid);
+        const descLines = doc.splitTextToSize(lines[i], contentW);
+        checkPage(descLines.length * 11);
+        doc.text(descLines, margin, y);
+        y += descLines.length * 11 + 4;
+        i++;
+      }
+
+      // Scores line
+      if (i < lines.length && lines[i].startsWith('ROI:')) {
+        doc.setFontSize(7.5);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(...cyan);
+        doc.text(lines[i], margin, y);
+        y += 12;
+        i++;
+      }
+
+      // Why line
+      if (i < lines.length && lines[i].startsWith('Why:')) {
+        doc.setFontSize(8);
+        doc.setFont('helvetica', 'italic');
+        doc.setTextColor(...mid);
+        const whyText = lines[i].replace('Why: ', '');
+        const whyLines = doc.splitTextToSize(whyText, contentW);
+        checkPage(whyLines.length * 11);
+        doc.text(whyLines, margin, y);
+        y += whyLines.length * 11 + 6;
+        i++;
+      }
+
+      // Thin rule between cards
+      doc.setDrawColor(201, 192, 176);
+      doc.setLineWidth(0.3);
+      doc.line(margin, y, pageW - margin, y);
+      y += 8;
+      continue;
+    }
+
+    if (line === '--') {
+      // Footer note
+      checkPage(30);
+      y += 12;
+      doc.setFontSize(7);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(...mid);
+      if (lines[i + 1]) doc.text(lines[i + 1], margin, y);
+      if (lines[i + 2]) doc.text(lines[i + 2], margin, y + 10);
+      break;
+    }
+
+    i++;
+  }
+
+  // Footer on each page
+  const totalPages = doc.internal.getNumberOfPages();
+  for (let pg = 1; pg <= totalPages; pg++) {
+    doc.setPage(pg);
+    const pageH = doc.internal.pageSize.getHeight();
+    doc.setFillColor(232, 226, 216);
+    doc.rect(0, pageH - 28, pageW, 28, 'F');
+    doc.setFontSize(7);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(...mid);
+    doc.text('Precision GTM LLC | precisiongotomarket.com | mac@precisiongotomarket.com', margin, pageH - 12);
+    doc.text('Page ' + pg + ' of ' + totalPages, pageW - margin, pageH - 12, { align: 'right' });
+  }
+
+  doc.save('precision-gtm-ai-use-case-audit.pdf');
 }
 
 function submitEmailCapture() {

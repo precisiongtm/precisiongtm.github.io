@@ -271,6 +271,10 @@
     display: none; font-size: 0.87rem;
     color: #16a34a; font-weight: 500; padding: 10px 0;
   }
+  .email-privacy {
+    font-size: 0.75rem; color: var(--mid);
+    font-weight: 300; margin-top: 6px;
+  }
   .email-divider {
     font-size: 0.75rem; color: var(--mid);
     letter-spacing: 0.08em; text-transform: uppercase;
@@ -858,6 +862,7 @@ function showResults() {
         <input class="email-input" id="ec-email" type="email" placeholder="Work email" style="margin-bottom:10px;" />
         <button class="btn btn-primary" id="ec-submit" onclick="submitEmailCapture()">Send me the results</button>
         <div class="email-success" id="ec-success">Got it. You will receive your results shortly.</div>
+        <p class="email-privacy">Your information is never sold or shared.</p>
       </div>
     </div>
   `;

@@ -573,6 +573,60 @@ function showResults() {
   const rest = ranked.slice(topN.length);
   const revenueReady = ranked.filter(s => s.uc.type === 'revenue').length;
 
+  // Serialize results as plain text for email
+  const sysList = [...p.systems].filter(id => id !== 'im').map(id => systemNames[id].replace(/^a /, '')).join(', ') || 'none confirmed';
+  let resultsSummary = [
+    'AI USE CASE AUDIT RESULTS',
+    'Precision GTM | precisiongotomarket.com',
+    '',
+    'YOUR PROFILE',
+    'Systems: ' + sysList,
+    'Data confidence: ' + p.labels.conf,
+    'Adoption: ' + p.labels.adopt,
+    'Proof timeline: ' + p.labels.proof,
+    '',
+    ranked.length + ' use case(s) ranked. ' + gated.length + ' to build toward.',
+    ''
+  ];
+
+  if (topN.length) {
+    resultsSummary.push('START HERE');
+    topN.forEach((s, i) => {
+      resultsSummary.push('');
+      resultsSummary.push('Rank ' + (i + 1) + ': ' + s.uc.name);
+      resultsSummary.push(s.uc.desc);
+      resultsSummary.push('ROI: ' + s.c.roi + '/5  |  Effort: ' + s.c.effort + '/5  |  Risk: ' + s.c.risk + '/5  |  TTV: ' + s.c.ttv + '/5');
+      resultsSummary.push('Why: ' + whyRecommended(s.uc, p, s.c));
+    });
+  }
+
+  if (rest.length) {
+    resultsSummary.push('');
+    resultsSummary.push('ALSO RANKED');
+    rest.forEach((s) => {
+      resultsSummary.push('');
+      resultsSummary.push(s.uc.name);
+      resultsSummary.push(s.uc.desc);
+      resultsSummary.push('ROI: ' + s.c.roi + '/5  |  Effort: ' + s.c.effort + '/5  |  Risk: ' + s.c.risk + '/5  |  TTV: ' + s.c.ttv + '/5');
+    });
+  }
+
+  if (gated.length) {
+    resultsSummary.push('');
+    resultsSummary.push('BUILD TOWARD THESE');
+    gated.forEach((s) => {
+      resultsSummary.push('');
+      resultsSummary.push(s.uc.name + ' -- ' + s.gates.map(g => g.type === 'systems' ? g.missing.length + ' systems missing' : 'adoption risk').join(', '));
+    });
+  }
+
+  resultsSummary.push('');
+  resultsSummary.push('--');
+  resultsSummary.push('See the full framework: https://precisiongotomarket.com/cmo-ai-roi-framework.html');
+  resultsSummary.push('Questions? mac@precisiongotomarket.com');
+
+  window._auditResultsText = resultsSummary.join('\n');
+
   document.getElementById('assessment').style.display = 'none';
   const r = document.getElementById('results');
   r.classList.add('active');
@@ -732,7 +786,13 @@ function submitEmailCapture() {
   form.target = 'ec-iframe';
   form.style.display = 'none';
 
-  const fields = { name, email, page: 'CMO AI ROI Assessment -- Email Results', source: 'cmo-ai-roi-assessment' };
+  const fields = {
+    name,
+    email,
+    page: 'CMO AI ROI Assessment -- Email Results',
+    source: 'cmo-ai-roi-assessment',
+    results: window._auditResultsText || ''
+  };
   Object.entries(fields).forEach(([key, value]) => {
     const input = document.createElement('input');
     input.type = 'hidden';

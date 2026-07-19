@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Use Case Audit: Precision GTM</title>
-<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<title>AI ROI Readiness Assessment for CMOs: Precision GTM</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -92,11 +92,6 @@
   .btn-ghost:hover { color:var(--blue); }
   .btn-ghost:disabled { color:transparent; cursor:default; }
 
-  .results { display:none; }
-  .results.active { display:block; animation:fade 0.4s ease; }
-  .results-head { padding-bottom:32px; border-bottom:1px solid var(--border); margin-bottom:8px; }
-  .results-eyebrow { font-size:0.68rem; font-weight:500; letter-spacing:0.14em; text-transform:uppercase; color:var(--blue); margin-bottom:14px; }
-
   .readiness-block {
     margin-bottom: 2rem;
     padding: 1.75rem 2rem;
@@ -180,6 +175,54 @@
     text-align: right;
     flex-shrink: 0;
   }
+
+  .email-capture {
+    margin-top: 2.5rem;
+    padding: 1.75rem 2rem;
+    background: var(--warm-mid);
+    border-left: 3px solid var(--blue);
+    max-width: 680px;
+  }
+  .email-capture-label {
+    font-size: 0.68rem; font-weight: 600;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--blue); margin-bottom: 0.5rem;
+  }
+  .email-capture-sub {
+    font-size: 0.87rem; color: var(--mid);
+    line-height: 1.65; font-weight: 300;
+    margin-bottom: 1.25rem;
+  }
+  .email-capture-row {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 10px; margin-bottom: 10px;
+  }
+  .email-input {
+    font-family: 'DM Sans', sans-serif; font-size: 0.87rem;
+    color: var(--navy); background: #fff;
+    border: 1px solid var(--border); border-radius: 2px;
+    padding: 10px 14px; outline: none;
+    transition: border-color 0.15s; width: 100%;
+  }
+  .email-input:focus { border-color: var(--blue); }
+  .email-success {
+    display: none; font-size: 0.87rem;
+    color: #16a34a; font-weight: 500; padding: 10px 0;
+  }
+  .email-privacy {
+    font-size: 0.75rem; color: var(--mid);
+    font-weight: 300; margin-top: 6px;
+  }
+  .email-divider {
+    font-size: 0.75rem; color: var(--mid);
+    letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 0.75rem 0 0.5rem; font-weight: 400;
+  }
+
+  .results { display:none; }
+  .results.active { display:block; animation:fade 0.4s ease; }
+  .results-head { padding-bottom:32px; border-bottom:1px solid var(--border); margin-bottom:8px; }
+  .results-eyebrow { font-size:0.68rem; font-weight:500; letter-spacing:0.14em; text-transform:uppercase; color:var(--blue); margin-bottom:14px; }
   .results-title { font-family:'Libre Baskerville',serif; font-size:clamp(1.6rem,3vw,2.2rem); line-height:1.25; font-weight:700; color:var(--navy); max-width:720px; margin-bottom:16px; letter-spacing:-0.01em; }
   .results-summary { font-size:0.95rem; color:var(--light-ink); max-width:720px; line-height:1.7; font-weight:300; }
   .results-summary strong { font-weight:500; color:var(--navy); }
@@ -238,48 +281,39 @@
   .cta-note a { color:var(--blue); text-decoration:none; }
   .cta-note a:hover { text-decoration:underline; }
 
-  .email-capture {
-    margin-top: 2.5rem;
-    padding: 1.75rem 2rem;
-    background: var(--warm-mid);
-    border-left: 3px solid var(--blue);
-    max-width: 680px;
-  }
-  .email-capture-label {
-    font-size: 0.68rem; font-weight: 600;
-    letter-spacing: 0.14em; text-transform: uppercase;
-    color: var(--blue); margin-bottom: 0.5rem;
-  }
-  .email-capture-sub {
-    font-size: 0.87rem; color: var(--mid);
-    line-height: 1.65; font-weight: 300;
-    margin-bottom: 1.25rem;
-  }
-  .email-capture-row {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 10px; margin-bottom: 10px;
-  }
-  .email-input {
-    font-family: 'DM Sans', sans-serif; font-size: 0.87rem;
-    color: var(--navy); background: #fff;
-    border: 1px solid var(--border); border-radius: 2px;
-    padding: 10px 14px; outline: none;
-    transition: border-color 0.15s; width: 100%;
-  }
-  .email-input:focus { border-color: var(--blue); }
-  .email-success {
-    display: none; font-size: 0.87rem;
-    color: #16a34a; font-weight: 500; padding: 10px 0;
-  }
-  .email-privacy {
-    font-size: 0.75rem; color: var(--mid);
-    font-weight: 300; margin-top: 6px;
-  }
-  .email-divider {
-    font-size: 0.75rem; color: var(--mid);
-    letter-spacing: 0.08em; text-transform: uppercase;
-    padding: 0.75rem 0 0.5rem; font-weight: 400;
-  }
+  /* CUSTOM USE CASE */
+  .custom-badge { display:inline-block; font-size:0.6rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:white; background:var(--navy); padding:2px 8px; border-radius:2px; margin-left:8px; vertical-align:middle; }
+  .custom-form { background:white; border:1px solid var(--border); border-radius:2px; padding:26px; max-width:760px; margin-top:16px; display:none; }
+  .custom-form.active { display:block; animation:fade 0.3s ease; }
+  .cf-field { margin-bottom:20px; }
+  .cf-label { font-size:0.72rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--light-ink); margin-bottom:8px; }
+  .cf-sub { font-size:0.8rem; color:var(--mid); font-weight:300; margin-bottom:10px; line-height:1.55; }
+  .cf-input { width:100%; font-family:'DM Sans',sans-serif; font-size:0.9rem; padding:11px 13px; border:1px solid var(--border); border-radius:2px; background:var(--bg); color:var(--navy); }
+  .cf-input:focus { outline:none; border-color:var(--blue); }
+  .cf-opts { display:flex; flex-direction:column; gap:8px; }
+  .cf-opt { display:flex; align-items:flex-start; gap:11px; padding:12px 14px; background:var(--bg); border:1px solid var(--border); border-radius:2px; cursor:pointer; transition:all 0.15s; }
+  .cf-opt:hover { border-color:var(--blue); }
+  .cf-opt.selected { border-color:var(--navy); background:var(--score-bg); }
+  .cf-opt-marker { flex-shrink:0; width:17px; height:17px; border-radius:50%; border:1.5px solid var(--border); margin-top:1px; position:relative; }
+  .cf-opt.selected .cf-opt-marker { border-color:var(--blue); }
+  .cf-opt.selected .cf-opt-marker::after { content:''; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:9px; height:9px; border-radius:50%; background:var(--blue); }
+  .cf-opt-title { font-size:0.85rem; font-weight:500; color:var(--navy); line-height:1.4; }
+  .cf-sys-grid { display:grid; grid-template-columns:1fr 1fr; gap:7px; }
+  .cf-sys { display:flex; align-items:center; gap:9px; padding:9px 12px; background:var(--bg); border:1px solid var(--border); border-radius:2px; cursor:pointer; transition:all 0.15s; font-size:0.82rem; color:var(--navy); }
+  .cf-sys:hover { border-color:var(--blue); }
+  .cf-sys.selected { border-color:var(--navy); background:var(--score-bg); }
+  .cf-sys-check { flex-shrink:0; width:15px; height:15px; border-radius:3px; border:1.5px solid var(--border); position:relative; }
+  .cf-sys.selected .cf-sys-check { border-color:var(--blue); background:var(--blue); }
+  .cf-sys.selected .cf-sys-check::after { content:''; position:absolute; left:4px; top:0px; width:4px; height:9px; border:solid white; border-width:0 2px 2px 0; transform:rotate(45deg); }
+  .cf-actions { display:flex; gap:10px; margin-top:6px; }
+  .cf-error { font-size:0.8rem; color:#dc2626; margin-top:10px; display:none; }
+  .cf-error.show { display:block; }
+  .diagnosis { display:flex; gap:10px; background:var(--risk-bg); border:1px solid #f0d4c8; border-radius:2px; padding:14px 16px; max-width:720px; margin:0 0 22px; }
+  .diagnosis svg { flex-shrink:0; width:17px; height:17px; stroke:#dc2626; fill:none; stroke-width:2; margin-top:2px; }
+  .diagnosis p { font-size:0.85rem; line-height:1.6; color:var(--light-ink); font-weight:300; }
+  .diagnosis strong { font-weight:600; color:#b91c1c; }
+
+  @media (max-width:768px) { .cf-sys-grid { grid-template-columns:1fr; } }
 
   .legend-row { display:flex; gap:18px; flex-wrap:wrap; margin-top:14px; }
   .legend-i { font-size:0.72rem; color:var(--mid); font-weight:300; }
@@ -316,9 +350,9 @@
 </nav>
 
 <div class="header">
-  <div class="eyebrow">Precision GTM: AI Use Case Audit</div>
+  <div class="eyebrow">Precision GTM: CMO Intelligence Series</div>
   <h1>Which AI Use Case Should You Start With?</h1>
-  <p class="subtitle">Four questions on the systems you run, your confidence in the data, the field's willingness to adopt, and how fast you need proof. Every use case is scored on ROI, risk, time to value, and effort, then calibrated to your answers and ranked.</p>
+  <p class="subtitle">Five questions on the systems you run, how clean the data is, who can build, whether the field will adopt, and how fast you need proof. Every use case is scored on ROI, risk, time to value, and effort, then calibrated to your answers and ranked.</p>
 </div>
 
 <div class="objective">
@@ -359,11 +393,11 @@ const useCases = [
     requires:["crm","ci","bi"], stack:["Salesforce","Gong","Tableau"] },
   { rank:2, name:"ICP Scoring on Live Deals", type:"revenue",
     desc:"Score every open deal against your validated ICP. Highest scores get PMM firepower, lowest get self-serve.",
-    roi:5, effort:4, risk:4, ttv:3, adoption:true,
+    roi:5, effort:4, risk:4, ttv:3, adoption:true, runCost:true,
     requires:["crm","ci","intent","warehouse"], stack:["Salesforce","Gong","6sense","Snowflake"] },
   { rank:3, name:"Deal Signal Analysis", type:"revenue",
     desc:"Find the exact talk tracks, proof points, and actions that separate won deals from lost ones at the same stage.",
-    roi:5, effort:3, risk:4, ttv:3, adoption:true,
+    roi:5, effort:3, risk:4, ttv:3, adoption:true, runCost:true,
     requires:["crm","ci","bi"], stack:["Salesforce","Gong","Tableau"] },
   { rank:4, name:"Real-Time Account Team Training", type:"revenue",
     desc:"Pull live deal context and deliver a deal-specific briefing before the next call. No boot camp required.",
@@ -414,7 +448,8 @@ const useCases = [
 const systems = [
   { cat:"Core deal systems", items:[
     { id:"crm",        name:"CRM",                       egs:"Salesforce, HubSpot" },
-    { id:"ci",         name:"Conversation intelligence", egs:"Gong, Chorus" },
+    { id:"ci",         name:"Conversation intelligence", egs:"Gong, Chorus. Deal-linked call corpus" },
+    { id:"saleseng",   name:"Sales engagement",          egs:"Salesloft, Outreach, Apollo. Sequences and activity, not the call corpus" },
     { id:"bi",         name:"BI / reporting",            egs:"Tableau, Looker, Power BI" }
   ]},
   { cat:"Targeting and data foundation", items:[
@@ -428,21 +463,47 @@ const systems = [
     { id:"cs",         name:"Customer success",          egs:"Gainsight, ChurnZero" },
     { id:"finance",    name:"Finance / revenue data",    egs:"Usage, expansion, churn data" }
   ]},
-  { cat:"Collaboration", items:[
-    { id:"im",         name:"Instant messaging",         egs:"Slack, Microsoft Teams", assumed:true }
+  { cat:"Content and brand", items:[
+    { id:"dam",        name:"DAM / brand management",    egs:"Frontify, Bynder, Brandfolder, SharePoint brand library" },
+    { id:"cms",        name:"CMS / content platform",    egs:"WordPress, Contentful, HubSpot CMS" }
+  ]},
+  { cat:"Files and communications as sources", items:[
+    { id:"files",      name:"File storage / document repositories", egs:"SharePoint, OneDrive, Google Drive. Check only if curated and current, not just present" },
+    { id:"emailarch",  name:"Email archives",            egs:"Gmail, Outlook. Check only if minable within your privacy and governance rules" },
+    { id:"chatarch",   name:"IM / chat archives",        egs:"Slack, Teams history. Same governance bar as email" },
+    { id:"transcripts", name:"Meeting transcripts",      egs:"Granola, Otter, Fireflies. Not deal-linked like CI" }
   ]}
 ];
 
 const systemNames = {
   crm:"CRM", ci:"conversation intelligence", bi:"BI", intent:"intent data",
   warehouse:"a data warehouse", map:"marketing automation", enablement:"sales enablement",
-  product:"product analytics", cs:"customer success data", finance:"finance data", im:"instant messaging"
+  product:"product analytics", cs:"customer success data", finance:"finance data",
+  dam:"DAM / brand management", cms:"a CMS / content platform",
+  files:"file storage / document repositories", emailarch:"email archives", chatarch:"IM / chat archives",
+  transcripts:"meeting transcripts", saleseng:"sales engagement"
 };
+
+/* Custom systems: session-scoped, added by the CMO from the picker.
+   Behave like curated heavy systems everywhere except the readiness score,
+   which measures coverage of the fixed 14 only. */
+const customSystems = [];   // [{id:'cx0', name:'...'}]
+let _cxCounter = 0;
+function customSystemId() { return 'cx' + (_cxCounter++); }
+function allHeavySystems() {
+  const curated = systems.flatMap(g => g.items);
+  return curated.concat(customSystems.map(s => ({ id:s.id, name:s.name, egs:'Added by you' })));
+}
+function sysName(id) {
+  if (systemNames[id]) return systemNames[id];
+  const c = customSystems.find(s => s.id === id);
+  return c ? c.name : id;
+}
 
 const questions = [
   {
     id:"confidence",
-    count:"Question 2 of 4",
+    count:"Question 2 of 5",
     text:"Across the systems you selected, how clean is the underlying data?",
     help:"You confirmed you have these systems. This is a separate question: how much you trust the data inside them. It calibrates risk, but only for use cases whose full required stack you confirmed. High lowers their risk. Low raises it, because a system can be fully deployed and still full of unreliable data.",
     options:[
@@ -458,8 +519,25 @@ const questions = [
     ]
   },
   {
+    id:"skills",
+    count:"Question 3 of 5",
+    text:"Who can build and maintain this?",
+    help:"These use cases do not run themselves. Someone has to wire the systems together and keep the pipes alive after launch. This calibrates effort and, at the bottom end, gates out use cases nobody is available to build.",
+    options:[
+      { title:"Dedicated. A technical resource in or available to marketing.",
+        desc:"Marketing ops engineer, analytics engineer, or equivalent with real system access.",
+        skills:"dedicated" },
+      { title:"Borrowed. IT or a data team does it when they can.",
+        desc:"Capable people exist, but marketing does not control their priorities.",
+        skills:"borrowed" },
+      { title:"Nobody. We would need outside help to build any of this.",
+        desc:"No one on or near the team can connect these systems today.",
+        skills:"none" }
+    ]
+  },
+  {
     id:"adoption",
-    count:"Question 3 of 4",
+    count:"Question 4 of 5",
     text:"Will the sales field actually use what you build?",
     help:"Several revenue use cases create value only when reps adopt them. If field trust is low or PMM does not control enablement, adoption-dependent use cases stall no matter how good the output is.",
     options:[
@@ -473,7 +551,7 @@ const questions = [
   },
   {
     id:"proof",
-    count:"Question 4 of 4",
+    count:"Question 5 of 5",
     text:"How fast do you need proof a CFO will recognize?",
     help:"Time to value is how quickly a use case produces a result once it is live, separate from how hard it was to deploy. If you have room to build, a slower time to value stops counting against a use case. Under this-quarter pressure, it stays a penalty.",
     options:[
@@ -491,6 +569,23 @@ let current = 0;
 const selectedSystems = new Set();
 const answers = {};
 const TOTAL_STEPS = 1 + questions.length;
+const customUseCases = [];   // survives retakes within the session
+let cfState = null;          // in-progress custom form state: { entries: [...] }
+
+/* Derivation for custom use cases: scores come from the framework, not self-rating.
+   ROI  <- deal proximity   deals:5 winrate:4 output:3 time:2
+   Effort <- heavy system count  0-1:1 2:2 3:3 4:4 5+:5
+   Risk   <- heavy system count  0-1:2 2:3 3:4 4+:5  (more connected surfaces, more exposure)
+   TTV  <- output cadence   ondemand:5 weeks:4 month:3 quarter:2 quarters:1 */
+function deriveCustom(cu) {
+  const n = cu.requires.length;
+  return {
+    roi: {deals:5, winrate:4, output:3, time:2}[cu.proximity],
+    effort: n <= 1 ? 1 : Math.min(5, n),
+    risk: n <= 1 ? 2 : Math.min(5, n + 1),
+    ttv: {ondemand:5, weeks:4, month:3, quarter:2, quarters:1}[cu.cadence]
+  };
+}
 
 function renderProgress() {
   const p = document.getElementById('progress');
@@ -507,9 +602,9 @@ function renderStep() {
   if (current === 0) {
     container.innerHTML = `
       <div class="question-block active">
-        <div class="q-count">Question 1 of 4</div>
+        <div class="q-count">Question 1 of 5</div>
         <div class="q-text">Which systems do you run today with reliable, populated data?</div>
-        <div class="q-help">This sets what you can build and how hard it is. A use case missing one required system still ranks, with a higher effort score. Missing two or more moves it to a build-toward list. Instant messaging and lightweight tools like a CMS or scraper are assumed available and never block a use case.</div>
+        <div class="q-help">This sets what you can build and how hard it is. A use case missing one required system still ranks, with a higher effort score. Missing two or more moves it to a build-toward list. Check a CMS or DAM only when a use case would read from it as a source. Delivery-only tools, Slack or Teams as an output channel, a scraper, PR software, are assumed available and never block anything; mining chat history is the separate source entry below. If a system holding data you would build on is not listed, add it at the bottom.</div>
         <div class="picker-warning">
           <svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
           <p><strong>Only check a system where the data is populated and reliable today.</strong> If you bought it but have not fully deployed it, or the data quality is questionable, leave it unchecked. Checking a box is you vouching that a use case built on that data would hold up in front of the CFO.</p>
@@ -527,6 +622,21 @@ function renderStep() {
               </div>
             `).join('')}
           `).join('')}
+          ${customSystems.length ? `<div class="system-cat-label">Your systems</div>` : ''}
+          ${customSystems.map(s => `
+            <div class="system ${selectedSystems.has(s.id) ? 'selected' : ''}" onclick="toggleSystem('${s.id}')">
+              <div class="system-check"></div>
+              <div class="system-body">
+                <div class="system-name">${s.name}</div>
+                <div class="system-egs">Added by you <button class="btn btn-ghost" style="padding:0; font-size:0.68rem;" onclick="event.stopPropagation(); removeCustomSystem('${s.id}')">&minus; remove</button></div>
+              </div>
+            </div>
+          `).join('')}
+          <div class="system-cat-label">Something else holds data you would build on?</div>
+          <div style="grid-column:1/-1; display:flex; gap:8px;">
+            <input class="cf-input" id="add-sys-name" type="text" maxlength="50" placeholder="Name it, e.g. Zendesk, Segment CDP, PIM" style="flex:1;" onkeydown="if(event.key==='Enter')addCustomSystem()">
+            <button class="btn" onclick="addCustomSystem()">&plus; Add</button>
+          </div>
         </div>
       </div>
     `;
@@ -569,6 +679,26 @@ function toggleSystem(id) {
   else selectedSystems.add(id);
   renderStep();
 }
+
+function addCustomSystem() {
+  const inp = document.getElementById('add-sys-name');
+  const name = (inp.value || '').trim();
+  if (!name) return;
+  const id = customSystemId();
+  customSystems.push({ id, name });
+  selectedSystems.add(id);   // adding it is vouching for it; unchecking is one tap
+  renderStep();
+}
+
+function removeCustomSystem(id) {
+  const i = customSystems.findIndex(s => s.id === id);
+  if (i === -1) return;
+  customSystems.splice(i, 1);
+  selectedSystems.delete(id);
+  // scrub it from any custom use case that requires it
+  customUseCases.forEach(cu => { cu.requires = cu.requires.filter(r => r !== id); });
+  renderStep();
+}
 function selectOption(i) { answers[current - 1] = i; renderStep(); }
 function goNext() {
   if (current > 0 && answers[current - 1] === undefined) return;
@@ -581,12 +711,14 @@ function getProfile() {
   return {
     systems: selectedSystems,
     confidence: questions[0].options[answers[0]].confidence,
-    adoptionOk: questions[1].options[answers[1]].adoptionOk,
-    proof: questions[2].options[answers[2]].proofWeight,
+    skills: questions[1].options[answers[1]].skills,
+    adoptionOk: questions[2].options[answers[2]].adoptionOk,
+    proof: questions[3].options[answers[3]].proofWeight,
     labels: {
       conf: (["High","Medium","Low"][answers[0]]) + " data cleanliness",
-      adopt: answers[1] === 0 ? "Contested adoption" : "Workable adoption",
-      proof: answers[2] === 0 ? "Proof this quarter" : "Room to build"
+      skills: (["Dedicated builder","Borrowed builder","No builder"][answers[1]]),
+      adopt: answers[2] === 0 ? "Contested adoption" : "Workable adoption",
+      proof: answers[3] === 0 ? "Proof this quarter" : "Room to build"
     }
   };
 }
@@ -604,8 +736,12 @@ function calibrate(uc, p) {
   let ttv = uc.ttv, ttvMoved = false;
   if (p.proof === 'patient' && uc.ttv < 3) { ttv = 3; ttvMoved = true; }
   let effort = uc.effort, effortMoved = false;
-  if (missing.length === 1) { effort = Math.min(5, uc.effort + 1); effortMoved = (effort !== uc.effort); }
-  return { missing, fullStack, roi, risk, riskMoved, riskDir, riskCaution, ttv, ttvMoved, effort, effortMoved };
+  if (missing.length === 1) { effort = Math.min(5, effort + 1); }
+  let skillsMoved = false;
+  if (p.skills === 'borrowed' && uc.requires.length >= 3) { effort = Math.min(5, effort + 1); skillsMoved = true; }
+  effortMoved = (effort !== uc.effort);
+  const needsBuilder = (p.skills === 'none');
+  return { missing, fullStack, roi, risk, riskMoved, riskDir, riskCaution, ttv, ttvMoved, effort, effortMoved, skillsMoved, needsBuilder };
 }
 
 function evaluate(uc, p) {
@@ -613,6 +749,7 @@ function evaluate(uc, p) {
   const gates = [];
   if (c.missing.length >= 2) gates.push({ type:'systems', missing:c.missing });
   if (uc.adoption && !p.adoptionOk) gates.push({ type:'adoption' });
+  if (p.skills === 'none' && uc.effort >= 3) gates.push({ type:'skills' });
   let score = 0;
   if (uc.type === 'revenue') score += 40; else if (uc.type === 'strategic') score += 10; else score += 4;
   score += c.roi * 6;
@@ -641,13 +778,22 @@ function whyRecommended(uc, p, c) {
 
 function calibrationNote(uc, c, p) {
   const notes = [];
+  if (uc.isCustom) {
+    const proxWord = {deals:"the result shows up in specific deals this quarter", winrate:"the result shows in win rate over a few quarters", output:"the result is team output and quality", time:"the result is time saved"}[uc.derivation.proximity];
+    const cadWord = {ondemand:"it generates on demand", weeks:"first results land within weeks", month:"results accumulate over a month or two", quarter:"patterns take a quarter-plus to build", quarters:"payoff takes multiple quarters"}[uc.derivation.cadence];
+    notes.push(`<strong>How your scores were derived.</strong> ROI ${uc.roi} because you said ${proxWord}. Effort ${uc.effort} and risk ${uc.risk} from the ${uc.requires.length} heavy system${uc.requires.length === 1 ? '' : 's'} it reads, since every connected system is a surface for integration work and bad data. TTV ${uc.ttv} because ${cadWord}. This is a coarse placement by design; a rigorous version scores against your actual data.`);
+  }
   if (c.riskMoved && c.riskDir === 'down') notes.push(`<strong>Risk lowered</strong> from ${uc.risk} to ${c.risk}, because you confirmed its full stack and rated that data clean.`);
   if (c.riskMoved && c.riskDir === 'up') notes.push(`<strong>Risk raised</strong> from ${uc.risk} to ${c.risk}, because it runs entirely on systems whose data you rated low.`);
   if (c.ttvMoved) notes.push(`<strong>Time to value neutralized</strong> from ${uc.ttv} to ${c.ttv}, because you have room to build, so its slow payoff no longer counts against it.`);
   if (c.effortMoved) {
-    const m = c.missing.map(x => systemNames[x]).join(', ');
-    notes.push(`<strong>Effort raised</strong> from ${uc.effort} to ${c.effort}, because you are missing ${m}.`);
+    const parts = [];
+    if (c.missing.length === 1) parts.push(`you are missing ${c.missing.map(x => sysName(x)).join(', ')}`);
+    if (c.skillsMoved) parts.push(`it spans ${uc.requires.length} systems and your builder is borrowed, so coordination cost is real cost`);
+    notes.push(`<strong>Effort raised</strong> from ${uc.effort} to ${c.effort}, because ${parts.join(', and ')}.`);
   }
+  if (c.needsBuilder) notes.push(`<strong>Needs a builder.</strong> Even at this effort level, someone has to connect the systems and keep it running. With no technical resource available, budget outside help before starting.`);
+  if (uc.runCost) notes.push(`<strong>Run cost note.</strong> This processes conversation and deal data continuously, so model costs recur monthly rather than per use. Modest at typical volumes, but it belongs in the budget line, not a surprise.`);
   if (!notes.length) return '';
   return `<div class="cal-note">Calibration: ${notes.join(' ')}</div>`;
 }
@@ -656,51 +802,65 @@ function whatWouldChange(uc, p, gates, c) {
   const fixes = [];
   const sysGate = gates.find(g => g.type === 'systems');
   if (sysGate) {
-    const names = sysGate.missing.map(m => systemNames[m]);
+    const names = sysGate.missing.map(m => sysName(m));
     const readable = names.length === 1 ? names[0] : names.slice(0, -1).join(', ') + ' and ' + names[names.length - 1];
     fixes.push(`<strong>Systems.</strong> It is missing ${sysGate.missing.length} required systems: ${readable}. Two or more gaps is too much to calibrate around, so it sits here until you close them. Deploy or clean up those systems until you would trust the data in front of the CFO. Full stack: ${uc.stack.join(', ')}.`);
   }
   if (gates.find(g => g.type === 'adoption')) {
     fixes.push(`<strong>Field adoption.</strong> Its value depends on reps using it, and you flagged adoption as contested. Secure sales-leadership air cover and give PMM a real hand in enablement rollout before building it.`);
   }
+  if (gates.find(g => g.type === 'skills')) {
+    fixes.push(`<strong>Builder.</strong> This is a heavier build (effort ${uc.effort}/5) and you have no technical resource available to construct or maintain it. Secure a dedicated or borrowed builder, or engage outside help, and it moves back into the ranking.`);
+  }
   return fixes.join(' ');
 }
 
-function calcReadiness(p, scored) {
-  const allSystems = ['crm','ci','bi','intent','warehouse','enablement','map','product','cs','finance'];
+function allUseCases() {
+  const customs = customUseCases.map((cu, i) => {
+    const d = deriveCustom(cu);
+    // Unknown dependence (created under a workable field) is treated as dependent
+    // if the profile is now contested: the safe assumption, surfaced on the card.
+    const adoptionUnknown = (cu.adoptionAsked === false);
+    return {
+      rank: 100 + i, name: cu.name, type: cu.type, desc: cu.desc || "Your use case.",
+      roi: d.roi, effort: d.effort, risk: d.risk, ttv: d.ttv,
+      adoption: adoptionUnknown ? true : cu.adoption === true,
+      adoptionUnknown,
+      requires: cu.requires, stack: cu.requires.map(r => sysName(r)),
+      isCustom: true, derivation: cu
+    };
+  });
+  return useCases.concat(customs);
+}
 
-  // 1. Stack score (0-100): % of all system slots across use cases that are filled
+
+/* Readiness score: capability dimensions only.
+   Weights: stack 40, data 30, adoption 15, builder 15. */
+function calcReadiness(p, scored) {
   const totalSlots = useCases.reduce((acc, uc) => acc + uc.requires.length, 0);
   const filledSlots = useCases.reduce((acc, uc) => acc + uc.requires.filter(r => p.systems.has(r)).length, 0);
   const stackScore = totalSlots > 0 ? Math.round((filledSlots / totalSlots) * 100) : 0;
-
-  // 2. Data confidence score (0-100)
   const dataScore = { high: 100, medium: 55, low: 20 }[p.confidence] ?? 55;
-
-  // 3. Adoption score (0-100)
   const adoptionScore = p.adoptionOk ? 90 : 30;
-
-  // 4. Flexibility score (0-100): patient = more options = more ready
-  const flexScore = p.proof === 'patient' ? 85 : 60;
-
-  // Weighted overall: stack and data matter most
+  const builderScore = { dedicated: 90, borrowed: 60, none: 25 }[p.skills] ?? 60;
   const overall = Math.round(
-    stackScore   * 0.40 +
-    dataScore    * 0.30 +
-    adoptionScore * 0.20 +
-    flexScore    * 0.10
+    stackScore * 0.40 + dataScore * 0.30 + adoptionScore * 0.15 + builderScore * 0.15
   );
-
   let tier, tierClass;
-  if (overall >= 86)      { tier = 'Ready';                tierClass = 'ready'; }
-  else if (overall >= 66) { tier = 'Conditionally Ready';  tierClass = 'conditional'; }
-  else if (overall >= 41) { tier = 'Partially Ready';      tierClass = 'partial'; }
-  else                    { tier = 'Not Ready';             tierClass = 'not-ready'; }
-
-  return { overall, tier, tierClass, stackScore, dataScore, adoptionScore, flexScore };
+  if (overall >= 86)      { tier = 'Ready';               tierClass = 'ready'; }
+  else if (overall >= 66) { tier = 'Conditionally Ready'; tierClass = 'conditional'; }
+  else if (overall >= 41) { tier = 'Partially Ready';     tierClass = 'partial'; }
+  else                    { tier = 'Not Ready';           tierClass = 'not-ready'; }
+  return { overall, tier, tierClass, stackScore, dataScore, adoptionScore, builderScore };
 }
 
 function readinessBlock(r) {
+  const dims = [
+    ['Stack coverage', r.stackScore],
+    ['Data confidence', r.dataScore],
+    ['Adoption readiness', r.adoptionScore],
+    ['Builder availability', r.builderScore]
+  ];
   return `
     <div class="readiness-block">
       <div class="readiness-score-wrap">
@@ -709,26 +869,12 @@ function readinessBlock(r) {
       </div>
       <div class="readiness-breakdown">
         <div class="readiness-breakdown-title">Score breakdown</div>
+        ${dims.map(([label, val]) => `
         <div class="readiness-dim">
-          <div class="readiness-dim-label">Stack coverage</div>
-          <div class="readiness-bar-wrap"><div class="readiness-bar-fill" style="width:${r.stackScore}%"></div></div>
-          <div class="readiness-dim-val">${r.stackScore}</div>
-        </div>
-        <div class="readiness-dim">
-          <div class="readiness-dim-label">Data confidence</div>
-          <div class="readiness-bar-wrap"><div class="readiness-bar-fill" style="width:${r.dataScore}%"></div></div>
-          <div class="readiness-dim-val">${r.dataScore}</div>
-        </div>
-        <div class="readiness-dim">
-          <div class="readiness-dim-label">Adoption readiness</div>
-          <div class="readiness-bar-wrap"><div class="readiness-bar-fill" style="width:${r.adoptionScore}%"></div></div>
-          <div class="readiness-dim-val">${r.adoptionScore}</div>
-        </div>
-        <div class="readiness-dim">
-          <div class="readiness-dim-label">Build flexibility</div>
-          <div class="readiness-bar-wrap"><div class="readiness-bar-fill" style="width:${r.flexScore}%"></div></div>
-          <div class="readiness-dim-val">${r.flexScore}</div>
-        </div>
+          <div class="readiness-dim-label">${label}</div>
+          <div class="readiness-bar-wrap"><div class="readiness-bar-fill" style="width:${val}%"></div></div>
+          <div class="readiness-dim-val">${val}</div>
+        </div>`).join('')}
       </div>
     </div>
   `;
@@ -736,93 +882,35 @@ function readinessBlock(r) {
 
 function showResults() {
   const p = getProfile();
-  const scored = useCases.map(uc => ({ uc, ...evaluate(uc, p) }));
+  const scored = allUseCases().map(uc => ({ uc, ...evaluate(uc, p) }));
   const ranked = scored.filter(s => s.gates.length === 0).sort((a, b) => b.score - a.score);
   const gated = scored.filter(s => s.gates.length > 0).sort((a, b) => b.score - a.score);
-  const topN = ranked.slice(0, Math.min(4, ranked.length));
-  const rest = ranked.slice(topN.length);
+  const total = scored.length;
   const revenueReady = ranked.filter(s => s.uc.type === 'revenue').length;
+  const readiness = calcReadiness(p, scored);
+
 
   document.getElementById('assessment').style.display = 'none';
   const r = document.getElementById('results');
   r.classList.add('active');
 
   const proofText = p.proof === 'fast' ? "a result a CFO recognizes inside a quarter" : "a foundation that compounds over the next two or three quarters";
-  const sysList = [...p.systems].filter(id => id !== 'im').map(id => systemNames[id].replace(/^a /, '')).join(', ') || "no heavy systems confirmed";
-
-  const readiness = calcReadiness(p, scored);
-
-  // Serialize results as plain text for email
-  let resultsSummary = [
-    'AI USE CASE AUDIT RESULTS',
-    'Precision GTM | precisiongotomarket.com',
-    '',
-    'AI READINESS SCORE: ' + readiness.overall + '/100 -- ' + readiness.tier,
-    'Stack coverage: ' + readiness.stackScore + '/100',
-    'Data confidence: ' + readiness.dataScore + '/100',
-    'Adoption readiness: ' + readiness.adoptionScore + '/100',
-    'Build flexibility: ' + readiness.flexScore + '/100',
-    '',
-    'YOUR PROFILE',
-    'Systems: ' + sysList,
-    'Data confidence: ' + p.labels.conf,
-    'Adoption: ' + p.labels.adopt,
-    'Proof timeline: ' + p.labels.proof,
-    '',
-    ranked.length + ' use case(s) ranked. ' + gated.length + ' to build toward.',
-    ''
-  ];
-
-  if (topN.length) {
-    resultsSummary.push('START HERE');
-    topN.forEach((s, i) => {
-      resultsSummary.push('');
-      resultsSummary.push('Rank ' + (i + 1) + ': ' + s.uc.name);
-      resultsSummary.push(s.uc.desc);
-      resultsSummary.push('ROI: ' + s.c.roi + '/5  |  Effort: ' + s.c.effort + '/5  |  Risk: ' + s.c.risk + '/5  |  TTV: ' + s.c.ttv + '/5');
-      resultsSummary.push('Why: ' + whyRecommended(s.uc, p, s.c).replace(/<[^>]+>/g, ''));
-    });
-  }
-
-  if (rest.length) {
-    resultsSummary.push('');
-    resultsSummary.push('ALSO RANKED');
-    rest.forEach((s) => {
-      resultsSummary.push('');
-      resultsSummary.push(s.uc.name);
-      resultsSummary.push(s.uc.desc);
-      resultsSummary.push('ROI: ' + s.c.roi + '/5  |  Effort: ' + s.c.effort + '/5  |  Risk: ' + s.c.risk + '/5  |  TTV: ' + s.c.ttv + '/5');
-    });
-  }
-
-  if (gated.length) {
-    resultsSummary.push('');
-    resultsSummary.push('BUILD TOWARD THESE');
-    gated.forEach((s) => {
-      resultsSummary.push('');
-      resultsSummary.push(s.uc.name + ' -- ' + s.gates.map(g => g.type === 'systems' ? g.missing.length + ' systems missing' : 'adoption risk').join(', '));
-    });
-  }
-
-  resultsSummary.push('');
-  resultsSummary.push('--');
-  resultsSummary.push('See the full framework: https://precisiongotomarket.com/cmo-ai-roi-framework.html');
-  resultsSummary.push('Questions? mac@precisiongotomarket.com');
-
-  window._auditResultsText = resultsSummary.join('\n');
+  const sysList = [...p.systems].map(id => sysName(id).replace(/^a /, '')).join(', ') || "no heavy systems confirmed";
 
   let html = `
     <div class="results-head">
-      <div class="results-eyebrow">Your AI Use Case Audit</div>
+      <div class="results-eyebrow">Your Assessment</div>
       <div class="results-title">${ranked.length} use case${ranked.length === 1 ? '' : 's'} ranked for you. ${gated.length} to build toward.</div>
-      <p class="results-summary">Objective held fixed: <strong>demonstrate revenue value a CFO would believe</strong>, and you need <strong>${proofText}</strong>. Each use case starts from its base ROI, risk, time to value, and effort, then calibrates to your answers. ${ranked.length} of 14 are buildable now${revenueReady ? `, ${revenueReady} of them revenue plays` : ''}. ${gated.length ? `${gated.length} are missing two or more systems or blocked by adoption and sit in build-toward.` : ''}</p>
+      <p class="results-summary">Objective held fixed: <strong>demonstrate revenue value a CFO would believe</strong>, and you need <strong>${proofText}</strong>. Each use case starts from its base ROI, risk, time to value, and effort, then calibrates to your answers. ${ranked.length} of ${total} are buildable now${revenueReady ? `, ${revenueReady} of them revenue plays` : ''}. ${gated.length ? `${gated.length} are gated by missing systems, adoption, or the lack of a builder, and sit in build-toward.` : ''}</p>
       <div class="profile-chips">
         <div class="profile-chip"><span>Systems:</span> ${sysList}</div>
         <div class="profile-chip"><span>Data:</span> ${p.labels.conf}</div>
+        <div class="profile-chip"><span>Builder:</span> ${p.labels.skills}</div>
         <div class="profile-chip"><span>Adoption:</span> ${p.labels.adopt}</div>
         <div class="profile-chip"><span>Proof:</span> ${p.labels.proof}</div>
       </div>
       <div class="legend-row">
+        <div class="legend-i"><strong>Fit</strong> composite of all four, calibrated, indexed to your best fit at 100</div>
         <div class="legend-i"><strong>ROI</strong> pipeline impact, fixed</div>
         <div class="legend-i"><strong>Effort</strong> systems to connect</div>
         <div class="legend-i"><strong>Risk</strong> exposure to data quality</div>
@@ -833,19 +921,44 @@ function showResults() {
 
   html += readinessBlock(readiness);
 
-  if (topN.length) {
-    html += `<div class="rec-section-label">Start here</div>`;
-    html += `<div class="rec-section-sub">Top of the ranked list. Revenue plays lead by design. Scores shown are calibrated to your answers, with any adjustment noted on the card.</div>`;
-    topN.forEach((s, i) => { html += recCard(s.uc, p, s.c, i + 1, true); });
-  } else {
-    html += `<div class="rec-section-label">Start here</div>`;
-    html += `<div class="rec-section-sub">Nothing is buildable now on the systems you confirmed. The build-toward list shows what is closest and what unlocks it.</div>`;
+  if (ranked.length < 3) {
+    // Count which missing systems appear most across system-gated use cases
+    const freq = {};
+    gated.forEach(s => {
+      const sg = s.gates.find(g => g.type === 'systems');
+      if (sg) sg.missing.forEach(m => { freq[m] = (freq[m] || 0) + 1; });
+    });
+    const top = Object.entries(freq).sort((a, b) => b[1] - a[1]).slice(0, 2);
+    if (top.length) {
+      const names = top.map(([id]) => sysName(id));
+      const readable = names.length === 1 ? names[0] : names[0] + ' and ' + names[1];
+      html += `
+      <div class="diagnosis" style="margin-top:28px;">
+        <svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
+        <p><strong>Why the list is short:</strong> most of these use cases need a connected stack with reliable data, and yours cannot support them yet. The fastest unlock is ${readable}, the system${names.length === 1 ? '' : 's'} named most often across build-toward. Standing ${names.length === 1 ? 'that' : 'those'} up with clean data moves several of the gated use cases back into the ranking.</p>
+      </div>`;
+    }
   }
 
-  if (rest.length) {
-    html += `<div class="rec-section-label">Also ranked</div>`;
-    html += `<div class="rec-section-sub">Buildable now, lower on the calibrated ranking. The next wave once the shortlist is moving.</div>`;
-    rest.forEach((s) => { html += recCard(s.uc, p, s.c, null, false); });
+  if (!p.adoptionOk) {
+    const adoptionGatedCount = gated.filter(s => s.gates.some(g => g.type === 'adoption')).length;
+    if (adoptionGatedCount >= 3) {
+      html += `
+      <div class="diagnosis" style="margin-top:28px;">
+        <svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
+        <p><strong>Why so much is gated:</strong> most high-ROI revenue plays run through your reps. They produce briefs, battle cards, and talk tracks a salesperson has to pick up mid-deal, and you flagged the field as contested. Until adoption is fixed, the buildable list is limited to what marketing consumes end to end. Fixing adoption unlocks ${adoptionGatedCount} more use cases at once, which makes it the highest-leverage move on this page.</p>
+      </div>`;
+    }
+  }
+
+  if (ranked.length) {
+    const topScore = ranked[0].score;
+    html += `<div class="rec-section-label">Your ranked list</div>`;
+    html += `<div class="rec-section-sub">Fit combines all four factors, calibrated to your answers and indexed to your best fit at 100. The gaps show distance, not just order. Revenue plays lead by design.</div>`;
+    ranked.forEach((s, i) => { html += recCard(s.uc, p, s.c, i + 1, i === 0, Math.round(s.score / topScore * 100)); });
+  } else {
+    html += `<div class="rec-section-label">Your ranked list</div>`;
+    html += `<div class="rec-section-sub">Nothing is buildable now on the systems you confirmed. The build-toward list shows what is closest and what unlocks it.</div>`;
   }
 
   if (gated.length) {
@@ -856,9 +969,11 @@ function showResults() {
 
   html += `
     <div class="results-actions">
+      <button class="btn" onclick="openCustomForm()">Add Your Own Use Cases</button>
       <button class="btn btn-primary" onclick="retake()">Retake the Assessment</button>
       <a class="btn" href="cmo-ai-roi-framework.html">See the Full Framework</a>
     </div>
+    <div class="custom-form" id="custom-form"></div>
     <div class="email-capture">
       <div class="email-capture-label">Get this assessment emailed to you</div>
       <p class="email-capture-sub">Enter your details and we will send you a copy of your results to share or revisit.</p>
@@ -875,6 +990,50 @@ function showResults() {
     </div>
   `;
 
+  // Serialize results as plain text for the email submission and PDF
+  const topFit = ranked.length ? ranked[0].score : 1;
+  const txt = [
+    'AI USE CASE ASSESSMENT RESULTS',
+    'Precision GTM | precisiongotomarket.com',
+    '',
+    'AI READINESS SCORE: ' + readiness.overall + '/100 -- ' + readiness.tier,
+    'Stack coverage: ' + readiness.stackScore + '/100',
+    'Data confidence: ' + readiness.dataScore + '/100',
+    'Adoption readiness: ' + readiness.adoptionScore + '/100',
+    'Builder availability: ' + readiness.builderScore + '/100',
+    '',
+    'YOUR PROFILE',
+    'Systems: ' + sysList,
+    'Data: ' + p.labels.conf,
+    'Builder: ' + p.labels.skills,
+    'Adoption: ' + p.labels.adopt,
+    'Proof timeline: ' + p.labels.proof,
+    '',
+    ranked.length + ' use case(s) ranked. ' + gated.length + ' to build toward.',
+    ''
+  ];
+  if (ranked.length) {
+    txt.push('YOUR RANKED LIST');
+    ranked.forEach((s, i) => {
+      txt.push('');
+      txt.push('Rank ' + (i + 1) + ' | Fit ' + Math.round(s.score / topFit * 100) + ' | ' + typeLabel(s.uc.type) + ': ' + s.uc.name + (s.uc.isCustom ? ' (yours)' : ''));
+      txt.push(s.uc.desc);
+      txt.push('ROI ' + s.c.roi + '/5 | Effort ' + s.c.effort + '/5 | Risk ' + s.c.risk + '/5 | TTV ' + s.c.ttv + '/5');
+    });
+  }
+  if (gated.length) {
+    txt.push('');
+    txt.push('BUILD TOWARD THESE');
+    gated.forEach((s) => {
+      txt.push('');
+      txt.push(s.uc.name + (s.uc.isCustom ? ' (yours)' : ''));
+      txt.push(whatWouldChange(s.uc, p, s.gates, s.c).replace(/<[^>]+>/g, ''));
+    });
+  }
+  txt.push('');
+  txt.push('Generated by the Precision GTM CMO AI ROI Assessment.');
+  window._auditResultsText = txt.join('\n');
+
   r.innerHTML = html;
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -884,7 +1043,7 @@ function scoreCell(val, base, cls, moved, dir) {
   return `<div class="rec-score-val ${cls}">${val}/5${arrow}</div>`;
 }
 
-function recCard(uc, p, c, rank, top) {
+function recCard(uc, p, c, rank, top, fit) {
   const note = calibrationNote(uc, c, p);
   const caution = c.riskCaution ? `
     <div class="rec-caution">
@@ -895,8 +1054,8 @@ function recCard(uc, p, c, rank, top) {
     <div class="rec-card ${top ? 'top' : ''}">
       <div class="rec-card-head">
         <div>
-          ${rank ? `<div class="rec-rank">Rank ${rank}</div>` : `<div class="rec-rank">${typeLabel(uc.type)}</div>`}
-          <div class="rec-name">${uc.name}</div>
+          <div class="rec-rank">Rank ${rank} &middot; ${typeLabel(uc.type)} &middot; Fit ${fit}</div>
+          <div class="rec-name">${uc.name}${uc.isCustom ? `<span class="custom-badge">Yours</span> <button class="btn btn-ghost" style="padding:0; font-size:0.68rem; vertical-align:middle;" onclick="removeCustom(${uc.rank - 100})">&minus; Remove</button>` : ''}</div>
           <div class="rec-desc">${uc.desc}</div>
         </div>
         <div class="rec-scores">
@@ -922,15 +1081,156 @@ function gatedCard(uc, p, gates, c) {
   const sg = gates.find(g => g.type === 'systems');
   if (sg) reasons.push(`${sg.missing.length} systems missing`);
   if (gates.find(g => g.type === 'adoption')) reasons.push("Adoption risk");
+  if (gates.find(g => g.type === 'skills')) reasons.push("No builder");
   return `
     <div class="gated-card">
       <div class="gated-head">
-        <div class="gated-name">${uc.name}</div>
+        <div class="gated-name">${uc.name}${uc.isCustom ? `<span class="custom-badge">Yours</span> <button class="btn btn-ghost" style="padding:0; font-size:0.68rem; vertical-align:middle;" onclick="removeCustom(${uc.rank - 100})">&minus; Remove</button>` : ''}</div>
         <div class="gated-reason">${reasons.join(' + ')}</div>
       </div>
-      <div class="gated-fix">${whatWouldChange(uc, p, gates, c)}</div>
+      <div class="gated-fix">${uc.isCustom && gates.find(g => g.type === 'adoption') ? (uc.adoptionUnknown ? `<strong>Dependence unknown.</strong> You added this before flagging the field as contested, so whether it needs rep behavior change was never asked. It is parked here as the safe assumption; if marketing controls its output end to end, re-add it and answer the rep question. ` : `<strong>Your use case only works if reps change behavior, and you flagged the field as contested.</strong> Fix adoption first, or pick something marketing controls end to end. `) : ''}${whatWouldChange(uc, p, gates, c)}</div>
     </div>
   `;
+}
+
+/* ---------- Custom use case form (multi-entry) ---------- */
+function blankEntry() {
+  return { name:'', type:null, proximity:null, requires:new Set(), cadence:null, adoption:null };
+}
+
+function openCustomForm() {
+  cfState = { entries: [blankEntry()] };
+  renderCustomForm();
+  const f = document.getElementById('custom-form');
+  f.classList.add('active');
+  f.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function cfSet(i, field, val) {
+  cfState.entries[i][field] = val;
+  renderCustomForm();
+}
+
+function cfToggleSys(i, id) {
+  const req = cfState.entries[i].requires;
+  if (req.has(id)) req.delete(id); else req.add(id);
+  renderCustomForm();
+}
+
+function cfAddEntry() {
+  cfState.entries.push(blankEntry());
+  renderCustomForm();
+}
+
+function cfRemoveEntry(i) {
+  cfState.entries.splice(i, 1);
+  if (cfState.entries.length === 0) { closeCustomForm(); return; }
+  renderCustomForm();
+}
+
+function entryBlock(e, i, askAdoption, heavy, removable) {
+  return `
+    <div style="border-bottom:1px solid var(--warm-mid); padding-bottom:22px; margin-bottom:22px;">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
+        <div class="cf-label" style="margin-bottom:0;">Use case ${i + 1}</div>
+        ${removable ? `<button class="btn btn-ghost" style="padding:0; font-size:0.72rem;" onclick="cfRemoveEntry(${i})">&minus; Remove</button>` : ''}
+      </div>
+      <div class="cf-field">
+        <input class="cf-input" type="text" maxlength="80" placeholder="Name it, e.g. Renewal-risk briefings for CSMs" value="${(e.name || '').replace(/"/g,'&quot;')}" oninput="cfState.entries[${i}].name=this.value">
+      </div>
+      <div class="cf-field">
+        <div class="cf-label">What does it do at its core?</div>
+        <div class="cf-opts">
+          ${[['revenue','Influences deals in flight or the people working them'],['efficiency','Reduces the time or cost to produce output'],['strategic','Shapes market position, targeting, or pricing']].map(([v,t]) => `
+            <div class="cf-opt ${e.type===v?'selected':''}" onclick="cfSet(${i},'type','${v}')"><div class="cf-opt-marker"></div><div class="cf-opt-title">${t}</div></div>`).join('')}
+        </div>
+      </div>
+      <div class="cf-field">
+        <div class="cf-label">When it works, where does the result show up first?</div>
+        <div class="cf-sub">This derives ROI. Pipeline impact means proximity to a closing deal, not how big the idea feels.</div>
+        <div class="cf-opts">
+          ${[['deals','In specific deals this quarter'],['winrate','In win rate or velocity over a few quarters'],['output','In team output or content quality'],['time','In time saved']].map(([v,t]) => `
+            <div class="cf-opt ${e.proximity===v?'selected':''}" onclick="cfSet(${i},'proximity','${v}')"><div class="cf-opt-marker"></div><div class="cf-opt-title">${t}</div></div>`).join('')}
+        </div>
+      </div>
+      <div class="cf-field">
+        <div class="cf-label">Which heavy systems would it read from?</div>
+        <div class="cf-sub">This derives effort and risk. Every connected system is a surface for integration work and bad data. Lightweight tools are assumed and not listed.</div>
+        <div class="cf-sys-grid">
+          ${heavy.map(s => `
+            <div class="cf-sys ${e.requires.has(s.id)?'selected':''}" onclick="cfToggleSys(${i},'${s.id}')"><div class="cf-sys-check"></div>${s.name}</div>`).join('')}
+        </div>
+      </div>
+      <div class="cf-field" style="margin-bottom:${askAdoption ? '20px' : '0'};">
+        <div class="cf-label">Once live, when does the first usable result land?</div>
+        <div class="cf-sub">This derives time to value: speed to result after deployment, not build time.</div>
+        <div class="cf-opts">
+          ${[['ondemand','Same day. It generates on demand'],['weeks','Within a couple of weeks as data flows'],['month','After a month or two of accumulation'],['quarter','After a quarter-plus of pattern building'],['quarters','Only after multiple quarters']].map(([v,t]) => `
+            <div class="cf-opt ${e.cadence===v?'selected':''}" onclick="cfSet(${i},'cadence','${v}')"><div class="cf-opt-marker"></div><div class="cf-opt-title">${t}</div></div>`).join('')}
+        </div>
+      </div>
+      ${askAdoption ? `
+      <div class="cf-field" style="margin-bottom:0;">
+        <div class="cf-label">Does it only create value if salespeople change what they do?</div>
+        <div class="cf-sub">You flagged field adoption as contested, so this determines whether it can rank now.</div>
+        <div class="cf-opts">
+          ${[[true,'Yes. Reps have to pick it up and use it'],[false,'No. Marketing controls the output end to end']].map(([v,t]) => `
+            <div class="cf-opt ${e.adoption===v?'selected':''}" onclick="cfSet(${i},'adoption',${v})"><div class="cf-opt-marker"></div><div class="cf-opt-title">${t}</div></div>`).join('')}
+        </div>
+      </div>` : ''}
+    </div>
+  `;
+}
+
+function renderCustomForm() {
+  const p = getProfile();
+  const askAdoption = !p.adoptionOk;
+  const heavy = allHeavySystems();
+  const f = document.getElementById('custom-form');
+  const removable = cfState.entries.length > 1;
+  f.innerHTML = `
+    ${cfState.entries.map((e, i) => entryBlock(e, i, askAdoption, heavy, removable)).join('')}
+    <div class="cf-actions">
+      <button class="btn" onclick="cfAddEntry()">&plus; Add Another</button>
+      <button class="btn btn-primary" onclick="submitCustom()">Score and Rank ${cfState.entries.length === 1 ? 'It' : 'Them'}</button>
+      <button class="btn btn-ghost" onclick="closeCustomForm()">Cancel</button>
+    </div>
+    <div class="cf-error" id="cf-error">Complete every field in every use case before scoring: name, core function, result location, and cadence${askAdoption ? ', and the rep-behavior question' : ''}.</div>
+  `;
+}
+
+function closeCustomForm() {
+  cfState = null;
+  const f = document.getElementById('custom-form');
+  f.classList.remove('active');
+  f.innerHTML = '';
+}
+
+function submitCustom() {
+  const p = getProfile();
+  const askAdoption = !p.adoptionOk;
+  const invalid = cfState.entries.some(e =>
+    e.name.trim().length === 0 || !e.type || !e.proximity || !e.cadence || (askAdoption && e.adoption === null));
+  if (invalid) { document.getElementById('cf-error').classList.add('show'); return; }
+  cfState.entries.forEach(e => {
+    customUseCases.push({
+      name: e.name.trim(),
+      desc: "Your use case, scored by the framework from your answers.",
+      type: e.type,
+      proximity: e.proximity,
+      requires: [...e.requires],
+      cadence: e.cadence,
+      adoption: askAdoption ? e.adoption : false,
+      adoptionAsked: askAdoption
+    });
+  });
+  cfState = null;
+  showResults();
+}
+
+function removeCustom(idx) {
+  customUseCases.splice(idx, 1);
+  showResults();
 }
 
 function retake() {
@@ -1005,7 +1305,7 @@ function downloadPDF() {
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(...mid);
     let chipX = margin;
-    for (let i = profileStart + 1; i < profileStart + 5 && i < lines.length; i++) {
+    for (let i = profileStart + 1; i < profileStart + 6 && i < lines.length; i++) {
       if (!lines[i]) break;
       const parts = lines[i].split(': ');
       if (parts.length < 2) continue;
@@ -1027,7 +1327,7 @@ function downloadPDF() {
   }
 
   // Parse and render sections
-  const sections = ['START HERE', 'ALSO RANKED', 'BUILD TOWARD THESE'];
+  const sections = ['YOUR RANKED LIST', 'BUILD TOWARD THESE'];
   let currentSection = null;
   let i = 0;
 
@@ -1048,7 +1348,7 @@ function downloadPDF() {
       continue;
     }
 
-    if (line.startsWith('Rank ') || (currentSection === 'START HERE' && line && !line.startsWith('ROI') && !line.startsWith('Why') && lines[i - 1] === '')) {
+    if (line.startsWith('Rank ') || (currentSection === 'YOUR RANKED LIST' && line && !line.startsWith('ROI') && !line.startsWith('Why') && lines[i - 1] === '')) {
       checkPage(60);
       y += 6;
       // Card title
@@ -1073,7 +1373,7 @@ function downloadPDF() {
       }
 
       // Scores line
-      if (i < lines.length && lines[i].startsWith('ROI:')) {
+      if (i < lines.length && lines[i].startsWith('ROI ')) {
         doc.setFontSize(7.5);
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(...cyan);

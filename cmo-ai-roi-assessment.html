@@ -154,6 +154,41 @@
   .readiness-note strong { font-weight:500; color:var(--navy); }
   .disclaimer { font-size:0.78rem; color:var(--mid); font-weight:300; line-height:1.6; max-width:720px; margin-top:28px; padding-top:18px; border-top:1px solid var(--warm-mid); }
 
+  /* NAIVE-VS-CALIBRATED REVEAL */
+  .reveal-card { background:white; border:1px solid var(--border); border-radius:2px; padding:24px 26px; margin-bottom:12px; }
+  .reveal-head { margin-bottom:18px; }
+  .reveal-cols { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  .reveal-col { padding:18px; border-radius:2px; }
+  .reveal-col.naive { background:var(--score-bg); }
+  .reveal-col.calibrated { background:var(--bg); border:1px dashed var(--border); position:relative; }
+  .reveal-col-label { font-size:0.62rem; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:var(--mid); margin-bottom:14px; }
+  .reveal-col.naive .reveal-col-label { color:var(--blue); }
+  .reveal-scores { display:flex; gap:14px; }
+  .reveal-verdict { font-size:0.83rem; line-height:1.55; color:var(--light-ink); font-weight:300; margin-top:14px; }
+  .reveal-verdict.naive-verdict { color:var(--blue-dk); font-weight:500; }
+  .reveal-lock { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:8px 0 4px; }
+  .reveal-lock svg { width:26px; height:26px; stroke:var(--mid); fill:none; stroke-width:1.6; margin-bottom:8px; }
+  .reveal-lock-scores { font-family:'DM Sans',sans-serif; font-size:1rem; font-weight:600; color:var(--mid); letter-spacing:0.06em; }
+  .reveal-gate { margin-top:16px; padding-top:14px; border-top:1px solid var(--warm-mid); }
+  .reveal-gate-line { font-size:0.85rem; line-height:1.6; color:var(--light-ink); font-weight:300; }
+  .reveal-email { margin-top:8px; margin-bottom:8px; border-left:3px solid var(--blue); }
+  @media (max-width:768px) { .reveal-cols { grid-template-columns:1fr; } }
+
+  /* CHAOS-INTO-ORDER: first-render ranking animation */
+  .ranking-animate .rank-item {
+    opacity: 0;
+    transform: translateY(var(--rank-shuffle, 24px)) scale(0.985);
+    transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform;
+  }
+  .ranking-animate .rank-item.settled {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ranking-animate .rank-item { opacity: 1; transform: none; transition: none; }
+  }
+
   .readiness-dim {
     display: flex;
     align-items: center;
@@ -574,6 +609,8 @@ const selectedSystems = new Set();
 const answers = {};
 const TOTAL_STEPS = 1 + questions.length;
 const customUseCases = [];   // survives retakes within the session
+let customUnlocked = false;  // flips true after email is captured at the reveal gate
+let capturedLead = null;     // { name, company, email } once given anywhere this session
 let cfState = null;          // in-progress custom form state: { entries: [...] }
 
 /* Derivation for custom use cases: scores come from the framework, not self-rating.
@@ -588,6 +625,25 @@ function deriveCustom(cu) {
     effort: n <= 1 ? 1 : Math.min(5, n),
     risk: n <= 1 ? 2 : Math.min(5, n + 1),
     ttv: {ondemand:5, weeks:4, month:3, quarter:2, quarters:1}[cu.cadence]
+  };
+}
+
+/* Naive score: the use case rated the way most people would, assuming a
+   perfect stack and clean data. No gates, no calibration. This is the
+   "before" in the before-and-after: optimistic, ungated, deceptively high.
+   ROI and base TTV are intrinsic and carry over; risk and effort are shown
+   at their best-case floor because a naive rater assumes the systems are
+   there and the data is clean. */
+function naiveCustom(cu) {
+  const d = deriveCustom(cu);
+  return {
+    roi: d.roi,
+    effort: 1,          // "just wire it up"
+    risk: 2,            // "our data's fine"
+    ttv: d.ttv,
+    // naive composite mirrors the ranking formula with no gates and best-case inputs
+    score: (cu.type === 'revenue' ? 40 : cu.type === 'strategic' ? 10 : 4)
+         + d.roi * 6 + (6 - 2) * 3 + d.ttv * 7 + (6 - 1) * 3
   };
 }
 
@@ -820,6 +876,7 @@ function whatWouldChange(uc, p, gates, c) {
 }
 
 function allUseCases() {
+  if (!customUnlocked) return useCases.slice();  // locked: customs held back for the reveal
   const customs = customUseCases.map((cu, i) => {
     const d = deriveCustom(cu);
     // Unknown dependence (created under a workable field) is treated as dependent
@@ -940,6 +997,65 @@ function showResults() {
 
   html += readinessBlock(readiness);
 
+  // NAIVE-VS-CALIBRATED REVEAL: when custom use cases are pending unlock,
+  // show their optimistic naive scores and gate the calibrated view on email.
+  if (customUseCases.length && !customUnlocked) {
+    html += `<div id="reveal-anchor"></div>`;
+    html += `<div class="rec-section-label">Your use case${customUseCases.length > 1 ? 's' : ''}, scored two ways</div>`;
+    html += `<div class="rec-section-sub">First, the way most people would rate ${customUseCases.length > 1 ? 'them' : 'it'}: assume the systems are there, assume the data is clean, ship it. Then the calibrated view against your actual stack, data, adoption, and builder. The gap between the two is the whole point.</div>`;
+    customUseCases.forEach((cu) => {
+      const nv = naiveCustom(cu);
+      html += `
+        <div class="reveal-card">
+          <div class="reveal-head">
+            <div class="rec-name">${cu.name}<span class="custom-badge">Yours</span></div>
+          </div>
+          <div class="reveal-cols">
+            <div class="reveal-col naive">
+              <div class="reveal-col-label">The naive score</div>
+              <div class="reveal-scores">
+                <div class="rec-score"><div class="rec-score-val sc-roi">${nv.roi}/5</div><div class="rec-score-lbl">ROI</div></div>
+                <div class="rec-score"><div class="rec-score-val sc-effort">${nv.effort}/5</div><div class="rec-score-lbl">Effort</div></div>
+                <div class="rec-score"><div class="rec-score-val sc-risk-low">${nv.risk}/5</div><div class="rec-score-lbl">Risk</div></div>
+                <div class="rec-score"><div class="rec-score-val sc-ttv">${nv.ttv}/5</div><div class="rec-score-lbl">TTV</div></div>
+              </div>
+              <p class="reveal-verdict naive-verdict">Looks like a clear win. Build it.</p>
+            </div>
+            <div class="reveal-col calibrated locked">
+              <div class="reveal-col-label">The calibrated score</div>
+              <div class="reveal-lock">
+                <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                <div class="reveal-lock-scores">? / 5 &middot; ? / 5 &middot; ? / 5 &middot; ? / 5</div>
+              </div>
+              <p class="reveal-verdict">Against your real constraints, this lands somewhere else. See where, and why.</p>
+            </div>
+          </div>
+          <div class="reveal-gate">
+            <p class="reveal-gate-line">The naive score is why most AI projects get greenlit, then stall. The calibrated score is what your stack, data, and team actually support. Unlock it below.</p>
+          </div>
+        </div>`;
+    });
+    html += `
+      <div class="email-capture reveal-email">
+        <div class="email-capture-label">Unlock your calibrated ranking</div>
+        <p class="email-capture-sub">See your use case${customUseCases.length > 1 ? 's' : ''} scored against your real constraints and slotted into your ranked list.${capturedLead ? '' : ' We will email you a copy to keep.'}</p>
+        <div class="email-capture-form" id="reveal-email-form">
+          ${capturedLead ? `
+          <button class="btn btn-primary" onclick="submitRevealUnlock()">Show me the calibrated ranking</button>
+          ` : `
+          <div class="email-capture-row">
+            <input class="email-input" id="rv-name" type="text" placeholder="Name" />
+            <input class="email-input" id="rv-company" type="text" placeholder="Company" />
+          </div>
+          <input class="email-input" id="rv-email" type="email" placeholder="Work email" style="margin-bottom:10px;" />
+          <button class="btn btn-primary" id="rv-submit" onclick="submitRevealUnlock()">Unlock the calibrated ranking</button>
+          <div class="email-success" id="rv-success">Unlocking...</div>
+          <p class="email-privacy">Your information is never sold or shared.</p>
+          `}
+        </div>
+      </div>`;
+  }
+
   if (ranked.length < 3) {
     // Count which missing systems appear most across system-gated use cases
     const freq = {};
@@ -972,9 +1088,15 @@ function showResults() {
 
   if (ranked.length) {
     const topScore = ranked[0].score;
+    const animate = !window._rankAnimationDone;
     html += `<div class="rec-section-label">Your ranked list</div>`;
     html += `<div class="rec-section-sub">Fit combines all four factors, calibrated to your answers and indexed to your best fit at 100. The gaps show distance, not just order. Revenue plays lead by design.</div>`;
-    ranked.forEach((s, i) => { html += recCard(s.uc, p, s.c, i + 1, i === 0, Math.round(s.score / topScore * 100)); });
+    html += `<div id="ranked-list" class="${animate ? 'ranking-animate' : ''}">`;
+    ranked.forEach((s, i) => {
+      const card = recCard(s.uc, p, s.c, i + 1, i === 0, Math.round(s.score / topScore * 100));
+      html += animate ? card.replace('<div class="rec-card', `<div data-rank="${i}" class="rank-item rec-card`) : card;
+    });
+    html += `</div>`;
   } else {
     html += `<div class="rec-section-label">Your ranked list</div>`;
     html += `<div class="rec-section-sub">Nothing is buildable now on the systems you confirmed. The build-toward list shows what is closest and what unlocks it.</div>`;
@@ -993,6 +1115,13 @@ function showResults() {
       <a class="btn" href="cmo-ai-roi-framework.html">See the Full Framework</a>
     </div>
     <div class="custom-form" id="custom-form"></div>
+    ${capturedLead ? `
+    <div class="email-capture">
+      <div class="email-capture-label">Your results are on the way</div>
+      <p class="email-capture-sub">We have your details from earlier and sent a copy to ${capturedLead.email}. <button class="btn btn-ghost" style="padding:0; font-size:0.83rem; vertical-align:baseline;" onclick="resendResults()">Send again</button></p>
+      <div class="email-success" id="ec-success" style="display:none;">Sent again to ${capturedLead.email}.</div>
+    </div>
+    ` : `
     <div class="email-capture">
       <div class="email-capture-label">Get this assessment emailed to you</div>
       <p class="email-capture-sub">Enter your details and we will send you a copy of your results to share or revisit.</p>
@@ -1007,6 +1136,7 @@ function showResults() {
         <p class="email-privacy">Your information is never sold or shared.</p>
       </div>
     </div>
+    `}
     <p class="disclaimer">This assessment is an indicative starting position, scored from your answers against the Precision GTM framework. It is not professional advice, and it cannot see what a real diagnostic would: your actual data, your pipeline, your team. The rigorous version of this analysis is the GTM Friction Audit.</p>
   `;
 
@@ -1076,6 +1206,25 @@ function showResults() {
 
   r.innerHTML = html;
   window.scrollTo({ top: 0, behavior: 'smooth' });
+  runRankingAnimation();
+}
+
+function runRankingAnimation() {
+  const container = document.getElementById('ranked-list');
+  if (!container || !container.classList.contains('ranking-animate')) return;
+  window._rankAnimationDone = true;   // once per session
+  const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const items = Array.prototype.slice.call(container.querySelectorAll('.rank-item'));
+  if (reduced) { items.forEach(el => el.classList.add('settled')); return; }
+  // Seed each card with a shuffled starting offset so they visibly converge into order
+  items.forEach(el => {
+    const jitter = 18 + Math.floor(Math.random() * 34);   // 18-52px
+    el.style.setProperty('--rank-shuffle', jitter + 'px');
+  });
+  // Settle top-down with a stagger: the ranking assembles itself from the top
+  items.forEach((el, i) => {
+    setTimeout(() => el.classList.add('settled'), 90 + i * 85);
+  });
 }
 
 function scoreCell(val, base, cls, moved, dir) {
@@ -1266,6 +1415,11 @@ function submitCustom() {
   });
   cfState = null;
   showResults();
+  // Jump to the reveal so the naive-vs-calibrated moment is what they see
+  setTimeout(() => {
+    const el = document.getElementById('reveal-anchor');
+    if (el) el.scrollIntoView({ behavior:'smooth', block:'start' });
+  }, 60);
 }
 
 function removeCustom(idx) {
@@ -1475,6 +1629,39 @@ function downloadPDF() {
   doc.save('precision-gtm-ai-use-case-audit.pdf');
 }
 
+function postToBackend(name, company, email, pageLabel) {
+  const iframe = document.createElement('iframe');
+  iframe.name = 'ec-iframe-' + Date.now();
+  iframe.style.display = 'none';
+  document.body.appendChild(iframe);
+
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = 'https://script.google.com/macros/s/AKfycbz0Sqczu3exzwFhB8XYPXrE3KoHAUxpt0n-QuokfWO-xEJ-XpODfPuVX1uFB2gxPqLMAQ/exec';
+  form.target = iframe.name;
+  form.style.display = 'none';
+
+  const fields = {
+    name,
+    company,
+    email,
+    page: pageLabel,
+    source: 'cmo-ai-roi-assessment',
+    results: window._auditResultsText || '',
+    profile: JSON.stringify(window._auditProfile || {})
+  };
+  Object.entries(fields).forEach(([key, value]) => {
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = key;
+    input.value = value;
+    form.appendChild(input);
+  });
+  document.body.appendChild(form);
+  form.submit();
+  setTimeout(() => { document.body.removeChild(form); document.body.removeChild(iframe); }, 2500);
+}
+
 function submitEmailCapture() {
   const name = document.getElementById('ec-name').value.trim();
   const company = document.getElementById('ec-company').value.trim();
@@ -1487,44 +1674,46 @@ function submitEmailCapture() {
   const btn = document.getElementById('ec-submit');
   btn.textContent = 'Sending...';
   btn.disabled = true;
-
-  const iframe = document.createElement('iframe');
-  iframe.name = 'ec-iframe';
-  iframe.style.display = 'none';
-  document.body.appendChild(iframe);
-
-  const form = document.createElement('form');
-  form.method = 'POST';
-  form.action = 'https://script.google.com/macros/s/AKfycbz0Sqczu3exzwFhB8XYPXrE3KoHAUxpt0n-QuokfWO-xEJ-XpODfPuVX1uFB2gxPqLMAQ/exec';
-  form.target = 'ec-iframe';
-  form.style.display = 'none';
-
-  const fields = {
-    name,
-    company,
-    email,
-    page: 'CMO AI ROI Assessment -- Email Results',
-    source: 'cmo-ai-roi-assessment',
-    results: window._auditResultsText || '',
-    profile: JSON.stringify(window._auditProfile || {})
-  };
-  Object.entries(fields).forEach(([key, value]) => {
-    const input = document.createElement('input');
-    input.type = 'hidden';
-    input.name = key;
-    input.value = value;
-    form.appendChild(input);
-  });
-
-  document.body.appendChild(form);
-  form.submit();
-
+  capturedLead = { name, company, email };
+  postToBackend(name, company, email, 'CMO AI ROI Assessment -- Email Results');
   setTimeout(() => {
     btn.style.display = 'none';
     document.getElementById('ec-success').style.display = 'block';
-    document.body.removeChild(form);
-    document.body.removeChild(iframe);
   }, 2000);
+}
+
+function resendResults() {
+  if (!capturedLead) return;
+  postToBackend(capturedLead.name, capturedLead.company, capturedLead.email, 'CMO AI ROI Assessment -- Resend Results');
+  const s = document.getElementById('ec-success');
+  if (s) s.style.display = 'block';
+}
+
+function submitRevealUnlock() {
+  let name, company, email;
+  if (capturedLead) {
+    ({ name, company, email } = capturedLead);
+  } else {
+    name = document.getElementById('rv-name').value.trim();
+    company = document.getElementById('rv-company').value.trim();
+    email = document.getElementById('rv-email').value.trim();
+    if (!name || !email) {
+      if (!name) document.getElementById('rv-name').focus();
+      else document.getElementById('rv-email').focus();
+      return;
+    }
+    const btn = document.getElementById('rv-submit');
+    btn.textContent = 'Unlocking...';
+    btn.disabled = true;
+    capturedLead = { name, company, email };
+    postToBackend(name, company, email, 'CMO AI ROI Assessment -- Custom Use Case Unlock');
+  }
+  customUnlocked = true;
+  setTimeout(() => {
+    showResults();
+    const el = document.getElementById('results');
+    if (el) el.scrollIntoView({ behavior:'smooth', block:'start' });
+  }, 700);
 }
 
 renderStep();

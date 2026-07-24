@@ -59,6 +59,17 @@
   .q-text { font-family:'Libre Baskerville',serif; font-size:clamp(1.35rem,2.6vw,1.75rem); line-height:1.35; font-weight:700; color:var(--navy); max-width:720px; margin-bottom:10px; letter-spacing:-0.01em; }
   .q-help { font-size:0.9rem; color:var(--mid); max-width:660px; line-height:1.65; font-weight:300; margin-bottom:20px; }
 
+  .obj-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; max-width:760px; }
+  .obj-card { background:white; border:1px solid var(--border); border-radius:2px; padding:20px 22px; cursor:pointer; transition:all 0.15s; position:relative; }
+  .obj-card:hover { border-color:var(--blue); background:#fdfcfa; }
+  .obj-card.primary { border-color:var(--navy); background:var(--score-bg); border-left:3px solid var(--blue); }
+  .obj-card.secondary { border-color:var(--border); background:var(--score-bg); border-left:3px solid var(--mid); }
+  .obj-rank { font-size:0.6rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--blue); height:14px; margin-bottom:6px; }
+  .obj-card.secondary .obj-rank { color:var(--mid); }
+  .obj-name { font-family:'Libre Baskerville',serif; font-size:1.05rem; font-weight:700; color:var(--navy); line-height:1.3; }
+  .obj-full { font-size:0.83rem; color:var(--mid); font-weight:300; line-height:1.55; margin-top:5px; }
+  .obj-hint { font-size:0.82rem; color:var(--mid); font-weight:300; margin-top:14px; }
+  @media (max-width:600px) { .obj-grid { grid-template-columns:1fr; } }
   .picker-warning { display:flex; gap:10px; background:var(--risk-bg); border:1px solid #f0d4c8; border-radius:2px; padding:14px 16px; max-width:760px; margin-bottom:26px; }
   .picker-warning svg { flex-shrink:0; width:18px; height:18px; stroke:#dc2626; fill:none; stroke-width:2; margin-top:1px; }
   .picker-warning p { font-size:0.85rem; line-height:1.6; color:var(--light-ink); font-weight:300; }
@@ -301,6 +312,26 @@
   .cal-down { color:#16a34a; }
   .cal-up { color:#dc2626; }
 
+  .outcome-block { background:white; border:1px solid var(--border); border-radius:2px; padding:26px 28px; margin-top:16px; }
+  .outcome-title { font-size:0.68rem; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--mid); margin-bottom:10px; }
+  .outcome-lede { font-size:0.9rem; line-height:1.7; color:var(--light-ink); font-weight:300; max-width:660px; margin-bottom:18px; }
+  .outcome-lede strong { font-weight:500; color:var(--navy); }
+  .outcome-rows { display:flex; flex-direction:column; gap:1px; background:var(--warm-mid); border:1px solid var(--warm-mid); border-radius:2px; }
+  .outcome-row { display:grid; grid-template-columns:190px 1fr 52px 52px; gap:14px; align-items:center; background:white; padding:11px 14px; }
+  .outcome-row.is-primary { background:var(--score-bg); }
+  .outcome-head-row { display:grid; grid-template-columns:190px 1fr 52px 52px; gap:14px; padding:0 14px 6px; }
+  .outcome-col-lbl { font-size:0.6rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--mid); text-align:right; }
+  .outcome-tag { display:inline-block; font-size:0.55rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; background:var(--tag-bg); color:var(--mid); padding:1px 6px; border-radius:2px; margin-left:5px; vertical-align:middle; }
+  .outcome-tag.primary { background:var(--blue); color:white; }
+  .outcome-count.gated { color:var(--mid); font-weight:400; }
+  .outcome-lede.alarm { border-left:3px solid #dc2626; padding-left:14px; }
+  .outcome-name { font-size:0.82rem; font-weight:600; color:var(--blue); letter-spacing:0.02em; }
+  .outcome-full { font-size:0.83rem; color:var(--light-ink); font-weight:300; }
+  .outcome-count { font-family:'DM Sans',sans-serif; font-size:0.95rem; font-weight:600; color:var(--navy); text-align:right; }
+  @media (max-width:600px) { .outcome-row, .outcome-head-row { grid-template-columns:1fr 44px 44px; gap:8px; } .outcome-full { display:none; } }
+  .rec-metric { display:inline-flex; align-items:baseline; gap:7px; margin-top:10px; font-size:0.83rem; color:var(--navy); font-weight:500; background:var(--score-bg); padding:4px 10px; border-radius:2px; }
+  .rec-metric-flag { display:inline-block; font-size:0.58rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; background:var(--blue); color:white; padding:2px 7px; border-radius:2px; margin-left:9px; vertical-align:middle; }
+  .rec-metric-label { font-size:0.6rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--blue); }
   .rec-why { margin-top:18px; padding-top:16px; border-top:1px solid var(--warm-mid); }
   .rec-why-label { font-size:0.62rem; font-weight:600; text-transform:uppercase; letter-spacing:0.12em; color:var(--blue); margin-bottom:7px; }
   .rec-why p { font-size:0.87rem; line-height:1.65; color:var(--light-ink); font-weight:300; }
@@ -390,14 +421,14 @@
 
 <div class="header">
   <div class="eyebrow">Precision GTM: CMO Intelligence Series</div>
-  <h1>Which AI Use Case Should You Start With?</h1>
-  <p class="subtitle">Five questions on the systems you run, how clean the data is, who can build, whether the field will adopt, and how fast you need proof. Every use case is scored on ROI, risk, time to value, and effort, then calibrated to your answers and ranked.</p>
+  <h1>Which AI Use Case Will Move a Number You Are Measured On?</h1>
+  <p class="subtitle">Tell us what you are measured on. Then six questions on your systems, your data, who can build, whether the field will adopt, and how fast you need proof. You get a ranked list of what will actually work in your organization, and a straight answer on whether it moves your number.</p>
 </div>
 
 <div class="objective">
   <div class="objective-inner">
     <div class="objective-label">The objective this assessment optimizes for</div>
-    <p>Every recommendation is ranked to do one thing: <strong>demonstrate revenue value a CFO would believe</strong>. That means impact on deals that close, not activity, time saved, or output volume. Efficiency and strategic use cases still rank when you are ready for them, but they never outrank a revenue play, because a defensible pipeline result is what earns you room to do everything else.</p>
+    <p>Marketing is part of the revenue engine, so every recommendation is ranked to do one thing: <strong>move a number a CFO already tracks</strong>. Pipeline, velocity, competitive position. Efficiency use cases still rank when you are ready for them, but they never outrank a revenue play, because a defensible revenue result is what earns you room to do everything else.</p>
   </div>
 </div>
 
@@ -426,59 +457,59 @@
    Trivial + instant-messaging systems are assumed available and never gate.
 ---------------------------------------------------------------- */
 const useCases = [
-  { rank:1, name:"Win/Loss Analysis Dashboard", type:"revenue",
+  { rank:1, name:"Win/Loss Analysis Dashboard", type:"revenue", outcome:"position", secondary:["pipeline"], metric:"Win rate vs named competitors",
     desc:"Mine closed deals for the patterns that separate wins from losses. Feeds every other revenue use case.",
     roi:5, effort:3, risk:3, ttv:4, adoption:false,
     requires:["crm","ci","bi"], stack:["Salesforce","Gong","Tableau"] },
-  { rank:2, name:"ICP Scoring on Live Deals", type:"revenue",
+  { rank:2, name:"ICP Scoring on Live Deals", type:"revenue", outcome:"pipeline", metric:"Qualified pipeline coverage",
     desc:"Score every open deal against your validated ICP. Highest scores get PMM firepower, lowest get self-serve.",
     roi:5, effort:4, risk:4, ttv:3, adoption:true, runCost:true,
     requires:["crm","ci","intent","warehouse"], stack:["Salesforce","Gong","6sense","Snowflake"] },
-  { rank:3, name:"Deal Signal Analysis", type:"revenue",
+  { rank:3, name:"Deal Signal Analysis", type:"revenue", outcome:"pipeline", secondary:["position"], metric:"Stage-to-stage conversion rate",
     desc:"Find the exact talk tracks, proof points, and actions that separate won deals from lost ones at the same stage.",
     roi:5, effort:3, risk:4, ttv:3, adoption:true, runCost:true,
     requires:["crm","ci","bi"], stack:["Salesforce","Gong","Tableau"] },
-  { rank:4, name:"Real-Time Account Team Training", type:"revenue",
+  { rank:4, name:"Real-Time Account Team Training", type:"revenue", outcome:"pipeline", metric:"Win rate on coached deals",
     desc:"Pull live deal context and deliver a deal-specific briefing before the next call. No boot camp required.",
     roi:5, effort:2, risk:2, ttv:5, adoption:true,
     requires:["crm","ci"], stack:["Salesforce","Gong"] },
-  { rank:5, name:"Executive Brief Before a CIO Meeting", type:"revenue",
+  { rank:5, name:"Executive Brief Before a CIO Meeting", type:"revenue", outcome:"pipeline", metric:"Exec meeting-to-next-step rate",
     desc:"A one-page brief framed around risk, cost, and priority before an economic-buyer meeting. Not features.",
     roi:4, effort:1, risk:2, ttv:5, adoption:true,
     requires:["crm","intent"], stack:["Salesforce","6sense"] },
-  { rank:6, name:"Searchable Objection Library", type:"revenue",
+  { rank:6, name:"Searchable Objection Library", type:"revenue", outcome:"pipeline", secondary:["efficiency"], metric:"Time stuck in objection stage",
     desc:"Instant access to responses that actually closed deals, pulled from conversation data and searchable mid-call.",
     roi:4, effort:2, risk:2, ttv:4, adoption:true,
     requires:["ci","enablement"], stack:["Gong","Highspot"] },
-  { rank:7, name:"Automated Competitive Monitoring", type:"strategic",
+  { rank:7, name:"Automated Competitive Monitoring", type:"strategic", outcome:"position", metric:"Competitive win rate",
     desc:"Track competitor pricing, product updates, and announcements automatically. A structured digest every Monday.",
     roi:3, effort:1, risk:2, ttv:5, adoption:false,
     requires:[], stack:["Semrush","Scraper"] },
-  { rank:8, name:"ICP Refinement", type:"strategic",
+  { rank:8, name:"ICP Refinement", type:"strategic", outcome:"pipeline", secondary:["retention"], metric:"Pipeline velocity by segment",
     desc:"Cut low-velocity segments and tighten your target-market definition using closed pipeline data.",
     roi:4, effort:3, risk:3, ttv:2, adoption:false,
     requires:["crm","warehouse","intent"], stack:["Salesforce","Snowflake","6sense"] },
-  { rank:9, name:"Competitive Battle Cards", type:"revenue",
+  { rank:9, name:"Competitive Battle Cards", type:"revenue", outcome:"position", secondary:["pipeline"], metric:"Win rate in competitive deals",
     desc:"Rep-ready documents built from win/loss data. What competitors claim, where they are weak, how to counter.",
     roi:3, effort:1, risk:3, ttv:4, adoption:true,
     requires:["ci","enablement"], stack:["Gong","Highspot"] },
-  { rank:10, name:"Tailored Sales One-Pagers", type:"efficiency",
+  { rank:10, name:"Tailored Sales One-Pagers", type:"efficiency", outcome:"efficiency", metric:"Content cost per deal",
     desc:"Industry-specific leave-behinds generated from deal context. Proof points matched to the buyer in the room.",
     roi:2, effort:1, risk:2, ttv:4, adoption:true,
     requires:["enablement","crm"], stack:["Highspot","Salesforce"] },
-  { rank:11, name:"Inbound Content Matched to ICP Segments", type:"efficiency",
+  { rank:11, name:"Inbound Content Matched to ICP Segments", type:"efficiency", outcome:"pipeline", secondary:["efficiency"], metric:"MQL-to-SQL conversion by segment",
     desc:"Map content to ICP priority tiers, find gaps, and generate assets for the segments most likely to convert.",
     roi:3, effort:3, risk:3, ttv:3, adoption:false,
     requires:["intent","map"], stack:["6sense","Marketo"] },
-  { rank:12, name:"Account Brief Generation", type:"efficiency",
+  { rank:12, name:"Account Brief Generation", type:"efficiency", outcome:"efficiency", metric:"Rep prep hours per account",
     desc:"Draft rep briefs from firmographics and pipeline data so practitioners edit rather than write from scratch.",
     roi:2, effort:1, risk:2, ttv:5, adoption:true,
     requires:["crm","intent"], stack:["Salesforce","6sense"] },
-  { rank:13, name:"M&A Announcement with Joint Value Prop", type:"strategic",
+  { rank:13, name:"M&A Announcement with Joint Value Prop", type:"strategic", outcome:"position", metric:"Time to market-ready narrative",
     desc:"When an acquisition closes, the joint narrative has to land fast. Drafts the release and partner announcement.",
     roi:3, effort:3, risk:3, ttv:5, adoption:false,
     requires:["crm"], stack:["CRM","PR Tools"] },
-  { rank:14, name:"Pricing and Packaging Strategy", type:"strategic",
+  { rank:14, name:"Pricing and Packaging Strategy", type:"strategic", outcome:"position", secondary:["retention"], metric:"Average selling price and expansion revenue",
     desc:"Value-metric analysis across usage, expansion, and churn to recommend tier structures. Highest upside, highest consequence.",
     roi:5, effort:5, risk:5, ttv:1, adoption:false,
     requires:["crm","product","cs","finance"], stack:["Salesforce","Pendo","Gainsight","Finance Data"] }
@@ -514,6 +545,16 @@ const systems = [
   ]}
 ];
 
+/* Business outcomes a CMO is accountable for. Every use case moves one of these,
+   and names the primary metric it moves. If a use case cannot name its metric,
+   it does not belong in the framework. */
+const outcomes = {
+  pipeline:   { label:"Pipeline",   full:"Pipeline and net-new revenue growth" },
+  retention:  { label:"Retention",  full:"Customer retention and expansion (NRR)" },
+  efficiency: { label:"Efficiency", full:"GTM efficiency and payback" },
+  position:   { label:"Position",   full:"Product positioning and brand" }
+};
+
 const systemNames = {
   crm:"CRM", ci:"conversation intelligence", bi:"BI", intent:"intent data",
   warehouse:"a data warehouse", map:"marketing automation", enablement:"sales enablement",
@@ -542,7 +583,7 @@ function sysName(id) {
 const questions = [
   {
     id:"confidence",
-    count:"Question 2 of 5",
+    count:"Question 3 of 6",
     text:"Across the systems you selected, how clean is the underlying data?",
     help:"You confirmed you have these systems. This is a separate question: how much you trust the data inside them. It calibrates risk, but only for use cases whose full required stack you confirmed. High lowers their risk. Low raises it, because a system can be fully deployed and still full of unreliable data.",
     options:[
@@ -559,7 +600,7 @@ const questions = [
   },
   {
     id:"skills",
-    count:"Question 3 of 5",
+    count:"Question 4 of 6",
     text:"Who can build and maintain this?",
     help:"These use cases do not run themselves. Someone has to wire the systems together and keep the pipes alive after launch. This calibrates effort and, at the bottom end, gates out use cases nobody is available to build.",
     options:[
@@ -576,7 +617,7 @@ const questions = [
   },
   {
     id:"adoption",
-    count:"Question 4 of 5",
+    count:"Question 5 of 6",
     text:"Will the sales field actually use what you build?",
     help:"Several revenue use cases create value only when reps adopt them. If field trust is low or PMM does not control enablement, adoption-dependent use cases stall no matter how good the output is.",
     options:[
@@ -590,7 +631,7 @@ const questions = [
   },
   {
     id:"proof",
-    count:"Question 5 of 5",
+    count:"Question 6 of 6",
     text:"How fast do you need proof a CFO will recognize?",
     help:"Time to value is how quickly a use case produces a result once it is live, separate from how hard it was to deploy. If you have room to build, a slower time to value stops counting against a use case. Under this-quarter pressure, it stays a penalty.",
     options:[
@@ -607,7 +648,8 @@ const questions = [
 let current = 0;
 const selectedSystems = new Set();
 const answers = {};
-const TOTAL_STEPS = 1 + questions.length;
+const objectiveRanking = [];   // [primaryKey, secondaryKey] in priority order
+const TOTAL_STEPS = 2 + questions.length;   // objective + picker + questions
 const customUseCases = [];   // survives retakes within the session
 let customUnlocked = false;  // flips true after email is captured at the reveal gate
 let capturedLead = null;     // { name, company, email } once given anywhere this session
@@ -618,6 +660,12 @@ let cfState = null;          // in-progress custom form state: { entries: [...] 
    Effort <- heavy system count  0-1:1 2:2 3:3 4:4 5+:5
    Risk   <- heavy system count  0-1:2 2:3 3:4 4+:5  (more connected surfaces, more exposure)
    TTV  <- output cadence   ondemand:5 weeks:4 month:3 quarter:2 quarters:1 */
+/* Custom use cases inherit an outcome from the proximity answer, since
+   "where does the result show up first" is really an outcome question. */
+/* Custom use cases declare which objective they serve, rather than having it
+   inferred. Proximity still drives ROI; the objective is asked directly because
+   "where does the result show up" cannot express retention or expansion. */
+
 function deriveCustom(cu) {
   const n = cu.requires.length;
   return {
@@ -660,9 +708,39 @@ function renderProgress() {
 function renderStep() {
   const container = document.getElementById('questions');
   if (current === 0) {
+    const picked = objectiveRanking;
     container.innerHTML = `
       <div class="question-block active">
-        <div class="q-count">Question 1 of 5</div>
+        <div class="q-count">Question 1 of 6</div>
+        <div class="q-text">What are you actually measured on this year?</div>
+        <div class="q-help">Pick your primary objective first, then your secondary. This does not change the ranking, which stays driven by what your organization can support. It changes what the results tell you: whether the use cases you can build today actually move the number you are accountable for, and what is standing in the way if they do not.</div>
+        <div class="obj-grid">
+          ${Object.keys(outcomes).map(k => {
+            const pos = picked.indexOf(k);
+            const cls = pos === 0 ? 'primary' : pos === 1 ? 'secondary' : '';
+            const badge = pos === 0 ? 'Primary' : pos === 1 ? 'Secondary' : '';
+            return `
+            <div class="obj-card ${cls}" onclick="toggleObjective('${k}')">
+              <div class="obj-rank">${badge}</div>
+              <div class="obj-name">${outcomes[k].label}</div>
+              <div class="obj-full">${outcomes[k].full}</div>
+            </div>`;
+          }).join('')}
+        </div>
+        <p class="obj-hint">${picked.length === 0 ? 'Tap your primary objective.' : picked.length === 1 ? 'Now tap your secondary.' : 'Tap either card again to change your ranking.'}</p>
+      </div>
+    `;
+    document.getElementById('back-btn').disabled = true;
+    const nextBtn = document.getElementById('next-btn');
+    nextBtn.disabled = objectiveRanking.length < 2;
+    nextBtn.textContent = 'Next';
+    renderProgress();
+    return;
+  }
+  if (current === 1) {
+    container.innerHTML = `
+      <div class="question-block active">
+        <div class="q-count">Question 2 of 6</div>
         <div class="q-text">Which systems do you run today with reliable, populated data?</div>
         <div class="q-help">This sets what you can build and how hard it is. A use case missing one required system still ranks, with a higher effort score. Missing two or more moves it to a build-toward list. Check a CMS or DAM only when a use case would read from it as a source. Delivery-only tools, Slack or Teams as an output channel, a scraper, PR software, are assumed available and never block anything; mining chat history is the separate source entry below. If a system holding data you would build on is not listed, add it at the bottom.</div>
         <div class="picker-warning">
@@ -700,12 +778,12 @@ function renderStep() {
         </div>
       </div>
     `;
-    document.getElementById('back-btn').disabled = true;
+    document.getElementById('back-btn').disabled = false;
     const nextBtn = document.getElementById('next-btn');
     nextBtn.disabled = false;
     nextBtn.textContent = 'Next';
   } else {
-    const qi = current - 1;
+    const qi = current - 2;
     const q = questions[qi];
     const selected = answers[qi];
     container.innerHTML = `
@@ -734,6 +812,19 @@ function renderStep() {
   renderProgress();
 }
 
+function toggleObjective(key) {
+  const i = objectiveRanking.indexOf(key);
+  if (i !== -1) {
+    objectiveRanking.splice(i, 1);          // tap again to unset and re-rank
+  } else if (objectiveRanking.length < 2) {
+    objectiveRanking.push(key);             // first tap = primary, second = secondary
+  } else {
+    objectiveRanking.shift();               // already have two: replace the primary
+    objectiveRanking.push(key);
+  }
+  renderStep();
+}
+
 function toggleSystem(id) {
   if (selectedSystems.has(id)) selectedSystems.delete(id);
   else selectedSystems.add(id);
@@ -759,9 +850,10 @@ function removeCustomSystem(id) {
   customUseCases.forEach(cu => { cu.requires = cu.requires.filter(r => r !== id); });
   renderStep();
 }
-function selectOption(i) { answers[current - 1] = i; renderStep(); }
+function selectOption(i) { answers[current - 2] = i; renderStep(); }
 function goNext() {
-  if (current > 0 && answers[current - 1] === undefined) return;
+  if (current === 0 && objectiveRanking.length < 2) return;
+  if (current > 1 && answers[current - 2] === undefined) return;
   if (current === TOTAL_STEPS - 1) { showResults(); return; }
   current++; renderStep();
 }
@@ -769,12 +861,16 @@ function goBack() { if (current === 0) return; current--; renderStep(); }
 
 function getProfile() {
   return {
+    objectives: objectiveRanking.slice(),
+    primaryObjective: objectiveRanking[0] || null,
+    secondaryObjective: objectiveRanking[1] || null,
     systems: selectedSystems,
     confidence: questions[0].options[answers[0]].confidence,
     skills: questions[1].options[answers[1]].skills,
     adoptionOk: questions[2].options[answers[2]].adoptionOk,
     proof: questions[3].options[answers[3]].proofWeight,
     labels: {
+      objective: objectiveRanking.map(k => outcomes[k].label).join(" then ") || "not set",
       conf: (["High","Medium","Low"][answers[0]]) + " data cleanliness",
       skills: (["Dedicated builder","Borrowed builder","No builder"][answers[1]]),
       adopt: answers[2] === 0 ? "Contested adoption" : "Workable adoption",
@@ -888,6 +984,8 @@ function allUseCases() {
       adoption: adoptionUnknown ? true : cu.adoption === true,
       adoptionUnknown,
       requires: cu.requires, stack: cu.requires.map(r => sysName(r)),
+      outcome: cu.objective || "efficiency",
+      metric: cu.metric || null,
       isCustom: true, derivation: cu
     };
   });
@@ -956,6 +1054,118 @@ function readinessBlock(r) {
   `;
 }
 
+/* ALIGNMENT ANALYSIS: the declared objective is a lens, never a sort.
+   The ranking stays honest (driven by fit and readiness). This compares what
+   they are measured on against what they can actually build, and names the gap.
+   Four diagnostic patterns: aligned, misaligned, gated-out, diffuse. */
+/* A use case serves an outcome as its primary effect or as a secondary one.
+   Primary is what it mostly moves; secondaries are what it also moves. */
+function servesOutcome(uc, key) {
+  if (uc.outcome === key) return 'primary';
+  if (uc.secondary && uc.secondary.indexOf(key) !== -1) return 'secondary';
+  return null;
+}
+
+function alignmentAnalysis(ranked, gated, p) {
+  if (!p.primaryObjective) return null;
+  const prim = p.primaryObjective;
+  const buildable = ranked.filter(s => servesOutcome(s.uc, prim)).length;
+  const buildablePrimary = ranked.filter(s => s.uc.outcome === prim).length;
+  const blocked = gated.filter(s => servesOutcome(s.uc, prim)).length;
+  const total = buildable + blocked;
+  const counts = {};
+  Object.keys(outcomes).forEach(k => { counts[k] = ranked.filter(s => servesOutcome(s.uc, k)).length; });
+  const heaviest = Object.keys(counts).filter(k => counts[k]).sort((a,b) => counts[b] - counts[a])[0] || null;
+  const heaviestCount = heaviest ? counts[heaviest] : 0;
+
+  let pattern;
+  const rankedTotal = ranked.length;
+  const primShare = rankedTotal ? buildable / rankedTotal : 0;
+  if (buildable === 0 && blocked > 0) pattern = 'gated-out';
+  else if (buildable === 0) pattern = 'none';
+  // Some are buildable, but most of what serves the objective is blocked.
+  else if (blocked >= buildable * 2 && blocked >= 3) pattern = 'mostly-blocked';
+  // Aligned when the primary objective is genuinely well served: it leads the
+  // buildable list, or ties the lead, or holds a meaningful share of it.
+  else if (heaviest === prim || buildable >= heaviestCount || primShare >= 0.3) pattern = 'aligned';
+  else if (buildable <= 1) pattern = 'misaligned';
+  else pattern = 'diffuse';
+
+  // Which gates are blocking the primary-objective use cases?
+  const blockers = {};
+  gated.filter(s => servesOutcome(s.uc, prim)).forEach(s => {
+    s.gates.forEach(g => {
+      if (g.type === 'systems') g.missing.forEach(m => { blockers[sysName(m)] = (blockers[sysName(m)] || 0) + 1; });
+      if (g.type === 'adoption') blockers['field adoption'] = (blockers['field adoption'] || 0) + 1;
+      if (g.type === 'skills') blockers['a builder'] = (blockers['a builder'] || 0) + 1;
+    });
+  });
+  const topBlocker = Object.keys(blockers).sort((a,b) => blockers[b] - blockers[a])[0] || null;
+
+  return { pattern, prim, buildable, buildablePrimary, blocked, total, heaviest, heaviestCount, topBlocker, counts };
+}
+
+/* What business outcomes does the buildable list actually serve? This is the
+   "so what" answer: not a list of use cases, a picture of where the impact lands. */
+function outcomeSummary(ranked, gated, p) {
+  const a = alignmentAnalysis(ranked, gated, p);
+  const counts = {}, gatedCounts = {};
+  Object.keys(outcomes).forEach(k => {
+    counts[k] = ranked.filter(s => servesOutcome(s.uc, k)).length;
+    gatedCounts[k] = gated.filter(s => servesOutcome(s.uc, k)).length;
+  });
+  const keys = Object.keys(outcomes);   // always show all four, including empty ones
+  if (!ranked.length && !gated.length) return '';
+
+  const rows = keys.map(k => {
+    const isPrim = p.primaryObjective === k;
+    const isSec = p.secondaryObjective === k;
+    const tag = isPrim ? '<span class="outcome-tag primary">Your primary</span>' : isSec ? '<span class="outcome-tag">Your secondary</span>' : '';
+    return `
+    <div class="outcome-row ${isPrim ? 'is-primary' : ''}">
+      <div class="outcome-name">${outcomes[k].label} ${tag}</div>
+      <div class="outcome-full">${outcomes[k].full}</div>
+      <div class="outcome-count">${counts[k] || 0}</div>
+      <div class="outcome-count gated">${gatedCounts[k] || 0}</div>
+    </div>`;
+  }).join('');
+
+  let verdict = '';
+  if (a) {
+    const L = outcomes[a.prim].label.toLowerCase();
+    if (a.pattern === 'aligned') {
+      verdict = `<p class="outcome-lede"><strong>Your list is aligned.</strong> You are measured on ${L}, and ${a.buildable} of the use cases you can build today move it. Start at the top of the ranked list and you are working on your own number.</p>`;
+    } else if (a.pattern === 'gated-out') {
+      verdict = `<p class="outcome-lede alarm"><strong>Everything that moves your number is blocked.</strong> You are measured on ${L}. ${a.blocked} use case${a.blocked === 1 ? '' : 's'} in this framework move${a.blocked === 1 ? 's' : ''} it, and not one is buildable today.${a.topBlocker ? ` The most common blocker is <strong>${a.topBlocker}</strong>.` : ''} Clearing that is worth more to you than anything on the ranked list.</p>`;
+    } else if (a.pattern === 'mostly-blocked') {
+      verdict = `<p class="outcome-lede alarm"><strong>Most of what moves your number is blocked.</strong> You are measured on ${L}. ${a.buildable + a.blocked} use case${(a.buildable + a.blocked) === 1 ? '' : 's'} here serve${(a.buildable + a.blocked) === 1 ? 's' : ''} it, and only ${a.buildable} ${a.buildable === 1 ? 'is' : 'are'} buildable today.${a.topBlocker ? ` The rest are gated, most often on <strong>${a.topBlocker}</strong>.` : ''} Start with what you can build, but clearing that blocker is the bigger move.</p>`;
+    } else if (a.pattern === 'misaligned') {
+      verdict = `<p class="outcome-lede alarm"><strong>Your buildable list does not serve your number.</strong> You are measured on ${L}, but only ${a.buildable} buildable use case move${a.buildable === 1 ? 's' : ''} it, while ${a.heaviestCount} move ${outcomes[a.heaviest].label.toLowerCase()}.${a.blocked ? ` Another ${a.blocked} that would move ${L} ${a.blocked === 1 ? 'is' : 'are'} gated${a.topBlocker ? `, most often on <strong>${a.topBlocker}</strong>` : ''}.` : ''} You can ship real wins here, but they will not be the wins you are graded on.</p>`;
+    } else if (a.pattern === 'none') {
+      verdict = `<p class="outcome-lede alarm"><strong>Nothing on your list moves your number.</strong> You are measured on ${L}, and no use case serving it is buildable today. Before picking anything from the ranked list, decide whether you are optimizing for the year you are being graded on or building foundations for the next one.</p>`;
+    } else {
+      verdict = `<p class="outcome-lede"><strong>Your list is spread thin.</strong> You are measured on ${L}, and ${a.buildable} buildable use case${a.buildable === 1 ? '' : 's'} move${a.buildable === 1 ? 's' : ''} it, with the rest spread across other outcomes.${a.blocked ? ` Another ${a.blocked} ${a.blocked === 1 ? 'is' : 'are'} gated.` : ''} Concentration beats coverage; picking two and finishing them will outperform starting five.</p>`;
+    }
+  } else {
+    const top = keys.slice().sort((x,y) => (counts[y]||0) - (counts[x]||0))[0];
+    verdict = `<p class="outcome-lede">Every use case names the metric it moves. Across what you can build today, the weight sits on <strong>${outcomes[top].full.toLowerCase()}</strong>.</p>`;
+  }
+
+  return `
+    <div class="outcome-block">
+      <div class="outcome-title">What you are measured on vs what you can build</div>
+      ${verdict}
+      <p class="outcome-foot">A use case can serve more than one objective, so these columns overlap rather than add up to your list length.</p>
+      <div class="outcome-head-row">
+        <div></div><div></div>
+        <div class="outcome-col-lbl">Ready</div>
+        <div class="outcome-col-lbl">Gated</div>
+      </div>
+      <div class="outcome-rows">${rows}</div>
+    </div>
+  `;
+}
+
 function showResults() {
   const p = getProfile();
   const scored = allUseCases().map(uc => ({ uc, ...evaluate(uc, p) }));
@@ -963,6 +1173,7 @@ function showResults() {
   const gated = scored.filter(s => s.gates.length > 0).sort((a, b) => b.score - a.score);
   const total = scored.length;
   const revenueReady = ranked.filter(s => s.uc.type === 'revenue').length;
+  const _align = alignmentAnalysis(ranked, gated, p);
   const readiness = calcReadiness(p, scored);
 
 
@@ -979,6 +1190,7 @@ function showResults() {
       <div class="results-title">${ranked.length} use case${ranked.length === 1 ? '' : 's'} ranked for you. ${gated.length} to build toward.</div>
       <p class="results-summary">Objective held fixed: <strong>demonstrate revenue value a CFO would believe</strong>, and you need <strong>${proofText}</strong>. Each use case starts from its base ROI, risk, time to value, and effort, then calibrates to your answers. ${ranked.length} of ${total} are buildable now${revenueReady ? `, ${revenueReady} of them revenue plays` : ''}. ${gated.length ? `${gated.length} are gated by missing systems, adoption, or the lack of a builder, and sit in build-toward.` : ''}</p>
       <div class="profile-chips">
+        <div class="profile-chip"><span>Measured on:</span> ${p.labels.objective}</div>
         <div class="profile-chip"><span>Systems:</span> ${sysList}</div>
         <div class="profile-chip"><span>Data:</span> ${p.labels.conf}</div>
         <div class="profile-chip"><span>Builder:</span> ${p.labels.skills}</div>
@@ -986,6 +1198,7 @@ function showResults() {
         <div class="profile-chip"><span>Proof:</span> ${p.labels.proof}</div>
       </div>
       <div class="legend-row">
+        <div class="legend-i"><strong>Moves</strong> the primary metric each use case shifts</div>
         <div class="legend-i"><strong>Fit</strong> composite of all four, calibrated, indexed to your best fit at 100</div>
         <div class="legend-i"><strong>ROI</strong> pipeline impact, fixed</div>
         <div class="legend-i"><strong>Effort</strong> systems to connect</div>
@@ -996,6 +1209,7 @@ function showResults() {
   `;
 
   html += readinessBlock(readiness);
+  html += outcomeSummary(ranked, gated, p);
 
   // NAIVE-VS-CALIBRATED REVEAL: when custom use cases are pending unlock,
   // show their optimistic naive scores and gate the calibrated view on email.
@@ -1152,6 +1366,9 @@ function showResults() {
     'Adoption readiness: ' + readiness.adoptionScore + '/100',
     'Builder availability: ' + readiness.builderScore + '/100',
     '',
+    'MEASURED ON: ' + p.labels.objective,
+    _align ? 'ALIGNMENT: ' + _align.pattern.toUpperCase() + ' -- ' + _align.buildable + ' buildable / ' + _align.blocked + ' gated use cases move your primary objective' + (_align.topBlocker ? ' (top blocker: ' + _align.topBlocker + ')' : '') : '',
+    '',
     'YOUR PROFILE',
     'Systems: ' + sysList,
     'Data: ' + p.labels.conf,
@@ -1166,7 +1383,8 @@ function showResults() {
     txt.push('YOUR RANKED LIST');
     ranked.forEach((s, i) => {
       txt.push('');
-      txt.push('Rank ' + (i + 1) + ' | Fit ' + Math.round(s.score / topFit * 100) + ' | ' + typeLabel(s.uc.type) + ': ' + s.uc.name + (s.uc.isCustom ? ' (yours)' : ''));
+      txt.push('Rank ' + (i + 1) + ' | Fit ' + Math.round(s.score / topFit * 100) + ' | ' + (outcomes[s.uc.outcome] ? outcomes[s.uc.outcome].label : typeLabel(s.uc.type)) + ': ' + s.uc.name + (s.uc.isCustom ? ' (yours)' : ''));
+      if (s.uc.metric) txt.push('Moves: ' + s.uc.metric);
       txt.push(s.uc.desc);
       txt.push('ROI ' + s.c.roi + '/5 | Effort ' + s.c.effort + '/5 | Risk ' + s.c.risk + '/5 | TTV ' + s.c.ttv + '/5');
     });
@@ -1186,6 +1404,13 @@ function showResults() {
 
   // Structured profile for storage and future benchmarking (posted as JSON)
   window._auditProfile = {
+    primaryObjective: p.primaryObjective,
+    secondaryObjective: p.secondaryObjective,
+    alignmentPattern: _align ? _align.pattern : null,
+    primaryBuildable: _align ? _align.buildable : null,
+    primaryGated: _align ? _align.blocked : null,
+    heaviestOutcome: _align ? _align.heaviest : null,
+    topBlocker: _align ? _align.topBlocker : null,
     readinessOverall: readiness.overall,
     readinessTier: readiness.tier,
     stackScore: readiness.stackScore,
@@ -1243,9 +1468,10 @@ function recCard(uc, p, c, rank, top, fit) {
     <div class="rec-card ${top ? 'top' : ''}">
       <div class="rec-card-head">
         <div>
-          <div class="rec-rank">Rank ${rank} &middot; ${typeLabel(uc.type)} &middot; Fit ${fit}</div>
+          <div class="rec-rank">Rank ${rank} &middot; ${outcomes[uc.outcome] ? outcomes[uc.outcome].label : typeLabel(uc.type)}${uc.secondary && uc.secondary.length ? ' + ' + uc.secondary.map(s => outcomes[s] ? outcomes[s].label : s).join(' + ') : ''} &middot; Fit ${fit}</div>
           <div class="rec-name">${uc.name}${uc.isCustom ? `<span class="custom-badge">Yours</span> <button class="btn btn-ghost" style="padding:0; font-size:0.68rem; vertical-align:middle;" onclick="removeCustom(${uc.rank - 100})">&minus; Remove</button>` : ''}</div>
           <div class="rec-desc">${uc.desc}</div>
+          ${uc.metric ? `<div class="rec-metric"><span class="rec-metric-label">Moves</span> ${uc.metric}${p.primaryObjective && servesOutcome(uc, p.primaryObjective) ? `<span class="rec-metric-flag">${servesOutcome(uc, p.primaryObjective) === 'primary' ? 'Your primary objective' : 'Also serves your primary'}</span>` : ''}</div>` : ''}
         </div>
         <div class="rec-scores">
           <div class="rec-score">${scoreCell(c.roi, uc.roi, 'sc-roi', false)}<div class="rec-score-lbl">ROI</div></div>
@@ -1284,7 +1510,7 @@ function gatedCard(uc, p, gates, c) {
 
 /* ---------- Custom use case form (multi-entry) ---------- */
 function blankEntry() {
-  return { name:'', type:null, proximity:null, requires:new Set(), cadence:null, adoption:null };
+  return { name:'', type:null, objective:null, proximity:null, requires:new Set(), cadence:null, adoption:null };
 }
 
 function openCustomForm() {
@@ -1332,6 +1558,14 @@ function entryBlock(e, i, askAdoption, heavy, removable) {
         <div class="cf-opts">
           ${[['revenue','Influences deals in flight or the people working them'],['efficiency','Reduces the time or cost to produce output'],['strategic','Shapes market position, targeting, or pricing']].map(([v,t]) => `
             <div class="cf-opt ${e.type===v?'selected':''}" onclick="cfSet(${i},'type','${v}')"><div class="cf-opt-marker"></div><div class="cf-opt-title">${t}</div></div>`).join('')}
+        </div>
+      </div>
+      <div class="cf-field">
+        <div class="cf-label">Which objective does it move?</div>
+        <div class="cf-sub">The same four you ranked at the start. This is what the use case is for, not where the data comes from.</div>
+        <div class="cf-opts">
+          ${Object.keys(outcomes).map(k => `
+            <div class="cf-opt ${e.objective===k?'selected':''}" onclick="cfSet(${i},'objective','${k}')"><div class="cf-opt-marker"></div><div class="cf-opt-title">${outcomes[k].label}: ${outcomes[k].full}</div></div>`).join('')}
         </div>
       </div>
       <div class="cf-field">
@@ -1399,13 +1633,14 @@ function submitCustom() {
   const p = getProfile();
   const askAdoption = !p.adoptionOk;
   const invalid = cfState.entries.some(e =>
-    e.name.trim().length === 0 || !e.type || !e.proximity || !e.cadence || (askAdoption && e.adoption === null));
+    e.name.trim().length === 0 || !e.type || !e.objective || !e.proximity || !e.cadence || (askAdoption && e.adoption === null));
   if (invalid) { document.getElementById('cf-error').classList.add('show'); return; }
   cfState.entries.forEach(e => {
     customUseCases.push({
       name: e.name.trim(),
       desc: "Your use case, scored by the framework from your answers.",
       type: e.type,
+      objective: e.objective,
       proximity: e.proximity,
       requires: [...e.requires],
       cadence: e.cadence,
@@ -1429,6 +1664,7 @@ function removeCustom(idx) {
 
 function retake() {
   current = 0;
+  objectiveRanking.length = 0;
   selectedSystems.clear();
   for (const k in answers) delete answers[k];
   document.getElementById('results').classList.remove('active');

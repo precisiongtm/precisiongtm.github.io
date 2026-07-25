@@ -70,6 +70,7 @@
   .obj-full { font-size:0.83rem; color:var(--mid); font-weight:300; line-height:1.55; margin-top:5px; }
   .obj-hint { font-size:0.82rem; color:var(--mid); font-weight:300; margin-top:14px; }
   @media (max-width:600px) { .obj-grid { grid-template-columns:1fr; } }
+  .q-nudge { font-size:0.83rem; line-height:1.6; color:var(--light-ink); font-weight:400; background:var(--score-bg); border-left:3px solid var(--blue); padding:11px 14px; border-radius:2px; margin:14px 0 4px; max-width:660px; }
   .picker-warning { display:flex; gap:10px; background:var(--risk-bg); border:1px solid #f0d4c8; border-radius:2px; padding:14px 16px; max-width:760px; margin-bottom:26px; }
   .picker-warning svg { flex-shrink:0; width:18px; height:18px; stroke:#dc2626; fill:none; stroke-width:2; margin-top:1px; }
   .picker-warning p { font-size:0.85rem; line-height:1.6; color:var(--light-ink); font-weight:300; }
@@ -348,8 +349,12 @@
   .rec-stack-tag.missing { background:#fef2f2; color:#dc2626; }
 
   .gated-card { background:transparent; border:1px dashed var(--border); border-radius:2px; padding:20px 22px; margin-bottom:10px; }
-  .gated-head { display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+  .gated-head { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap; }
   .gated-name { font-family:'Libre Baskerville',serif; font-size:0.98rem; font-weight:700; color:var(--light-ink); }
+  .gated-outcome { font-size:0.62rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--mid); margin-bottom:5px; }
+  .gated-flag { display:inline-block; font-size:0.55rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; background:var(--mid); color:white; padding:1px 6px; border-radius:2px; margin-left:8px; }
+  .gated-metric { display:inline-flex; align-items:baseline; gap:6px; margin-top:8px; font-size:0.8rem; color:var(--light-ink); font-weight:400; }
+  .gated-metric-label { font-size:0.56rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--mid); }
   .gated-reason { font-size:0.72rem; font-weight:500; letter-spacing:0.04em; color:#dc2626; text-transform:uppercase; }
   .gated-fix { font-size:0.85rem; line-height:1.6; color:var(--mid); font-weight:300; margin-top:8px; max-width:720px; }
   .gated-fix strong { font-weight:500; color:var(--light-ink); }
@@ -381,6 +386,7 @@
   .cf-sys:hover { border-color:var(--blue); }
   .cf-sys.selected { border-color:var(--navy); background:var(--score-bg); }
   .cf-sys-check { flex-shrink:0; width:15px; height:15px; border-radius:3px; border:1.5px solid var(--border); position:relative; }
+  .cf-sys-have { margin-left:auto; font-size:0.58rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--blue); }
   .cf-sys.selected .cf-sys-check { border-color:var(--blue); background:var(--blue); }
   .cf-sys.selected .cf-sys-check::after { content:''; position:absolute; left:4px; top:0px; width:4px; height:9px; border:solid white; border-width:0 2px 2px 0; transform:rotate(45deg); }
   .cf-actions { display:flex; gap:10px; margin-top:6px; }
@@ -516,16 +522,16 @@ const useCases = [
 ];
 
 const systems = [
-  { cat:"Core deal systems", items:[
+  { cat:"Core systems most teams run", items:[
     { id:"crm",        name:"CRM",                       egs:"Salesforce, HubSpot" },
+    { id:"map",        name:"Marketing automation",      egs:"Marketo, Pardot, HubSpot" },
+    { id:"bi",         name:"BI / reporting",            egs:"Tableau, Looker, Power BI. Or your CRM dashboards if that is where reporting lives" },
     { id:"ci",         name:"Conversation intelligence", egs:"Gong, Chorus. Deal-linked call corpus" },
-    { id:"saleseng",   name:"Sales engagement",          egs:"Salesloft, Outreach, Apollo. Sequences and activity, not the call corpus" },
-    { id:"bi",         name:"BI / reporting",            egs:"Tableau, Looker, Power BI" }
+    { id:"saleseng",   name:"Sales engagement",          egs:"Salesloft, Outreach, Apollo. Sequences and activity, not the call corpus" }
   ]},
   { cat:"Targeting and data foundation", items:[
     { id:"intent",     name:"Intent / ABM data",         egs:"6sense, Demandbase" },
-    { id:"warehouse",  name:"Data warehouse",            egs:"Snowflake, BigQuery, Databricks" },
-    { id:"map",        name:"Marketing automation",      egs:"Marketo, Pardot, HubSpot" }
+    { id:"warehouse",  name:"Data warehouse",            egs:"Snowflake, BigQuery, Databricks" }
   ]},
   { cat:"Enablement and product", items:[
     { id:"enablement", name:"Sales enablement",          egs:"Highspot, Seismic" },
@@ -743,6 +749,7 @@ function renderStep() {
         <div class="q-count">Question 2 of 6</div>
         <div class="q-text">Which systems do you run today with reliable, populated data?</div>
         <div class="q-help">This sets what you can build and how hard it is. A use case missing one required system still ranks, with a higher effort score. Missing two or more moves it to a build-toward list. Check a CMS or DAM only when a use case would read from it as a source. Delivery-only tools, Slack or Teams as an output channel, a scraper, PR software, are assumed available and never block anything; mining chat history is the separate source entry below. If a system holding data you would build on is not listed, add it at the bottom.</div>
+        <div class="q-nudge">Most teams your size run at least a CRM and marketing automation. Check every system where the data is actually reliable, and only those. Checking a box means you are vouching for what is inside it.</div>
         <div class="picker-warning">
           <svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
           <p><strong>Only check a system where the data is populated and reliable today.</strong> If you bought it but have not fully deployed it, or the data quality is questionable, leave it unchecked. Checking a box is you vouching that a use case built on that data would hold up in front of the CFO.</p>
@@ -1500,7 +1507,11 @@ function gatedCard(uc, p, gates, c) {
   return `
     <div class="gated-card">
       <div class="gated-head">
-        <div class="gated-name">${uc.name}${uc.isCustom ? `<span class="custom-badge">Yours</span> <button class="btn btn-ghost" style="padding:0; font-size:0.68rem; vertical-align:middle;" onclick="removeCustom(${uc.rank - 100})">&minus; Remove</button>` : ''}</div>
+        <div>
+          <div class="gated-outcome">${outcomes[uc.outcome] ? outcomes[uc.outcome].label : typeLabel(uc.type)}${uc.secondary && uc.secondary.length ? ' + ' + uc.secondary.map(s => outcomes[s] ? outcomes[s].label : s).join(' + ') : ''}${p.primaryObjective && servesOutcome(uc, p.primaryObjective) ? `<span class="gated-flag">${servesOutcome(uc, p.primaryObjective) === 'primary' ? 'Your primary objective' : 'Also serves your primary'}</span>` : ''}</div>
+          <div class="gated-name">${uc.name}${uc.isCustom ? `<span class="custom-badge">Yours</span> <button class="btn btn-ghost" style="padding:0; font-size:0.68rem; vertical-align:middle;" onclick="removeCustom(${uc.rank - 100})">&minus; Remove</button>` : ''}</div>
+          ${uc.metric ? `<div class="gated-metric"><span class="gated-metric-label">Would move</span> ${uc.metric}</div>` : ''}
+        </div>
         <div class="gated-reason">${reasons.join(' + ')}</div>
       </div>
       <div class="gated-fix">${uc.isCustom && gates.find(g => g.type === 'adoption') ? (uc.adoptionUnknown ? `<strong>Dependence unknown.</strong> You added this before flagging the field as contested, so whether it needs rep behavior change was never asked. It is parked here as the safe assumption; if marketing controls its output end to end, re-add it and answer the rep question. ` : `<strong>Your use case only works if reps change behavior, and you flagged the field as contested.</strong> Fix adoption first, or pick something marketing controls end to end. `) : ''}${whatWouldChange(uc, p, gates, c)}</div>
@@ -1510,7 +1521,9 @@ function gatedCard(uc, p, gates, c) {
 
 /* ---------- Custom use case form (multi-entry) ---------- */
 function blankEntry() {
-  return { name:'', type:null, objective:null, proximity:null, requires:new Set(), cadence:null, adoption:null };
+  // Prefill with the stack they already declared: a custom use case runs on the
+  // organization's systems, so we start from those and let them trim to what it needs.
+  return { name:'', type:null, objective:null, proximity:null, requires:new Set(selectedSystems), cadence:null, adoption:null };
 }
 
 function openCustomForm() {
@@ -1577,11 +1590,11 @@ function entryBlock(e, i, askAdoption, heavy, removable) {
         </div>
       </div>
       <div class="cf-field">
-        <div class="cf-label">Which heavy systems would it read from?</div>
-        <div class="cf-sub">This derives effort and risk. Every connected system is a surface for integration work and bad data. Lightweight tools are assumed and not listed.</div>
+        <div class="cf-label">Which of your systems would it actually use?</div>
+        <div class="cf-sub">Prefilled with the stack you already told us about. Leave checked only the systems this use case would read from, and uncheck the rest. Fewer systems means lower effort and less risk. If it needs something you do not have, add it at the bottom, that is what raises the effort score.</div>
         <div class="cf-sys-grid">
           ${heavy.map(s => `
-            <div class="cf-sys ${e.requires.has(s.id)?'selected':''}" onclick="cfToggleSys(${i},'${s.id}')"><div class="cf-sys-check"></div>${s.name}</div>`).join('')}
+            <div class="cf-sys ${e.requires.has(s.id)?'selected':''}" onclick="cfToggleSys(${i},'${s.id}')"><div class="cf-sys-check"></div>${s.name}${selectedSystems.has(s.id)?'<span class="cf-sys-have">have</span>':''}</div>`).join('')}
         </div>
       </div>
       <div class="cf-field" style="margin-bottom:${askAdoption ? '20px' : '0'};">

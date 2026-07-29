@@ -503,16 +503,16 @@ const useCases = [
     desc:"Industry-specific leave-behinds generated from deal context. Proof points matched to the buyer in the room.",
     roi:2, effort:1, risk:2, ttv:4, adoption:true,
     requires:["enablement","crm"], stack:["Highspot","Salesforce"] },
-  { rank:11, name:"Inbound Content Matched to ICP Segments", type:"efficiency", outcome:"pipeline", secondary:["efficiency"], metric:"MQL-to-SQL conversion by segment",
-    desc:"Map content to ICP priority tiers, find gaps, and generate assets for the segments most likely to convert.",
+  { rank:11, name:"Content Matched to ICP Segments", type:"efficiency", outcome:"pipeline", secondary:["efficiency"], metric:"MQL-to-SQL conversion by segment",
+    desc:"Map content to ICP priority tiers, find gaps, and generate assets for the segments most likely to convert, across inbound and outbound alike.",
     roi:3, effort:3, risk:3, ttv:3, adoption:false,
     requires:["intent","map"], stack:["6sense","Marketo"] },
   { rank:12, name:"Account Brief Generation", type:"efficiency", outcome:"efficiency", metric:"Rep prep hours per account",
     desc:"Draft rep briefs from firmographics and pipeline data so practitioners edit rather than write from scratch.",
     roi:2, effort:1, risk:2, ttv:5, adoption:true,
     requires:["crm","intent"], stack:["Salesforce","6sense"] },
-  { rank:13, name:"M&A Announcement with Joint Value Prop", type:"strategic", outcome:"position", metric:"Time to market-ready narrative",
-    desc:"When an acquisition closes, the joint narrative has to land fast. Drafts the release and partner announcement.",
+  { rank:13, name:"Market Narrative for a Sudden Event", type:"strategic", outcome:"position", metric:"Time to market-ready narrative",
+    desc:"An acquisition, a funding round, a category repositioning, a leadership change: whatever the trigger, the narrative has to land fast. Drafts the release and the value-prop framing before the moment passes.",
     roi:3, effort:3, risk:3, ttv:5, adoption:false,
     requires:["crm"], stack:["CRM","PR Tools"] },
   { rank:14, name:"Pricing and Packaging Strategy", type:"strategic", outcome:"position", secondary:["retention"], metric:"Average selling price and expansion revenue",
@@ -719,7 +719,7 @@ function renderStep() {
       <div class="question-block active">
         <div class="q-count">Question 1 of 6</div>
         <div class="q-text">What are you actually measured on this year?</div>
-        <div class="q-help">Pick your primary objective first, then your secondary. This does not change the ranking, which stays driven by what your organization can support. It changes what the results tell you: whether the use cases you can build today actually move the number you are accountable for, and what is standing in the way if they do not.</div>
+        <div class="q-help">Tap two cards: your primary objective first, then your secondary. Both are required before you can continue. This does not change the ranking, which stays driven by what your organization can support. It changes what the results tell you: whether the use cases you can build today actually move the number you are accountable for, and what is standing in the way if they do not.</div>
         <div class="obj-grid">
           ${Object.keys(outcomes).map(k => {
             const pos = picked.indexOf(k);
@@ -733,13 +733,13 @@ function renderStep() {
             </div>`;
           }).join('')}
         </div>
-        <p class="obj-hint">${picked.length === 0 ? 'Tap your primary objective.' : picked.length === 1 ? 'Now tap your secondary.' : 'Tap either card again to change your ranking.'}</p>
+        <p class="obj-hint">${picked.length === 0 ? 'Tap your primary objective first. (1 of 2 required)' : picked.length === 1 ? 'One more: now tap your secondary objective. (2 of 2 required)' : 'Both selected. Tap either card again to change your ranking.'}</p>
       </div>
     `;
     document.getElementById('back-btn').disabled = true;
     const nextBtn = document.getElementById('next-btn');
     nextBtn.disabled = objectiveRanking.length < 2;
-    nextBtn.textContent = 'Next';
+    nextBtn.textContent = objectiveRanking.length < 2 ? `Select ${2 - objectiveRanking.length} more to continue` : 'Next';
     renderProgress();
     return;
   }

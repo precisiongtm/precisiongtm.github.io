@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Product Marketing Contract -- Precision GTM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ink: #0f0e0c; --paper: #f5f2ec; --warm-mid: #e8e2d8;
+      --rule: #c9c0b0; --accent: #00b8d9; --accent-dk: #0097b5;
+      --muted: #6b6358; --light-ink: #3a3630;
+      --f-serif: 'Libre Baskerville', Georgia, serif;
+      --f-sans: 'DM Sans', system-ui, sans-serif;
+      --max: 1080px; --gap: clamp(1.5rem, 4vw, 3rem);
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--paper); color: var(--ink); font-family: var(--f-sans); font-size: 16px; line-height: 1.65; -webkit-font-smoothing: antialiased; }
+    /* NAV */
+    nav.pgtm-nav { position: sticky; top: 0; z-index: 100; background: rgba(245,242,236,0.95); border-bottom: 1px solid var(--rule); padding: 0 var(--gap); backdrop-filter: blur(10px); }
+    .nav-inner { max-width: var(--max); margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 60px; }
+    .nav-logo { font-family: var(--f-sans); font-size: 0.85rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink); text-decoration: none; }
+    .nav-logo span { color: var(--accent); }
+    .nav-back { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+    .nav-back:hover { color: var(--accent); }
+    .nav-back svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    /* HERO */
+    .page-hero { padding: clamp(4rem, 8vw, 7rem) var(--gap) clamp(3rem, 6vw, 5rem); border-bottom: 1px solid var(--rule); }
+    .page-hero-inner { max-width: var(--max); margin: 0 auto; display: grid; grid-template-columns: 1fr 320px; gap: 4rem; align-items: start; }
+    .page-eyebrow { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; }
+    .page-h1 { font-family: var(--f-serif); font-size: clamp(2rem, 4vw, 3rem); line-height: 1.18; letter-spacing: -0.02em; color: var(--ink); margin-bottom: 1.25rem; }
+    .page-sub { font-size: 1rem; color: var(--light-ink); line-height: 1.75; font-weight: 300; max-width: 520px; }
+    /* PROOF SIDEBAR */
+    .proof-sidebar { padding-top: 0.5rem; }
+    .proof-block { border-top: 1px solid var(--rule); padding: 1.5rem 0; }
+    .proof-block:first-child { border-top: 2px solid var(--accent); }
+    .proof-stat { font-family: var(--f-serif); font-size: 2.2rem; font-weight: 700; color: var(--ink); line-height: 1; margin-bottom: 0.4rem; }
+    .proof-stat span { color: var(--accent); }
+    .proof-label { font-size: 0.8rem; color: var(--muted); line-height: 1.45; }
+    /* SECTIONS */
+    section { padding: clamp(3.5rem, 7vw, 6rem) var(--gap); border-bottom: 1px solid var(--rule); }
+    .section-inner { max-width: var(--max); margin: 0 auto; }
+    .section-label { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.75rem; }
+    .section-h2 { font-family: var(--f-serif); font-size: clamp(1.5rem, 3vw, 2.2rem); line-height: 1.22; letter-spacing: -0.015em; color: var(--ink); margin-bottom: 1rem; }
+    .section-intro { font-size: 0.97rem; color: var(--muted); max-width: 600px; line-height: 1.7; margin-bottom: 3rem; font-weight: 300; }
+    /* GRID */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
+    .three-col { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--rule); border: 1px solid var(--rule); }
+    /* CARDS */
+    .detail-card { background: var(--paper); padding: 1.75rem 2rem; }
+    .card-label { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.6rem; }
+    .card-title { font-family: var(--f-serif); font-size: 1rem; font-weight: 700; color: var(--ink); margin-bottom: 0.6rem; }
+    .card-desc { font-size: 0.87rem; color: var(--muted); line-height: 1.65; font-weight: 300; }
+    /* BULLETS */
+    .bullet-list { list-style: none; display: flex; flex-direction: column; gap: 0.65rem; }
+    .bullet-list li { font-size: 0.9rem; color: var(--muted); padding-left: 1.25rem; position: relative; line-height: 1.6; font-weight: 300; }
+    .bullet-list li::before { content: '→'; position: absolute; left: 0; color: var(--accent); font-size: 0.8rem; top: 0.05em; }
+    /* PROOF POINTS */
+    .proof-list { list-style: none; display: flex; flex-direction: column; gap: 0; border: 1px solid var(--rule); }
+    .proof-item { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--rule); display: flex; gap: 1.25rem; align-items: baseline; }
+    .proof-item:last-child { border-bottom: none; }
+    .proof-item-stat { font-family: var(--f-serif); font-size: 1.4rem; font-weight: 700; color: var(--accent); min-width: 70px; line-height: 1; }
+    .proof-item-text { font-size: 0.9rem; color: var(--light-ink); line-height: 1.55; font-weight: 300; }
+    /* CTA BUTTON */
+    .btn-primary { display: inline-block; background: var(--accent); color: #fff; font-size: 0.82rem; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; padding: 0.85rem 2rem; text-decoration: none; border-radius: 2px; transition: background 0.2s; border: none; cursor: pointer; }
+    .btn-primary:hover { background: var(--accent-dk); }
+    /* CONTACT FORM */
+    .contact-section { padding: clamp(3.5rem, 7vw, 6rem) var(--gap); background: var(--warm-mid); }
+    .contact-section .section-inner, .contact-section > * { max-width: var(--max); margin-left: auto; margin-right: auto; }
+    .contact-label { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.75rem; max-width: var(--max); margin-left: auto; margin-right: auto; }
+    .contact-heading { font-family: var(--f-serif); font-size: clamp(1.5rem, 3vw, 2.2rem); color: var(--ink); margin-bottom: 0.75rem; max-width: var(--max); margin-left: auto; margin-right: auto; }
+    .contact-sub { font-size: 0.97rem; color: var(--muted); margin-bottom: 2rem; font-weight: 300; max-width: 560px; margin-left: auto; margin-right: auto; }
+    .contact-form { max-width: 640px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; }
+    .contact-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .contact-input { font-family: var(--f-sans); font-size: 0.87rem; color: var(--ink); background: #fff; border: 1px solid var(--rule); border-radius: 2px; padding: 10px 14px; outline: none; transition: border-color 0.15s; width: 100%; }
+    .contact-input:focus { border-color: var(--accent); }
+    .contact-textarea { font-family: var(--f-sans); font-size: 0.87rem; color: var(--ink); background: #fff; border: 1px solid var(--rule); border-radius: 2px; padding: 10px 14px; outline: none; transition: border-color 0.15s; width: 100%; resize: vertical; min-height: 100px; }
+    .contact-textarea:focus { border-color: var(--accent); }
+    .contact-submit { align-self: flex-start; padding: 0.85rem 2rem; background: var(--accent); color: white; border: none; border-radius: 2px; font-family: var(--f-sans); font-size: 0.78rem; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; cursor: pointer; transition: background 0.15s; }
+    .contact-submit:hover { background: var(--accent-dk); }
+    .contact-success { display: none; font-size: 0.87rem; color: #16a34a; font-weight: 500; padding: 10px 0; }
+    .contact-privacy { font-size: 0.75rem; color: var(--muted); font-weight: 300; margin-top: 6px; }
+    /* FOOTER */
+    footer { padding: 2rem var(--gap); border-top: 1px solid var(--rule); }
+    .footer-inner { max-width: var(--max); margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
+    .footer-logo { font-family: var(--f-sans); font-size: 0.82rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink); text-decoration: none; }
+    .footer-logo span { color: var(--accent); }
+    .footer-copy { font-size: 0.75rem; color: var(--rule); }
+    /* RESPONSIVE */
+    @media (max-width: 860px) {
+      .page-hero-inner { grid-template-columns: 1fr; }
+      .two-col { grid-template-columns: 1fr; }
+      .three-col { grid-template-columns: 1fr; }
+      .contact-row { grid-template-columns: 1fr; }
+    }
+  </style>
+  <!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DDXWNGS6FL"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-DDXWNGS6FL');
+</script>
+</head>
+<body>
+
+<nav class="pgtm-nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="index.html">PRECISION <span>GTM</span></a>
+    <a class="nav-back" href="index.html">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      Back to Precision GTM
+    </a>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div>
+      <div class="page-eyebrow">Fractional Contract</div>
+      <h1 class="page-h1">Senior product marketing, ready to run -- no ramp, no agency overhead.</h1>
+      <p class="page-sub">Hands-on product marketing for enterprise B2B and AI companies that need a senior operator. Positioning, pricing and packaging, launches, competitive strategy, and sales enablement. Scoped by outcome, not by hours.</p>
+    </div>
+    <div class="proof-sidebar">
+      <div class="proof-block">
+        <div class="proof-stat">2<span style="font-size:1.2rem;">x</span></div>
+        <div class="proof-label">ACV lift in 3 months through pricing and packaging redesign</div>
+      </div>
+      <div class="proof-block">
+        <div class="proof-stat">65<span style="font-size:1.2rem;">%</span></div>
+        <div class="proof-label">Improvement in MQL-to-SQL conversion through repositioning</div>
+      </div>
+      <div class="proof-block">
+        <div class="proof-stat">#1</div>
+        <div class="proof-label">Gartner and Forrester placements through positioning and analyst strategy</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section>
+  <div class="section-inner">
+    <div class="section-label">What This Covers</div>
+    <h2 class="section-h2">The work that moves pipeline and ACV.</h2>
+    <p class="section-intro">Each engagement is scoped around a specific problem. The deliverable is a system that runs after the engagement ends.</p>
+    <div class="three-col">
+      <div class="detail-card">
+        <div class="card-label">Positioning</div>
+        <div class="card-title">ICP, Narrative, and Category</div>
+        <div class="card-desc">Define the wedge, sharpen the category narrative, and build the messaging framework that holds across sales, marketing, and product.</div>
+      </div>
+      <div class="detail-card">
+        <div class="card-label">Pricing and Packaging</div>
+        <div class="card-title">Aligned to Economic Buyers</div>
+        <div class="card-desc">Redesign pricing and packaging to reflect what economic buyers actually value. Built around deal size expansion and faster qualification.</div>
+      </div>
+      <div class="detail-card">
+        <div class="card-label">Launch</div>
+        <div class="card-title">Coordinated Go-to-Market</div>
+        <div class="card-desc">End-to-end launch strategy and execution across product, sales, and marketing. Built for enterprise buyers, not just product announcements.</div>
+      </div>
+      <div class="detail-card">
+        <div class="card-label">Competitive</div>
+        <div class="card-title">Strategy and Intelligence</div>
+        <div class="card-desc">Competitive positioning that holds in enterprise deals. Win/loss analysis, battlecards, and rep training built around the real objections.</div>
+      </div>
+      <div class="detail-card">
+        <div class="card-label">Sales Enablement</div>
+        <div class="card-title">Tools Reps Actually Use</div>
+        <div class="card-desc">Playbooks, decks, discovery frameworks, and ROI models built to land with economic buyers and shorten the sales cycle.</div>
+      </div>
+      <div class="detail-card">
+        <div class="card-label">Analyst Relations</div>
+        <div class="card-title">Category Leadership</div>
+        <div class="card-desc">Positioning and briefing strategy for Gartner and Forrester. Built around achieving and defending category leadership positions.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section-inner">
+    <div class="section-label">Track Record</div>
+    <h2 class="section-h2">20 years across enterprise B2B, AI, data, and infrastructure.</h2>
+    <ul class="proof-list">
+      <li class="proof-item"><div class="proof-item-stat">2x</div><div class="proof-item-text">ACV improvement in three months through pricing and packaging redesign aligned to executive buyer economics</div></li>
+      <li class="proof-item"><div class="proof-item-stat">65%</div><div class="proof-item-text">Improvement in MQL-to-SQL conversion through portfolio-wide repositioning and messaging framework</div></li>
+      <li class="proof-item"><div class="proof-item-stat">#1</div><div class="proof-item-text">Gartner and Forrester placements through differentiated positioning, competitive strategy, and analyst engagement</div></li>
+      <li class="proof-item"><div class="proof-item-stat">16%</div><div class="proof-item-text">Year-over-year license growth through clear positioning and competitive strategy in a mature enterprise market</div></li>
+    </ul>
+    <p style="margin-top:1.5rem;"><a href="https://www.linkedin.com/in/macgupta1/" target="_blank" rel="noopener" style="font-size:0.82rem; font-weight:500; letter-spacing:0.07em; text-transform:uppercase; color:var(--accent); text-decoration:none;">View full background on LinkedIn &rarr;</a></p>
+  </div>
+</section>
+
+<section>
+  <div class="section-inner">
+    <div class="section-label">Who This Is For</div>
+    <h2 class="section-h2">Built for companies that need senior PMM judgment, not headcount.</h2>
+    <div class="two-col">
+      <ul class="bullet-list">
+        <li>Growth-stage vertical AI or enterprise B2B SaaS companies with a product in market</li>
+        <li>Teams that need a senior operator, not an agency or a junior hire</li>
+        <li>Companies entering new markets or repositioning an existing platform</li>
+        <li>Situations where the messaging, pricing, or narrative is the bottleneck -- not the product</li>
+      </ul>
+      <ul class="bullet-list">
+        <li>Launching into enterprise accounts where the sales cycle and buyer dynamics are more complex</li>
+        <li>Post-Series A through Series C, where GTM precision starts to matter more than volume</li>
+        <li>Companies that have tried agencies and found the output too generic or too slow</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="contact-section">
+  <div class="contact-label">Get in touch</div>
+  <h2 class="contact-heading">Start a conversation</h2>
+  <p class="contact-sub">Tell us what you're working on and we will follow up within one business day.</p>
+  <div class="contact-form">
+    <div class="contact-row">
+      <input class="contact-input" id="cf-name" type="text" placeholder="Name" />
+      <input class="contact-input" id="cf-company" type="text" placeholder="Company" />
+    </div>
+    <input class="contact-input" id="cf-email" type="email" placeholder="Work email" />
+    <textarea class="contact-textarea" id="cf-message" placeholder="What are you working on? (optional)"></textarea>
+    <button class="contact-submit" id="cf-submit" onclick="submitContact()">Send message</button>
+    <div class="contact-success" id="cf-success">Message received. We will follow up within one business day.</div>
+    <p class="contact-privacy">Your information is never sold or shared.</p>
+  </div>
+</div>
+
+<script>
+function submitContact() {
+  const name = document.getElementById('cf-name').value.trim();
+  const company = document.getElementById('cf-company').value.trim();
+  const email = document.getElementById('cf-email').value.trim();
+  const message = document.getElementById('cf-message').value.trim();
+  if (!name || !email) {
+    if (!name) document.getElementById('cf-name').focus();
+    else document.getElementById('cf-email').focus();
+    return;
+  }
+  const btn = document.getElementById('cf-submit');
+  btn.textContent = 'Sending...';
+  btn.disabled = true;
+  const iframe = document.createElement('iframe');
+  iframe.name = 'cf-iframe';
+  iframe.style.display = 'none';
+  document.body.appendChild(iframe);
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = 'https://script.google.com/macros/s/AKfycbz0Sqczu3exzwFhB8XYPXrE3KoHAUxpt0n-QuokfWO-xEJ-XpODfPuVX1uFB2gxPqLMAQ/exec';
+  form.target = 'cf-iframe';
+  form.style.display = 'none';
+  const fields = { name, company, email, message, source: 'product-marketing-contract', page: 'product-marketing-contract' };
+  Object.entries(fields).forEach(([key, value]) => {
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = key;
+    input.value = value;
+    form.appendChild(input);
+  });
+  document.body.appendChild(form);
+  form.submit();
+  setTimeout(() => {
+    btn.style.display = 'none';
+    document.getElementById('cf-success').style.display = 'block';
+    document.body.removeChild(form);
+    document.body.removeChild(iframe);
+  }, 2000);
+}
+</script>
+
+<footer>
+  <div class="footer-inner">
+    <a class="footer-logo" href="index.html">PRECISION <span>GTM</span></a>
+    <div class="footer-copy">&copy; 2026 Precision GTM LLC</div>
+  </div>
+</footer>
+
+</body>
+</html>

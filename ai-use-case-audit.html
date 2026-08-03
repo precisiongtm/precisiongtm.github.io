@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Work With Me: Precision GTM</title>
-<meta name="description" content="A half-day prioritization workshop for marketing leaders, workflow blueprints your team owns, and a path to implementation. Start with the free assessment.">
+<title>AI Use Case Audit: Precision GTM</title>
+<meta name="description" content="The AI Use Case Audit: a half-day prioritization workshop for marketing leaders, workflow blueprints your team owns, and a path to implementation. Start with the free assessment.">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-DDXWNGS6FL"></script>
 <script>
@@ -94,6 +94,14 @@
 
   /* CTA */
   .cta-block { background:var(--score-bg); border-left:3px solid var(--blue); border-radius:2px; padding:32px 34px; max-width:760px; }
+  .email-capture { background:white; border:1px solid var(--border); border-radius:2px; padding:28px 30px; max-width:600px; }
+  .email-capture-label { font-family:'Libre Baskerville', serif; font-size:1.1rem; font-weight:700; color:var(--navy); margin-bottom:10px; }
+  .email-capture-sub { font-size:0.9rem; color:var(--light-ink); font-weight:300; line-height:1.65; margin-bottom:18px; max-width:520px; }
+  .email-capture-row { display:flex; gap:10px; margin-bottom:10px; }
+  .email-input { font-family:'DM Sans', sans-serif; font-size:0.87rem; color:var(--navy); background:#fff; border:1px solid var(--border); border-radius:2px; padding:10px 14px; outline:none; transition:border-color 0.15s; width:100%; }
+  .email-input:focus { border-color:var(--blue); }
+  .email-success { display:none; font-size:0.87rem; color:#16a34a; font-weight:500; padding:10px 0; }
+  .email-privacy { font-size:0.72rem; color:var(--mid); font-weight:300; margin-top:8px; }
   .cta-block h3 { font-family:'Libre Baskerville', serif; font-size:1.25rem; font-weight:700; margin-bottom:12px; line-height:1.35; }
   .cta-block p { font-size:0.92rem; line-height:1.7; color:var(--light-ink); font-weight:300; max-width:600px; }
   .btn-row { display:flex; gap:12px; flex-wrap:wrap; margin-top:22px; }
@@ -142,7 +150,7 @@
 </nav>
 
 <div class="header">
-  <div class="eyebrow">Work With Me</div>
+  <div class="eyebrow">The AI Use Case Audit</div>
   <h1>Your AI roadmap is full. The question is whether any of it moves a number you are measured on.</h1>
   <p class="subtitle">Pipeline. Retention. Efficiency. Positioning. Marketing is part of the revenue engine, and every AI use case should name the metric it moves. I help you find the ones that move yours, prove it to a CFO, and get to a working workflow without a six-month program.</p>
 </div>
@@ -299,21 +307,17 @@
       <div class="fit-col yes">
         <div class="fit-title">This is for you if</div>
         <ul class="fit-list">
-          <li>You lead marketing at a B2B software company, roughly $20M to $150M in revenue.</li>
-          <li>You have a list of AI ideas and no defensible way to tell which ones move your number.</li>
-          <li>Your team is 15 to 60 people with no dedicated AI function.</li>
+          <li>You lead marketing at a B2B software company with roughly $10M or more in revenue.</li>
           <li>You are measured on pipeline, retention, efficiency, or positioning, and you need a result a CFO will credit.</li>
-          <li>You can get your leadership team in a room for half a day.</li>
+          <li>You have a list of AI ideas and no defensible way to tell which ones move your number.</li>
         </ul>
       </div>
       <div class="fit-col no">
         <div class="fit-title">This is not for you if</div>
         <ul class="fit-list">
           <li>You have an internal AI team already running a roadmap. You do not need me, and I would be a duplicate.</li>
-          <li>You want someone to build and run production systems. That is the partner's job, not mine.</li>
           <li>Your CRM is unreliable and you are hoping AI will paper over it. Fix the data first; I will tell you that for free.</li>
           <li>You want a strategy deck for the board. There are better and more expensive firms for that.</li>
-          <li>Nobody in your organization can build or maintain anything. Start with hiring, not with me.</li>
         </ul>
       </div>
     </div>
@@ -332,7 +336,24 @@
       <p>Fifteen minutes. You will know whether the AI work you can actually support moves the number you are graded on. If the ranked list is all you needed, take it and go. If it starts an argument on your team, that is exactly what the workshop is for.</p>
       <div class="btn-row">
         <a class="btn btn-primary" href="cmo-ai-roi-assessment.html">Take the assessment</a>
-        <a class="btn" href="mailto:mac@precisiongotomarket.com?subject=Prioritization%20Workshop">Ask about the workshop</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="email-capture">
+      <div class="email-capture-label">Ready to take the next step?</div>
+      <p class="email-capture-sub">If you already know the workshop is the right move, or want to talk through where this fits before running the assessment, tell us and we will be in touch.</p>
+      <div class="email-capture-form" id="next-step-form">
+        <div class="email-capture-row">
+          <input class="email-input" id="ns-name" type="text" placeholder="Name" />
+          <input class="email-input" id="ns-company" type="text" placeholder="Company" />
+        </div>
+        <input class="email-input" id="ns-email" type="email" placeholder="Work email" style="margin-bottom:10px;" />
+        <textarea class="email-input" id="ns-note" rows="2" placeholder="Anything specific you want to cover? (optional)" style="resize:vertical; min-height:52px; font-family:'DM Sans',sans-serif; margin-bottom:10px;"></textarea>
+        <button class="btn btn-primary" id="ns-submit" onclick="submitNextStep()">Request a conversation</button>
+        <div class="email-success" id="ns-success">Got it. We will be in touch within a day or two.</div>
+        <p class="email-privacy">Your information is never sold or shared.</p>
       </div>
     </div>
   </div>
@@ -343,5 +364,56 @@
   <p>Precision GTM &middot; <a href="mailto:mac@precisiongotomarket.com">mac@precisiongotomarket.com</a> &middot; <a href="index.html">precisiongotomarket.com</a></p>
 </footer>
 
+<script>
+function postToBackend(name, company, email, pageLabel, extraFields) {
+  const iframe = document.createElement('iframe');
+  iframe.name = 'ns-iframe-' + Date.now();
+  iframe.style.display = 'none';
+  document.body.appendChild(iframe);
+
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = 'https://script.google.com/macros/s/AKfycbz0Sqczu3exzwFhB8XYPXrE3KoHAUxpt0n-QuokfWO-xEJ-XpODfPuVX1uFB2gxPqLMAQ/exec';
+  form.target = iframe.name;
+  form.style.display = 'none';
+
+  const fields = Object.assign({
+    name, company, email,
+    page: pageLabel,
+    source: 'ai-use-case-audit'
+  }, extraFields || {});
+  Object.entries(fields).forEach(([key, value]) => {
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = key;
+    input.value = value;
+    form.appendChild(input);
+  });
+  document.body.appendChild(form);
+  form.submit();
+  setTimeout(() => { document.body.removeChild(form); document.body.removeChild(iframe); }, 2500);
+}
+
+function submitNextStep() {
+  const name = document.getElementById('ns-name').value.trim();
+  const company = document.getElementById('ns-company').value.trim();
+  const email = document.getElementById('ns-email').value.trim();
+  const note = document.getElementById('ns-note').value.trim();
+  if (!name || !email) {
+    if (!name) document.getElementById('ns-name').focus();
+    else document.getElementById('ns-email').focus();
+    return;
+  }
+  const btn = document.getElementById('ns-submit');
+  btn.textContent = 'Sending...';
+  btn.disabled = true;
+  postToBackend(name, company, email, 'AI Use Case Audit -- Ready for Next Step', { note });
+  setTimeout(() => {
+    btn.style.display = 'none';
+    document.getElementById('ns-note').style.display = 'none';
+    document.getElementById('ns-success').style.display = 'block';
+  }, 900);
+}
+</script>
 </body>
 </html>

@@ -1273,13 +1273,11 @@ function showResults() {
   html += outcomeSummary(ranked, gated, p);
 
   if (!resultsUnlocked) {
-    // LOCKED: show score and summary (already rendered above), but hold back the
-    // named ranked list and build-toward list behind one email gate. Custom use
-    // cases still get a personalized naive-vs-calibrated teaser, since that is
-    // the sharpest reason to unlock.
+    // LOCKED: show score and summary (already rendered above), then go straight
+    // to the gate. A separate "ranked list is ready, N buildable / M gated"
+    // line used to sit here, but it only repeated counts the alignment summary
+    // above already gives and the gate's own copy restates again below it.
     html += `<div id="reveal-anchor"></div>`;
-    html += `<div class="rec-section-label">Your ranked list is ready</div>`;
-    html += `<div class="rec-section-sub">${ranked.length} use case${ranked.length === 1 ? '' : 's'} are buildable on your stack today. ${gated.length} sit in build-toward. Unlock to see exactly which, in order, and why.</div>`;
 
     if (customUseCases.length) {
       html += `<p class="custom-calibrated-note">You added ${customUseCases.length} use case${customUseCases.length > 1 ? 's' : ''} of your own. ${customUseCases.length > 1 ? 'They have' : 'It has'} been calibrated against your stack, data, adoption, and builder, and ${customUseCases.length > 1 ? 'are' : 'is'} included in your ranked list below.</p>`;

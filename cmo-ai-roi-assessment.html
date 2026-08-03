@@ -165,6 +165,7 @@
   .readiness-note { font-size:0.85rem; line-height:1.65; color:var(--light-ink); font-weight:300; margin-top:16px; padding-top:14px; border-top:1px solid var(--warm-mid); max-width:640px; }
   .readiness-note strong { font-weight:500; color:var(--navy); }
   .disclaimer { font-size:0.78rem; color:var(--mid); font-weight:300; line-height:1.6; max-width:720px; margin-top:28px; padding-top:18px; border-top:1px solid var(--warm-mid); }
+  .disclaimer a { color:var(--blue); }
   .next-step-capture { margin-top:24px; border-left:3px solid var(--navy); }
   .next-step-note { resize:vertical; min-height:52px; font-family:'DM Sans',sans-serif; margin-bottom:10px; }
   .results-delivery { background:white; border:1px solid var(--border); border-radius:2px; padding:22px 26px; margin:20px 0; }
@@ -1380,7 +1381,7 @@ function showResults() {
       <p class="email-success" id="email-copy-success">Sent to ${capturedLead ? capturedLead.email : 'you'}.</p>
     </div>
     ` : ''}
-    <p class="disclaimer">This assessment is an indicative starting position, scored from your answers against the Precision GTM framework. It is not professional advice, and it cannot see what a real diagnostic would: your actual data, your pipeline, your team. The rigorous version of this analysis is the GTM Friction Audit.</p>
+    <p class="disclaimer">This assessment is an indicative starting position, scored from your answers against the Precision GTM framework. It is not professional advice, and it cannot see what a real diagnostic would: your actual data, your pipeline, your team. The rigorous version of this analysis is the <a href="https://precisiongotomarket.com/gtm-diagnostic.html">GTM Friction Audit</a>.</p>
   `;
 
   // Serialize results as plain text for the email submission and PDF

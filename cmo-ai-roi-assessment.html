@@ -167,6 +167,10 @@
   .disclaimer { font-size:0.78rem; color:var(--mid); font-weight:300; line-height:1.6; max-width:720px; margin-top:28px; padding-top:18px; border-top:1px solid var(--warm-mid); }
   .next-step-capture { margin-top:24px; border-left:3px solid var(--navy); }
   .next-step-note { resize:vertical; min-height:52px; font-family:'DM Sans',sans-serif; margin-bottom:10px; }
+  .results-delivery { background:white; border:1px solid var(--border); border-radius:2px; padding:22px 26px; margin:20px 0; }
+  .results-delivery-label { font-size:0.68rem; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--mid); margin-bottom:6px; }
+  .results-delivery-sub { font-size:0.85rem; color:var(--light-ink); font-weight:300; margin-bottom:14px; }
+  .results-delivery-actions { display:flex; gap:10px; flex-wrap:wrap; }
   .retake-limit-note { font-size:0.83rem; color:var(--mid); font-weight:300; line-height:1.6; margin-top:10px; }
   .retake-limit-note a { color:var(--blue); }
 
@@ -665,6 +669,7 @@ const customUseCases = [];   // survives retakes within the session
 let resultsUnlocked = false;  // flips true once email is given at the results gate; unlocks the named ranked and build-toward lists
 let capturedLead = null;     // { name, company, email } once given anywhere this session
 let attemptCount = 1;         // the initial view counts as attempt 1; capped at 3 per session
+let nextStepRequested = false; // true once they ask for a conversation; never re-asked, even across retakes
 let cfState = null;          // in-progress custom form state: { entries: [...] }
 
 /* Derivation for custom use cases: scores come from the framework, not self-rating.
@@ -1031,6 +1036,14 @@ function calcReadiness(p, scored) {
    only renders when results are unlocked, capturedLead is already set, so it
    never re-asks for name or email, one click submits the request. */
 function nextStepCTA() {
+  if (nextStepRequested) {
+    return `
+      <div class="email-capture next-step-capture">
+        <div class="email-capture-label">You are on the list</div>
+        <p class="email-capture-sub">We have your request and will be in touch within a day or two. No need to ask again.</p>
+      </div>
+    `;
+  }
   return `
     <div class="email-capture next-step-capture">
       <div class="email-capture-label">Ready to take the next step?</div>
@@ -1348,15 +1361,18 @@ function showResults() {
       <button class="btn" onclick="openCustomForm()">Add Your Own Use Cases</button>
       <button id="retake-btn" class="btn btn-primary" onclick="retake()" ${attemptCount >= 3 ? 'disabled' : ''}>${attemptCount >= 3 ? 'Limit reached for this session' : 'Retake the Assessment'}</button>
       <a class="btn" href="cmo-ai-roi-framework.html">See the Full Framework</a>
-      ${resultsUnlocked ? `<button class="btn" onclick="downloadPDF()">Download as PDF</button>` : ''}
     </div>
     <p id="retake-limit-msg" class="retake-limit-note" style="${attemptCount >= 3 ? '' : 'display:none;'}">You have used all 3 assessments for this session. If you would like to go deeper on your own numbers, <a href="mailto:mac@precisiongotomarket.com?subject=Ready%20to%20go%20deeper">contact us</a>.</p>
     <div class="custom-form" id="custom-form"></div>
-    ${resultsUnlocked && capturedLead ? `
-    <div class="email-capture">
-      <div class="email-capture-label">Your results are on the way</div>
-      <p class="email-capture-sub">We have your details from earlier and sent a copy to ${capturedLead.email}. <button class="btn btn-ghost" style="padding:0; font-size:0.83rem; vertical-align:baseline;" onclick="resendResults()">Send again</button></p>
-      <div class="email-success" id="ec-success" style="display:none;">Sent again to ${capturedLead.email}.</div>
+    ${resultsUnlocked ? `
+    <div class="results-delivery">
+      <div class="results-delivery-label">Keep a copy of your ranked list</div>
+      <p class="results-delivery-sub">Download it, email it to yourself, or both.</p>
+      <div class="results-delivery-actions">
+        <button class="btn" onclick="downloadPDF()">Download as PDF</button>
+        <button class="btn" id="email-copy-btn" onclick="emailMeCopy()">Email me a copy</button>
+      </div>
+      <p class="email-success" id="email-copy-success">Sent to ${capturedLead ? capturedLead.email : 'you'}.</p>
     </div>
     ` : ''}
     <p class="disclaimer">This assessment is an indicative starting position, scored from your answers against the Precision GTM framework. It is not professional advice, and it cannot see what a real diagnostic would: your actual data, your pipeline, your team. The rigorous version of this analysis is the GTM Friction Audit.</p>
@@ -1943,11 +1959,20 @@ function submitEmailCapture() {
   }, 2000);
 }
 
-function resendResults() {
+function emailMeCopy() {
   if (!capturedLead) return;
-  postToBackend(capturedLead.name, capturedLead.company, capturedLead.email, 'CMO AI ROI Assessment -- Resend Results');
-  const s = document.getElementById('ec-success');
-  if (s) s.style.display = 'block';
+  const btn = document.getElementById('email-copy-btn');
+  btn.textContent = 'Sending...';
+  btn.disabled = true;
+  // Full results included deliberately here: this is the explicit "yes, email
+  // me" action, distinct from the unlock step which no longer sends one.
+  postToBackend(capturedLead.name, capturedLead.company, capturedLead.email, 'CMO AI ROI Assessment -- Email Results');
+  setTimeout(() => {
+    btn.textContent = 'Email me a copy';
+    btn.disabled = false;
+    const s = document.getElementById('email-copy-success');
+    if (s) { s.textContent = 'Sent to ' + capturedLead.email + '.'; s.style.display = 'block'; }
+  }, 900);
 }
 
 function submitNextStep() {
@@ -1969,6 +1994,7 @@ function submitNextStep() {
   const btn = document.getElementById('ns-submit');
   btn.textContent = 'Sending...';
   btn.disabled = true;
+  nextStepRequested = true;
   postToBackend(name, company, email, 'CMO AI ROI Assessment -- Ready for Next Step', { note });
   setTimeout(() => {
     btn.style.display = 'none';
@@ -1995,7 +2021,11 @@ function submitRevealUnlock() {
     btn.textContent = 'Unlocking...';
     btn.disabled = true;
     capturedLead = { name, company, email };
-    postToBackend(name, company, email, 'CMO AI ROI Assessment -- Results Unlock');
+    // Deliberately blank 'results' here: the backend only auto-emails the
+    // person their results when both results and email are present. Unlocking
+    // should capture the lead, not trigger an email — that is now an explicit
+    // choice they make below via "Email me a copy."
+    postToBackend(name, company, email, 'CMO AI ROI Assessment -- Results Unlock', { results: '' });
   }
   resultsUnlocked = true;
   setTimeout(() => {

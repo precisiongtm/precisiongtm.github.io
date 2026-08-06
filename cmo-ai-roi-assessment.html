@@ -290,6 +290,17 @@
 
   .results { display:none; }
   .results.active { display:block; animation:fade 0.4s ease; }
+  .journey-stepper { display:flex; align-items:center; margin-bottom:26px; flex-wrap:wrap; row-gap:14px; }
+  .journey-step { display:flex; align-items:center; gap:9px; flex-shrink:0; }
+  .journey-dot { width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.72rem; font-weight:600; flex-shrink:0; border:1.5px solid var(--border); color:var(--mid); background:white; }
+  .journey-step.done .journey-dot { background:var(--blue); border-color:var(--blue); color:white; }
+  .journey-step.current .journey-dot { border-color:var(--blue); color:var(--blue); background:var(--score-bg); }
+  .journey-label { font-size:0.78rem; font-weight:500; color:var(--navy); white-space:nowrap; }
+  .journey-step.pending .journey-label { color:var(--mid); font-weight:400; }
+  .journey-sub { display:block; font-size:0.62rem; font-weight:400; letter-spacing:0.06em; text-transform:uppercase; color:var(--mid); margin-top:1px; }
+  .journey-line { height:1.5px; background:var(--border); flex:1 1 20px; min-width:16px; margin:0 10px; }
+  .journey-line.filled { background:var(--blue); }
+  @media (max-width:700px) { .journey-stepper { display:none; } }
   .results-head { padding-bottom:32px; border-bottom:1px solid var(--border); margin-bottom:8px; }
   .results-eyebrow { font-size:0.68rem; font-weight:500; letter-spacing:0.14em; text-transform:uppercase; color:var(--blue); margin-bottom:14px; }
   .results-title { font-family:'Libre Baskerville',serif; font-size:clamp(1.6rem,3vw,2.2rem); line-height:1.25; font-weight:700; color:var(--navy); max-width:720px; margin-bottom:16px; letter-spacing:-0.01em; }
@@ -485,11 +496,11 @@ const useCases = [
     desc:"Find the exact talk tracks, proof points, and actions that separate won deals from lost ones at the same stage.",
     roi:5, effort:3, risk:4, ttv:3, adoption:true, runCost:true,
     requires:["crm","ci","bi"], stack:["Salesforce","Gong","Tableau"] },
-  { rank:4, name:"Real-Time Account Team Training", type:"revenue", outcome:"pipeline", metric:"Win rate on coached deals",
+  { rank:4, name:"Real-Time Deal Coaching", type:"revenue", outcome:"pipeline", metric:"Win rate on coached deals",
     desc:"Pull live deal context and deliver a deal-specific briefing before the next call. No boot camp required.",
     roi:5, effort:2, risk:2, ttv:5, adoption:true,
     requires:["crm","ci"], stack:["Salesforce","Gong"] },
-  { rank:5, name:"Executive Brief Before a CIO Meeting", type:"revenue", outcome:"pipeline", metric:"Exec meeting-to-next-step rate",
+  { rank:5, name:"Pre-Meeting Executive Brief", type:"revenue", outcome:"pipeline", metric:"Exec meeting-to-next-step rate",
     desc:"A one-page brief framed around risk, cost, and priority before an economic-buyer meeting. Not features.",
     roi:4, effort:1, risk:2, ttv:5, adoption:true,
     requires:["crm","intent"], stack:["Salesforce","6sense"] },
@@ -1222,6 +1233,31 @@ function outcomeSummary(ranked, gated, p) {
   `;
 }
 
+/* Item from Ryan's feedback: nothing on the results page told a first-time
+   visitor that adding their own use case or talking to us were even options,
+   let alone where those sit in a sequence. This reads state off the same
+   session variables the rest of the page already tracks, so it stays correct
+   automatically as someone moves through the flow. */
+function journeyStepper() {
+  const steps = [
+    { label: 'Take the Assessment', state: 'done' },
+    { label: 'Review Your Ranked List', state: resultsUnlocked ? 'done' : 'current' },
+    { label: 'Add Your Own Use Cases', sub: 'optional', state: customUseCases.length ? 'done' : 'pending' },
+    { label: 'Talk to Us', sub: 'optional', state: nextStepRequested ? 'done' : 'pending' }
+  ];
+  return `
+    <div class="journey-stepper">
+      ${steps.map((s, i) => `
+        <div class="journey-step ${s.state}"${i === 3 ? ' id="journey-step-talk"' : ''}>
+          <div class="journey-dot"${i === 3 ? ' id="journey-dot-talk"' : ''}>${s.state === 'done' ? '&#10003;' : (i + 1)}</div>
+          <div class="journey-label">${s.label}${s.sub ? `<span class="journey-sub">${s.sub}</span>` : ''}</div>
+        </div>
+        ${i < steps.length - 1 ? `<div class="journey-line ${s.state === 'done' ? 'filled' : ''}"></div>` : ''}
+      `).join('')}
+    </div>
+  `;
+}
+
 function showResults() {
   const p = getProfile();
   const scored = allUseCases().map(uc => ({ uc, ...evaluate(uc, p) }));
@@ -1245,7 +1281,8 @@ function showResults() {
   const proofText = p.proof === 'fast' ? "a result a CFO recognizes inside a quarter" : "a foundation that compounds over the next two or three quarters";
   const sysList = [...p.systems].map(id => sysName(id).replace(/^a /, '')).join(', ') || "no heavy systems confirmed";
 
-  let html = `
+  let html = journeyStepper();
+  html += `
     <div class="results-head">
       <div class="results-eyebrow">Your Assessment</div>
       <div class="results-title">${ranked.length} use case${ranked.length === 1 ? '' : 's'} ranked for you. ${gated.length} to build toward.</div>
@@ -1916,7 +1953,8 @@ function postToBackend(name, company, email, pageLabel, extraFields) {
     page: pageLabel,
     source: 'cmo-ai-roi-assessment',
     results: window._auditResultsText || '',
-    profile: JSON.stringify(window._auditProfile || {})
+    profile: JSON.stringify(window._auditProfile || {}),
+    sendEmail: 'no'   // safe default; only the explicit "Email me a copy" action overrides this
   }, extraFields || {});
   Object.entries(fields).forEach(([key, value]) => {
     const input = document.createElement('input');
@@ -1957,7 +1995,7 @@ function emailMeCopy() {
   btn.disabled = true;
   // Full results included deliberately here: this is the explicit "yes, email
   // me" action, distinct from the unlock step which no longer sends one.
-  postToBackend(capturedLead.name, capturedLead.company, capturedLead.email, 'CMO AI ROI Assessment -- Email Results');
+  postToBackend(capturedLead.name, capturedLead.company, capturedLead.email, 'CMO AI ROI Assessment -- Email Results', { sendEmail: 'yes' });
   setTimeout(() => {
     btn.textContent = 'Email me a copy';
     btn.disabled = false;
@@ -1986,7 +2024,11 @@ function submitNextStep() {
   btn.textContent = 'Sending...';
   btn.disabled = true;
   nextStepRequested = true;
-  postToBackend(name, company, email, 'CMO AI ROI Assessment -- Ready for Next Step', { note });
+  const stepEl = document.getElementById('journey-step-talk');
+  if (stepEl) { stepEl.classList.remove('pending'); stepEl.classList.add('done'); }
+  const dotEl = document.getElementById('journey-dot-talk');
+  if (dotEl) dotEl.innerHTML = '&#10003;';
+  postToBackend(name, company, email, 'CMO AI ROI Assessment -- Ready for Next Step', { note, sendEmail: 'no' });
   setTimeout(() => {
     btn.style.display = 'none';
     const noteEl = document.getElementById('ns-note');
@@ -2012,11 +2054,10 @@ function submitRevealUnlock() {
     btn.textContent = 'Unlocking...';
     btn.disabled = true;
     capturedLead = { name, company, email };
-    // Deliberately blank 'results' here: the backend only auto-emails the
-    // person their results when both results and email are present. Unlocking
-    // should capture the lead, not trigger an email — that is now an explicit
-    // choice they make below via "Email me a copy."
-    postToBackend(name, company, email, 'CMO AI ROI Assessment -- Results Unlock', { results: '' });
+    // Always send the full results, so the sheet's record is complete
+    // regardless of whether the user gets emailed. sendEmail is the explicit,
+    // separate control for that decision, not a side effect of blanking data.
+    postToBackend(name, company, email, 'CMO AI ROI Assessment -- Results Unlock', { sendEmail: 'no' });
   }
   resultsUnlocked = true;
   setTimeout(() => {

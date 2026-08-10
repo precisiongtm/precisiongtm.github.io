@@ -303,6 +303,7 @@
   @media (max-width:700px) { .journey-stepper { display:none; } }
   .results-head { padding-bottom:32px; border-bottom:1px solid var(--border); margin-bottom:8px; }
   .results-eyebrow { font-size:0.68rem; font-weight:500; letter-spacing:0.14em; text-transform:uppercase; color:var(--blue); margin-bottom:14px; }
+  .removed-note { font-size:0.83rem; color:var(--mid); font-weight:300; margin-bottom:16px; }
   .results-title { font-family:'Libre Baskerville',serif; font-size:clamp(1.6rem,3vw,2.2rem); line-height:1.25; font-weight:700; color:var(--navy); max-width:720px; margin-bottom:16px; letter-spacing:-0.01em; }
   .results-summary { font-size:0.95rem; color:var(--light-ink); max-width:720px; line-height:1.7; font-weight:300; }
   .results-summary strong { font-weight:500; color:var(--navy); }
@@ -319,6 +320,8 @@
   .rec-card-head { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap; }
   .rec-rank { font-size:0.68rem; font-weight:600; letter-spacing:0.08em; color:var(--blue); text-transform:uppercase; margin-bottom:4px; }
   .rec-name { font-family:'Libre Baskerville',serif; font-size:1.1rem; font-weight:700; color:var(--navy); line-height:1.3; }
+  .rec-dismiss { padding:0; margin-left:10px; font-size:0.68rem; vertical-align:middle; }
+  .rec-dismiss:hover { color:#b45309; }
   .rec-desc { font-size:0.85rem; color:var(--mid); font-weight:300; line-height:1.55; margin-top:6px; max-width:620px; }
   .rec-scores { display:flex; gap:16px; flex-shrink:0; }
   .rec-score { text-align:center; }
@@ -678,6 +681,7 @@ const answers = {};
 const objectiveRanking = [];   // [primaryKey, secondaryKey] in priority order
 const TOTAL_STEPS = 2 + questions.length;   // objective + picker + questions
 const customUseCases = [];   // survives retakes within the session
+const removedUseCases = new Set(); // ranks of the fixed 14 the person dismissed as not relevant; also survives retakes
 let resultsUnlocked = false;  // flips true once email is given at the results gate; unlocks the named ranked and build-toward lists
 let capturedLead = null;     // { name, company, email } once given anywhere this session
 let attemptCount = 1;         // the initial view counts as attempt 1; capped at 3 per session
@@ -1018,7 +1022,7 @@ function allUseCases() {
       isCustom: true, derivation: cu
     };
   });
-  return useCases.concat(customs);
+  return useCases.filter(uc => !removedUseCases.has(uc.rank)).concat(customs);
 }
 
 
@@ -1282,6 +1286,9 @@ function showResults() {
   const sysList = [...p.systems].map(id => sysName(id).replace(/^a /, '')).join(', ') || "no heavy systems confirmed";
 
   let html = journeyStepper();
+  if (removedUseCases.size) {
+    html += `<p class="removed-note">${removedUseCases.size} use case${removedUseCases.size === 1 ? '' : 's'} hidden as not relevant to your business. <button class="btn btn-ghost" style="padding:0; font-size:0.78rem; vertical-align:baseline;" onclick="restoreRemovedUseCases()">Restore them</button></p>`;
+  }
   html += `
     <div class="results-head">
       <div class="results-eyebrow">Your Assessment</div>
@@ -1491,6 +1498,7 @@ function showResults() {
     rankedCount: ranked.length,
     gatedCount: gated.length,
     customUseCaseCount: customUseCases.length,
+    removedUseCases: [...removedUseCases].map(rank => (useCases.find(u => u.rank === rank) || {}).name).filter(Boolean),
     topUseCase: ranked.length ? ranked[0].uc.name : null
   };
 
@@ -1534,7 +1542,7 @@ function recCard(uc, p, c, rank, top, fit) {
       <div class="rec-card-head">
         <div>
           <div class="rec-rank">Rank ${rank} &middot; ${outcomes[uc.outcome] ? outcomes[uc.outcome].label : typeLabel(uc.type)}${uc.secondary && uc.secondary.length ? ' + ' + uc.secondary.map(s => outcomes[s] ? outcomes[s].label : s).join(' + ') : ''} &middot; Fit ${fit}</div>
-          <div class="rec-name">${uc.name}${uc.isCustom ? `<span class="custom-badge">Yours</span> <button class="btn btn-ghost" style="padding:0; font-size:0.68rem; vertical-align:middle;" onclick="removeCustom(${uc.rank - 100})">&minus; Remove</button>` : ''}</div>
+          <div class="rec-name">${uc.name}${uc.isCustom ? `<span class="custom-badge">Yours</span> <button class="btn btn-ghost" style="padding:0; font-size:0.68rem; vertical-align:middle;" onclick="removeCustom(${uc.rank - 100})">&minus; Remove</button>` : `<button class="btn btn-ghost rec-dismiss" onclick="removeBaseUseCase(${uc.rank})" title="Not relevant to your business? Remove it.">&minus; Not relevant</button>`}</div>
           <div class="rec-desc">${uc.desc}</div>
           ${uc.metric ? `<div class="rec-metric"><span class="rec-metric-label">Moves</span> ${uc.metric}${p.primaryObjective && servesOutcome(uc, p.primaryObjective) ? `<span class="rec-metric-flag">${servesOutcome(uc, p.primaryObjective) === 'primary' ? 'Your primary objective' : 'Also serves your primary'}</span>` : ''}</div>` : ''}
         </div>
@@ -1567,7 +1575,7 @@ function gatedCard(uc, p, gates, c) {
       <div class="gated-head">
         <div>
           <div class="gated-outcome">${outcomes[uc.outcome] ? outcomes[uc.outcome].label : typeLabel(uc.type)}${uc.secondary && uc.secondary.length ? ' + ' + uc.secondary.map(s => outcomes[s] ? outcomes[s].label : s).join(' + ') : ''}${p.primaryObjective && servesOutcome(uc, p.primaryObjective) ? `<span class="gated-flag">${servesOutcome(uc, p.primaryObjective) === 'primary' ? 'Your primary objective' : 'Also serves your primary'}</span>` : ''}</div>
-          <div class="gated-name">${uc.name}${uc.isCustom ? `<span class="custom-badge">Yours</span> <button class="btn btn-ghost" style="padding:0; font-size:0.68rem; vertical-align:middle;" onclick="removeCustom(${uc.rank - 100})">&minus; Remove</button>` : ''}</div>
+          <div class="gated-name">${uc.name}${uc.isCustom ? `<span class="custom-badge">Yours</span> <button class="btn btn-ghost" style="padding:0; font-size:0.68rem; vertical-align:middle;" onclick="removeCustom(${uc.rank - 100})">&minus; Remove</button>` : `<button class="btn btn-ghost rec-dismiss" onclick="removeBaseUseCase(${uc.rank})" title="Not relevant to your business? Remove it.">&minus; Not relevant</button>`}</div>
           ${uc.metric ? `<div class="gated-metric"><span class="gated-metric-label">Would move</span> ${uc.metric}</div>` : ''}
         </div>
         <div class="gated-reason">${reasons.join(' + ')}</div>
@@ -1730,6 +1738,16 @@ function submitCustom() {
 
 function removeCustom(idx) {
   customUseCases.splice(idx, 1);
+  showResults();
+}
+
+function removeBaseUseCase(rank) {
+  removedUseCases.add(rank);
+  showResults();
+}
+
+function restoreRemovedUseCases() {
+  removedUseCases.clear();
   showResults();
 }
 

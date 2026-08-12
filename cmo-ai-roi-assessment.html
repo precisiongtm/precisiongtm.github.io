@@ -369,6 +369,17 @@
   .rec-caution strong { color:#b91c1c; font-weight:600; }
 
   .rec-stack { display:flex; flex-wrap:wrap; gap:4px; margin-top:12px; }
+  .ref-arch { margin-top:14px; border-top:1px solid var(--warm-mid); padding-top:12px; }
+  .ref-arch summary { cursor:pointer; font-size:0.72rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--blue); list-style:none; user-select:none; }
+  .ref-arch summary::-webkit-details-marker { display:none; }
+  .ref-arch summary::before { content:'+ '; }
+  .ref-arch[open] summary::before { content:'\2212 '; }
+  .ref-arch-flow { margin-top:14px; display:flex; flex-direction:column; align-items:flex-start; }
+  .ref-arch-stage { background:var(--score-bg); border-left:3px solid var(--blue); border-radius:2px; padding:10px 14px; width:100%; }
+  .ref-arch-label { font-size:0.62rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--blue); margin-bottom:4px; }
+  .ref-arch-text { font-size:0.83rem; color:var(--light-ink); font-weight:300; line-height:1.55; }
+  .ref-arch-arrow { color:var(--mid); font-size:0.8rem; padding:4px 0; align-self:center; }
+  .ref-arch-note { font-size:0.75rem; color:var(--mid); font-weight:300; font-style:italic; margin-top:12px; line-height:1.5; }
   .rec-stack-tag { background:var(--tag-bg); color:var(--mid); font-size:0.65rem; font-weight:500; padding:2px 7px; border-radius:2px; letter-spacing:0.04em; }
   .rec-stack-tag.missing { background:#fef2f2; color:#dc2626; }
 
@@ -490,7 +501,14 @@ const useCases = [
   { rank:1, name:"Win/Loss Analysis Dashboard", type:"revenue", outcome:"position", secondary:["pipeline"], metric:"Win rate vs named competitors",
     desc:"Mine closed deals for the patterns that separate wins from losses. Feeds every other revenue use case.",
     roi:5, effort:3, risk:3, ttv:4, adoption:false,
-    requires:["crm","ci","bi"], stack:["Salesforce","Gong","Tableau"] },
+    requires:["crm","ci","bi"], stack:["Salesforce","Gong","Tableau"],
+    refArch: {
+      sources: "Salesforce (deal outcome, stage history, deal size) and Gong (call transcripts on closed deals)",
+      aggregation: "Closed-won and closed-lost deals are pulled and paired with their call data",
+      aiLayer: "Pattern extraction across the paired set: what language, objections, and competitive mentions correlate with wins versus losses",
+      output: "A scored pattern set surfaced in Tableau, refreshed on a cadence",
+      consumer: "Product marketing and sales enablement, feeding positioning and battle cards"
+    } },
   { rank:2, name:"ICP Scoring on Live Deals", type:"revenue", outcome:"pipeline", metric:"Qualified pipeline coverage",
     desc:"Score every open deal against your validated ICP. Highest scores get PMM firepower, lowest get self-serve.",
     roi:5, effort:4, risk:4, ttv:3, adoption:true, runCost:true,
@@ -1530,6 +1548,37 @@ function scoreCell(val, base, cls, moved, dir) {
   return `<div class="rec-score-val ${cls}">${val}/5${arrow}</div>`;
 }
 
+/* Reference architecture: the shape of how the systems connect, not the
+   substance of how to build it. Sources, aggregation, AI layer, output,
+   consumer, always the same five stages so they're fast to skim and easy to
+   compare across use cases as more get authored. Deliberately stops short of
+   prompts, field mappings, or decision logic, that's what the blueprint sells. */
+function refArchBlock(uc) {
+  if (!uc.refArch) return '';
+  const stages = [
+    ['Sources', uc.refArch.sources],
+    ['Aggregation', uc.refArch.aggregation],
+    ['AI layer', uc.refArch.aiLayer],
+    ['Output', uc.refArch.output],
+    ['Consumer', uc.refArch.consumer]
+  ];
+  return `
+    <details class="ref-arch">
+      <summary>Reference architecture</summary>
+      <div class="ref-arch-flow">
+        ${stages.map(([label, text], i) => `
+          <div class="ref-arch-stage">
+            <div class="ref-arch-label">${label}</div>
+            <div class="ref-arch-text">${text}</div>
+          </div>
+          ${i < stages.length - 1 ? '<div class="ref-arch-arrow">&#8595;</div>' : ''}
+        `).join('')}
+      </div>
+      <p class="ref-arch-note">This shows how the systems connect, not how to build it. The exact prompts, field mappings, and decision logic are what a workflow blueprint delivers.</p>
+    </details>
+  `;
+}
+
 function recCard(uc, p, c, rank, top, fit) {
   const note = calibrationNote(uc, c, p);
   const caution = c.riskCaution ? `
@@ -1559,6 +1608,7 @@ function recCard(uc, p, c, rank, top, fit) {
         ${note}
         ${caution}
         <div class="rec-stack">${uc.stack.map(s => `<span class="rec-stack-tag">${s}</span>`).join('')}</div>
+        ${refArchBlock(uc)}
       </div>
     </div>
   `;
